@@ -2874,6 +2874,8 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
           "config=${config.sops.templates."rclone.conf".path}"
         ];
       };
+    };    
+  }
 #+end_src
 *** Linkwarden
 Here the usage of sops varies a little, the ownership of the files in ~/run/secrets~ falls under ~root:root~ thus posing a problem for linkwarden in reading the files.
