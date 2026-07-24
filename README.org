@@ -638,7 +638,7 @@ The default hosts structure goes as follows
           binds = {
             "Mod+Return".spawn-sh = "foot";
             "Mod+D".spawn-sh = "fuzzel";
-            "Mod+B".spawn-sh = "brave-origin";
+            "Mod+B".spawn-sh = "chromium";
             "Mod+P".spawn-sh = "spotify";
             "Mod+U".spawn-sh = "emacsclient -c";
 
@@ -3528,7 +3528,16 @@ The flake installs spotify automatically based on the given spicetify configurat
     }: {
       gtk = {
         enable = true;
+        gtk4.theme = null;
+        theme = {
+          name = "Kanagawa-B-LB";
+          package = pkgs.kanagawa-gtk-theme; 
+        };
       };
+      qt = {
+        enable = true;
+        platformTheme.name = "gtk3";
+      };            
       dconf = {
         enable = true;
         settings = {
@@ -3538,7 +3547,6 @@ The flake installs spotify automatically based on the given spicetify configurat
       home.pointerCursor = {
         enable = true;
         gtk.enable = true;
-        x11.enable = true;
         name = "Bibata-Modern-Ice";
         package = pkgs.bibata-cursors;
       };
