@@ -33,6 +33,7 @@
       self.nixosModules.arr
       self.nixosModules.jellyfin
       self.nixosModules.copyparty
+      self.nixosModules.rclone
 
       inputs.sops-nix.nixosModules.sops
     ];

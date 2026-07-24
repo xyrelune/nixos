@@ -319,6 +319,7 @@ The default hosts structure goes as follows
         self.nixosModules.arr
         self.nixosModules.jellyfin
         self.nixosModules.copyparty
+        self.nixosModules.rclone
 
         inputs.sops-nix.nixosModules.sops
       ];
@@ -2833,6 +2834,46 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
       };
     };
   }
+#+end_src
+*** Rclone
+#+begin_src nix :tangle modules/features/web/rclone.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.rclone = {
+      pkgs,
+      config,
+      ...
+    }: {
+      sops.secrets = {
+        "rclone/tiredlamp/token/access_token" = {};
+        "rclone/tiredlamp/token/refresh_token" = {};
+        "rclone/tiredlamp/client_id" = {};
+        "rclone/tiredlamp/client_secret" = {};
+      };
+      sops.templates."rclone.conf".content = ''
+        [tiredlamp_gdrive]
+        type = drive
+        client_id = ${config.sops.secrets."rclone/tiredlamp/client_id"}
+        client_secret = ${config.sops.secrets."rclone/tiredlamp/client_secret"}
+        scope = drive
+        token = {"access_token":"${config.sops.secrets."rclone/tiredlamp/token/access_token"}","token_type":"Bearer","refresh_token":"${config.sops.secrets."rclone/tiredlamp/token/refresh_token"}","expiry":"2026-07-22T09:30:31.915272781+05:30","expires_in":3599}
+        teamdrive = 
+      '';
+      environment.systemPackages = [ pkgs.rclone ];
+      fileSystems."/mnt/tiredlamp" = {
+        device = "tiredlamp_gdrive:/bitwarden";
+        fsType = "rclone";
+        options = [
+          "nodev"
+          "nofail"
+          "allow_other"
+          "args2env"
+          "config=${config.sops.templates."rclone.conf".path}"
+        ];
+      };
 #+end_src
 *** Linkwarden
 Here the usage of sops varies a little, the ownership of the files in ~/run/secrets~ falls under ~root:root~ thus posing a problem for linkwarden in reading the files.

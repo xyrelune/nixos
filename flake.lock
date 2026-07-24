@@ -644,10 +644,10 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1784267218,
-        "narHash": "sha256-3Ztu7wTAlJj++Z1AYFyf/DxTXk8jLB3k5pIXMsjtXdM=",
+        "lastModified": 1784785750,
+        "narHash": "sha256-dJy0p1YV13k4dMrtptb8W+Ht+5aPE6BCWDiDMBPVzXM=",
         "ref": "main",
-        "rev": "8b1310f89e61bb738ec6d2a9d846269830527025",
+        "rev": "5b76c763ab7c1f66d79a5ecc2534e79b43ebe10d",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@codeberg.org/kinest/secrets"
