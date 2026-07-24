@@ -10,7 +10,7 @@
     ...
   }: {
     sops.secrets = {
-      vaultwarden-backup.env = {};
+      "vaultwarden-backup.env" = {};
     };
     # Runtime
     virtualisation.podman = {
