@@ -51,6 +51,9 @@
             };
             interval = 1;
           };
+          "tray" = {
+            spacing = 5;
+          };
         };
       };
       style = "

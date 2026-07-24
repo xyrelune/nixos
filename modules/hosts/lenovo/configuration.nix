@@ -29,12 +29,20 @@
     ];
 
     boot.loader.grub = {
-      enable = true;
-      device = "nodev";
-      efiSupport = true;
-      useOSProber = true;
+      enable = false;
+      #device = "nodev";
+      #efiSupport = true;
+      #useOSProber = true;
     };
-    boot.loader.efi.canTouchEfiVariables = true;
+    #boot.loader.efi.canTouchEfiVariables = true;
+    boot = {
+      loader = {
+        efi.canTouchEfiVariables = true;
+        systemd-boot = {
+          enable = true;
+        };
+      };
+    };
 
     networking.hostName = "lenovo";
 
