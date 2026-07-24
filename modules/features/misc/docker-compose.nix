@@ -389,7 +389,41 @@
         "podman-compose-services-root.target"
       ];
     };
-
+    virtualisation.oci-containers.containers."vaultwarden-backup" = {
+      image = "ttionya/vaultwarden-backup:latest";
+      environmentFiles = [
+        config.sops.secrets."vaultwarden-backup.env".path
+      ];
+      volumes = [
+        "/home/kin/data/vaultwarden-backup/rclone-data:/config:rw"
+        "/var/lib/vaultwarden:/bitwarden/data:rw"
+      ];
+      labels = {
+        "compose2nix.settings.sops.secrets" = "vaultwarden-backup.env";
+      };
+      log-driver = "journald";
+      extraOptions = [
+        "--network-alias=vaultwarden-backup"
+        "--network=services_default"
+      ];
+    };
+    systemd.services."podman-vaultwarden-backup" = {
+      serviceConfig = {
+        Restart = lib.mkOverride 90 "always";
+      };
+      after = [
+        "podman-network-services_default.service"
+      ];
+      requires = [
+        "podman-network-services_default.service"
+      ];
+      partOf = [
+        "podman-compose-services-root.target"
+      ];
+      wantedBy = [
+        "podman-compose-services-root.target"
+      ];
+    };
     # Networks
     systemd.services."podman-network-services_default" = {
         path = [ pkgs.podman ];
