@@ -12,15 +12,15 @@
     copyparty.url = "github:9001/copyparty";
 
     secrets = {
-      url = "git+ssh://git@github.com/kinestt/nix-secrets?ref=main&shallow=1";
+      url = "git+ssh://git@github.com/xyrelune/nix-secrets?ref=main&shallow=1";
       flake = false;
     };
     walls = {
-      url = "git+ssh://git@codeberg.org/kinest/walls?ref=main&shallow=1";
+      url = "git+ssh://git@github.com/xyrelune/walls?ref=main&shallow=1";
       flake = false;
     };
     custom-fonts = {
-      url = "git+ssh://git@github.com/kinestt/custom-fonts?ref=main&shallow=1";
+      url = "git+ssh://git@github.com/xyrelune/custom-fonts?ref=main&shallow=1";
       flake = false;
     };
 

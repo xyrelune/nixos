@@ -224,7 +224,7 @@
           "Mod+Shift+P".spawn-sh = "niri msg action power-off-monitors";
         };
         spawn-sh-at-startup = [
-          "${lib.getExe pkgs.swaybg} -i ${wallspath}/dune.jpg"
+          "${lib.getExe pkgs.swaybg} -i ${wallspath}/ign_mountains.png"
           "waybar"
         ];
       };

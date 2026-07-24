@@ -48,15 +48,15 @@ I also use flakes as a way to import my non-flake files and use it to import fil
       copyparty.url = "github:9001/copyparty";
   
       secrets = {
-        url = "git+ssh://git@github.com/kinestt/nix-secrets?ref=main&shallow=1";
+        url = "git+ssh://git@github.com/xyrelune/nix-secrets?ref=main&shallow=1";
         flake = false;
       };
       walls = {
-        url = "git+ssh://git@codeberg.org/kinest/walls?ref=main&shallow=1";
+        url = "git+ssh://git@github.com/xyrelune/walls?ref=main&shallow=1";
         flake = false;
       };
       custom-fonts = {
-        url = "git+ssh://git@github.com/kinestt/custom-fonts?ref=main&shallow=1";
+        url = "git+ssh://git@github.com/xyrelune/custom-fonts?ref=main&shallow=1";
         flake = false;
       };
 
@@ -731,7 +731,7 @@ The default hosts structure goes as follows
             "Mod+Shift+P".spawn-sh = "niri msg action power-off-monitors";
           };
           spawn-sh-at-startup = [
-            "${lib.getExe pkgs.swaybg} -i ${wallspath}/dune.jpg"
+            "${lib.getExe pkgs.swaybg} -i ${wallspath}/ign_mountains.png"
             "waybar"
           ];
         };
@@ -799,7 +799,7 @@ The default hosts structure goes as follows
             font = "Iosevka Nerd Font Mono:size=12";
           };
           colors-dark = {
-            alpha = "1";
+            alpha = "0.7";
             blur = "no";
             background = "1f1f28";
             foreground = "dcd7ba";
@@ -3517,6 +3517,7 @@ The flake installs spotify automatically based on the given spicetify configurat
   }
 #+end_src
 *** GTK
+Check the theme repo for the appropriate name to give in <name> attribute of the gtk theme.
 #+begin_src nix :tangle modules/home/home-modules/gtk.nix
   {
     self,

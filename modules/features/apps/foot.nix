@@ -25,7 +25,7 @@
           font = "Iosevka Nerd Font Mono:size=12";
         };
         colors-dark = {
-          alpha = "1";
+          alpha = "0.7";
           blur = "no";
           background = "1f1f28";
           foreground = "dcd7ba";
