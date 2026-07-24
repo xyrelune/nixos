@@ -9,6 +9,9 @@
     config,
     ...
   }: {
+    sops.secrets = {
+      vaultwarden-backup.env = {};
+    };
     # Runtime
     virtualisation.podman = {
         enable = true;

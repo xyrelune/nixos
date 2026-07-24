@@ -1402,6 +1402,9 @@ The default hosts structure goes as follows
       config,
       ...
     }: {
+      sops.secrets = {
+        vaultwarden-backup.env = {};
+      };
       # Runtime
       virtualisation.podman = {
           enable = true;
