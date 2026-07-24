@@ -25,7 +25,7 @@
     '';
     environment.systemPackages = [ pkgs.rclone ];
     fileSystems."/mnt/tiredlamp" = {
-      device = "tiredlamp_gdrive:/bitwarden";
+      device = "tiredlamp_gdrive:bitwarden";
       fsType = "rclone";
       options = [
         "nodev"

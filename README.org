@@ -2864,7 +2864,7 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
       '';
       environment.systemPackages = [ pkgs.rclone ];
       fileSystems."/mnt/tiredlamp" = {
-        device = "tiredlamp_gdrive:/bitwarden";
+        device = "tiredlamp_gdrive:bitwarden";
         fsType = "rclone";
         options = [
           "nodev"
