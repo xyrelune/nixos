@@ -198,6 +198,7 @@
           "Print".screenshot = _: {};
           "Ctrl+Print".screenshot-screen = _: {};
           "Mod+Print".screenshot-window = _: {};
+          "Mod+Escape".toggle-keyboard-shortcuts-inhibit = _: {};
 
           "Mod+Shift+E".quit = _: {};
 

@@ -15,18 +15,18 @@
       enable = true;
       timeouts = [
         {
-          timeout = 90;
+          timeout = 360;
           command = lock;
         }
         {
-          timeout = 100;
+          timeout = 380;
           command = display "off";
           resumeCommand = display "on";
         }
-        #{
-        #  timeout = 110;
-        #  command = "${pkgs.systemd}/bin/systemctl suspend";
-        #}
+        {
+          timeout = 400;
+          command = "${pkgs.systemd}/bin/systemctl suspend";
+        }
       ];
       events = {
         "before-sleep" = (display "off") + "; " + lock;

@@ -2067,7 +2067,13 @@ That would conclude the steps needed for windows vm with GPU passthrough to work
       ];
       environment.systemPackages = with pkgs; [
         dnsmasq
-        looking-glass-client
+
+        (pkgs.writeShellScriptBin "looking-glass" ''
+          exec ${pkgs.systemd}/bin/systemd-inhibit \
+            --what=idle\
+            --why="Looking Glass" \
+            ${pkgs.looking-glass-client}/bin/looking-glass-client "$@"
+        '')
       ];
       networking.firewall.trustedInterfaces = [ "vibr0" ];
 
@@ -3073,7 +3079,7 @@ The main peers would be:
       secretspath = builtins.toString inputs.secrets;
     in {
       imports = [
-        #self.homeModules.lock
+        self.homeModules.lock
         self.homeModules.mako
         self.homeModules.alacritty
         self.homeModules.gtk
@@ -3494,6 +3500,7 @@ The flake installs spotify automatically based on the given spicetify configurat
         settings = {
           main = {
             #font = "Futura:size=12";
+            list-executables-in-path = "yes";
           };
           colors = {
             background = "1f1f28ff";
@@ -3740,18 +3747,18 @@ The flake installs spotify automatically based on the given spicetify configurat
         enable = true;
         timeouts = [
           {
-            timeout = 90;
+            timeout = 360;
             command = lock;
           }
           {
-            timeout = 100;
+            timeout = 380;
             command = display "off";
             resumeCommand = display "on";
           }
-          #{
-          #  timeout = 110;
-          #  command = "${pkgs.systemd}/bin/systemctl suspend";
-          #}
+          {
+            timeout = 400;
+            command = "${pkgs.systemd}/bin/systemctl suspend";
+          }
         ];
         events = {
           "before-sleep" = (display "off") + "; " + lock;

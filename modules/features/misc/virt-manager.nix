@@ -22,7 +22,13 @@
     ];
     environment.systemPackages = with pkgs; [
       dnsmasq
-      looking-glass-client
+
+      (pkgs.writeShellScriptBin "looking-glass" ''
+        exec ${pkgs.systemd}/bin/systemd-inhibit \
+          --what=idle\
+          --why="Looking Glass" \
+          ${pkgs.looking-glass-client}/bin/looking-glass-client "$@"
+      '')
     ];
     networking.firewall.trustedInterfaces = [ "vibr0" ];
 

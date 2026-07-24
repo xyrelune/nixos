@@ -21,6 +21,7 @@
       settings = {
         main = {
           #font = "Futura:size=12";
+          list-executables-in-path = "yes";
         };
         colors = {
           background = "1f1f28ff";
