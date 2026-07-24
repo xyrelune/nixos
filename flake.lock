@@ -644,19 +644,19 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1784888555,
-        "narHash": "sha256-cj8JYPXAVxiY7TNB64wAh1jh/Imgqm566DYGRVo4ThI=",
+        "lastModified": 1784890734,
+        "narHash": "sha256-n3VVtRsnxxhvUh+m0YUN1wndSrBXoJFm/bTRm815XUU=",
         "ref": "main",
-        "rev": "95e44c1754d554e8c72d2a9d46828f7c265cbd08",
+        "rev": "40b222ef6aea6c93b96d3ef9c3c834c9762f378f",
         "shallow": true,
         "type": "git",
-        "url": "ssh://git@codeberg.org/kinest/secrets"
+        "url": "ssh://git@github.com/kinestt/nix-secrets"
       },
       "original": {
         "ref": "main",
         "shallow": true,
         "type": "git",
-        "url": "ssh://git@codeberg.org/kinest/secrets"
+        "url": "ssh://git@github.com/kinestt/nix-secrets"
       }
     },
     "sidra": {
