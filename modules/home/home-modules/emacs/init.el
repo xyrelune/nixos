@@ -93,3 +93,8 @@
   (emms-all)
   (emms-default-players)
   (setq emms-player-list '(emms-player-mpv)))
+
+;; elcord - Discord Rich Presence
+;;(use-package elcord
+;;  :config
+;;  (elcord-mode))

@@ -1299,6 +1299,9 @@ The default hosts structure goes as follows
     }: {
       services.displayManager.ly = {
         enable = true;
+        settings = {
+          clear_password = true;
+        };
       };
     };
   }
@@ -3849,6 +3852,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
           base16-theme
           yaml-mode
           powershell
+          elcord
         ];
       };
 
@@ -3981,4 +3985,9 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
     (emms-all)
     (emms-default-players)
     (setq emms-player-list '(emms-player-mpv)))
+
+  ;; elcord - Discord Rich Presence
+  ;;(use-package elcord
+  ;;  :config
+  ;;  (elcord-mode)) 
 #+end_src
