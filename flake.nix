@@ -8,7 +8,6 @@
     prismlauncher.url = "github:PrismLauncher/PrismLauncher?ref=release-9.x";
     xwayland-satellite-unscaled.url = "github:Supreeeme/xwayland-satellite?ref=unscaled-dpi";
     redlib-fork.url = "github:taglia/redlib?ref=dockerhub-redlib-0.36.0";
-    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     copyparty.url = "github:9001/copyparty";
 
     secrets = {
@@ -40,27 +39,12 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixflix = {
-      url = "github:kiriwalawren/nixflix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nvf = {
       url = "github:notashelf/nvf";
     };
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    sidra = {
-      url = "github:wimpysworld/sidra";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-      };
     };
   };
 

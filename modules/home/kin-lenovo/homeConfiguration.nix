@@ -61,7 +61,6 @@
           withEquicord = true;
         })
 
-        inputs.sidra.packages.${pkgs.system}.default
         inputs.prismlauncher.packages.${pkgs.system}.prismlauncher
 
         nur.repos.tnmt.brave-origin

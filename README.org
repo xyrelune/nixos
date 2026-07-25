@@ -44,7 +44,6 @@ I also use flakes as a way to import my non-flake files and use it to import fil
       prismlauncher.url = "github:PrismLauncher/PrismLauncher?ref=release-9.x";
       xwayland-satellite-unscaled.url = "github:Supreeeme/xwayland-satellite?ref=unscaled-dpi";
       redlib-fork.url = "github:taglia/redlib?ref=dockerhub-redlib-0.36.0";
-      spicetify-nix.url = "github:Gerg-L/spicetify-nix";
       copyparty.url = "github:9001/copyparty";
   
       secrets = {
@@ -76,27 +75,12 @@ I also use flakes as a way to import my non-flake files and use it to import fil
         url = "github:Mic92/sops-nix";
         inputs.nixpkgs.follows = "nixpkgs";
       };
-      nixflix = {
-        url = "github:kiriwalawren/nixflix";
-        inputs.nixpkgs.follows = "nixpkgs";
-      };
       nvf = {
         url = "github:notashelf/nvf";
       };
       nur = {
         url = "github:nix-community/NUR";
         inputs.nixpkgs.follows = "nixpkgs";
-      };
-      sidra = {
-        url = "github:wimpysworld/sidra";
-        inputs.nixpkgs.follows = "nixpkgs";
-      };
-      zen-browser = {
-        url = "github:0xc000022070/zen-browser-flake";
-        inputs = {
-          nixpkgs.follows = "nixpkgs";
-          home-manager.follows = "home-manager";
-        };
       };
     };
 
@@ -197,6 +181,7 @@ The default hosts structure goes as follows
           };
         };
       };
+      boot.kernelPackages = pkgs.linuxPackages_zen;
 
       networking.hostName = "lenovo";
 
@@ -3147,7 +3132,6 @@ The main peers would be:
             withEquicord = true;
           })
 
-          inputs.sidra.packages.${pkgs.system}.default
           inputs.prismlauncher.packages.${pkgs.system}.prismlauncher
 
           nur.repos.tnmt.brave-origin
@@ -3379,36 +3363,6 @@ The main peers would be:
   }
         
 
-#+end_src
-*** Spicetify
-The flake installs spotify automatically based on the given spicetify configuration, therefore we don't need to install ~pkgs.spotify~ anywhere.
-
-#+begin_src nix :tangle modules/home/home-modules/spicetify.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.spicetify = {
-      pkgs,
-      ...
-    }: {
-      imports = [
-        inputs.spicetify-nix.homeManagerModules.spicetify
-      ];
-
-      programs.spicetify = let
-        spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-      in {
-        enable = true;
-        enabledExtensions = with spicePkgs.extensions; [
-          shuffle
-        ];
-        theme = spicePkgs.themes.text;
-        colorScheme = "Gruvbox";
-      };
-    };
-  }
 #+end_src
 *** Fuzzel
 #+begin_src nix :tangle modules/home/home-modules/fuzzel.nix

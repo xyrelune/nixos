@@ -36,6 +36,7 @@
         };
       };
     };
+    boot.kernelPackages = pkgs.linuxPackages_zen;
 
     networking.hostName = "lenovo";
 
