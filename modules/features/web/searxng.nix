@@ -23,13 +23,6 @@
           center_alignment = true;
           results_on_new_tab = true;
         };
-        hostnames = {
-          replace = {
-            "(.*\.)?reddit\.com$" = "redlib.server.org";
-            "(.*\.)?youtube\.com$" = "piped.server.org";
-            "(.*\.)?youtu\.be$" = "piped.server.org";
-          };
-        };
       };
       domain = "search.server.org";
       configureNginx = true;
