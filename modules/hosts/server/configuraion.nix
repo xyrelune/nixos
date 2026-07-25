@@ -54,6 +54,7 @@
             authorizedKeys = {
               keys = [
                 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIS+eKj19lpFfENzaduMCgAqd6Borror02S8o2OF3Aiu vaultwarden"
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBl9/46Fjl8qpf1IdPXrWYbBuCtHJhQhr93MdDgTxM5m kin@lenovo"
               ];
             };
           };
