@@ -295,7 +295,6 @@ The default hosts structure goes as follows
         self.nixosModules.vaultwarden
         self.nixosModules.komga
         self.nixosModules.miniflux
-        self.nixosModules.redlib
         self.nixosModules.docker
         self.nixosModules.bash
         self.nixosModules.yazi
@@ -2455,29 +2454,6 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
     flake.nixosModules.jellyfin = {
       services.jellyfin = {
         enable = true;
-      };
-    };
-  }
-#+end_src
-*** Redlib
-#+begin_src nix :tangle modules/features/web/redlib.nix
-  {
-    inputs,
-    ...
-  }: {
-    flake.nixosModules.redlib = {
-      pkgs,
-      ...
-    }: {
-      services.redlib = { 
-        enable = true;
-        port = 5544;
-        package = inputs.redlib-fork.packages.${pkgs.system}.default;
-
-        settings = {
-          "REDLIB_DEFAULT_USE_HLS" = "on";
-          "REDLIB_DEFAULT_SHOW_NSFW" = "on";
-        };
       };
     };
   }
