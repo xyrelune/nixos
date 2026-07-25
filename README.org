@@ -3140,7 +3140,6 @@ The main peers would be:
         sessionVariables = {
           GTK_DEBUG = "portals";
           GTK_USE_PORTAL = 1;
-          SSH_AUTH_SOCK = "/home/kin/.bitwarden-ssh-agent.sock";
         };
       };
       sops = {
@@ -3528,7 +3527,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
           mainBar = {
             layer = "top";
             position = "top";
-            height = 30;
+            height = 23;
             spacing = 5;
             modules-left = ["niri/workspaces" "mpris" ];
             modules-center = [];
@@ -3576,10 +3575,10 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         };
         style = "
           #waybar {
-              font-family: 'Iosevka Nerd Font Propo';
-              font-size: 16px;
+              font-family: 'SF Pro' , 'Iosevka Nerd Font Propo';
+              font-size: 14px;
               font-weight: normal;
-              background-color: rgba(31, 31, 40, 1);
+              background-color: rgba(31, 31, 40, 0.7);
           }
           
           #cpu {
@@ -3907,6 +3906,9 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (setq make-backup-files nil)
   (setq auto-save-default nil)
   (electric-indent-mode 1)
+
+  ;; Transparency 
+  (add-to-list 'default-frame-alist '(alpha-background . 70))
 
   ;; Custom Fonts for org mode
   (add-hook 'org-mode-hook 'variable-pitch-mode)

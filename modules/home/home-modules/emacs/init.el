@@ -20,6 +20,9 @@
 (setq auto-save-default nil)
 (electric-indent-mode 1)
 
+;; Transparency 
+(add-to-list 'default-frame-alist '(alpha-background . 70))
+
 ;; Custom Fonts for org mode
 (add-hook 'org-mode-hook 'variable-pitch-mode)
 (custom-theme-set-faces
