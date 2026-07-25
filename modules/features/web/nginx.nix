@@ -26,15 +26,6 @@
           sslCertificate = "/etc/ssl/local/server.org.pem";
           sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
         };
-        "4get.server.org" = {
-          forceSSL = true;
-          sslCertificate = "/etc/ssl/local/server.org.pem";
-          sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:10030";
-            proxyWebsockets = true;
-          };
-        };
         "deluge.server.org" = {
           forceSSL = true;
           sslCertificate = "/etc/ssl/local/server.org.pem";
@@ -62,48 +53,12 @@
             proxyWebsockets = true;
           };
         };
-        "omni.server.org" = {
-          forceSSL = true;
-          sslCertificate = "/etc/ssl/local/server.org.pem";
-          sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:5000";
-            proxyWebsockets = true;
-          };
-        };
         "jellyfin.server.org" = {
           forceSSL = true;
           sslCertificate = "/etc/ssl/local/server.org.pem";
           sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
           locations."/" = {
             proxyPass = "http://127.0.0.1:8096";
-            proxyWebsockets = true;
-          };
-        };
-        "piped.server.org" = {
-          forceSSL = true;
-          sslCertificate = "/etc/ssl/local/server.org.pem";
-          sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:10100";
-            proxyWebsockets = true;
-          };
-        };
-        "pipedapi.server.org" = {
-          forceSSL = true;
-          sslCertificate = "/etc/ssl/local/server.org.pem";
-          sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:10101";
-            proxyWebsockets = true;
-          };
-        };
-        "pipedproxy.server.org" = {
-          forceSSL = true;
-          sslCertificate = "/etc/ssl/local/server.org.pem";
-          sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:10102";
             proxyWebsockets = true;
           };
         };
@@ -167,24 +122,6 @@
           sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
           locations."/" = {
             proxyPass = "http://127.0.0.1:8888";
-            proxyWebsockets = true;
-          };
-        };
-        "redlib.server.org" = {
-          forceSSL = true;
-          sslCertificate = "/etc/ssl/local/server.org.pem";
-          sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:5544";
-            proxyWebsockets = true;
-          };
-        };
-        "kitty.server.org" = {
-          forceSSL = true;
-          sslCertificate = "/etc/ssl/local/server.org.pem";
-          sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:10200";
             proxyWebsockets = true;
           };
         };
