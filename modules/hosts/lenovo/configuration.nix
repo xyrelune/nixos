@@ -28,13 +28,6 @@
       inputs.sops-nix.nixosModules.sops
     ];
 
-    boot.loader.grub = {
-      enable = false;
-      #device = "nodev";
-      #efiSupport = true;
-      #useOSProber = true;
-    };
-    #boot.loader.efi.canTouchEfiVariables = true;
     boot = {
       loader = {
         efi.canTouchEfiVariables = true;
@@ -100,7 +93,7 @@
         inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
       ];
       variables = {
-        EDITOR = "vim";
+        EDITOR = "nvim";
       };
       sessionVariables = {
         NIXOS_OZONE_WL = "1";

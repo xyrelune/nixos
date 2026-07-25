@@ -55,6 +55,7 @@
         jellyfin-mpv-shim
         bitwarden-cli
         bitwarden-desktop
+
         (discord.override {
           withOpenASAR = true;
           withEquicord = true;
@@ -68,6 +69,7 @@
       sessionVariables = {
         GTK_DEBUG = "portals";
         GTK_USE_PORTAL = 1;
+        SSH_AUTH_SOCK = "/home/kin/.bitwarden-ssh-agent.sock";
       };
     };
     sops = {

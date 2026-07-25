@@ -43,19 +43,30 @@
     #boot.kernelPackages = pkgs.linuxPackages_latest;
     nix.settings.experimental-features = ["nix-command" "flakes"];
     users = {
-      users.kin = {
-        isNormalUser = true;
-        description = "kin";
-        extraGroups = [ "wheel" "docker" "media" ];
-        shell = pkgs.bash;
-        home = "/home/kin";
+      users = {
+        kin = {
+          isNormalUser = true;
+          description = "kin";
+          extraGroups = [ "wheel" "docker" "media" ];
+          shell = pkgs.bash;
+          home = "/home/kin";
+          openssh = {
+            authorizedKeys = {
+              keys = [
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIS+eKj19lpFfENzaduMCgAqd6Borror02S8o2OF3Aiu vaultwarden"
+              ];
+            };
+          };
+        };
+        media = {
+          isSystemUser = true;
+          group = "media";
+          home = "/var/lib/media";
+          createHome = true;
+        };
       };
-      groups.media = {};
-      users.media = {
-        isSystemUser = true;
-        group = "media";
-        home = "/var/lib/media";
-        createHome = true;
+      groups = {
+        media = {};
       };
     };
 

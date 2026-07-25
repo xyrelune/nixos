@@ -189,13 +189,6 @@ The default hosts structure goes as follows
         inputs.sops-nix.nixosModules.sops
       ];
 
-      boot.loader.grub = {
-        enable = false;
-        #device = "nodev";
-        #efiSupport = true;
-        #useOSProber = true;
-      };
-      #boot.loader.efi.canTouchEfiVariables = true;
       boot = {
         loader = {
           efi.canTouchEfiVariables = true;
@@ -261,7 +254,7 @@ The default hosts structure goes as follows
           inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
         ];
         variables = {
-          EDITOR = "vim";
+          EDITOR = "nvim";
         };
         sessionVariables = {
           NIXOS_OZONE_WL = "1";
@@ -337,19 +330,30 @@ The default hosts structure goes as follows
       #boot.kernelPackages = pkgs.linuxPackages_latest;
       nix.settings.experimental-features = ["nix-command" "flakes"];
       users = {
-        users.kin = {
-          isNormalUser = true;
-          description = "kin";
-          extraGroups = [ "wheel" "docker" "media" ];
-          shell = pkgs.bash;
-          home = "/home/kin";
+        users = {
+          kin = {
+            isNormalUser = true;
+            description = "kin";
+            extraGroups = [ "wheel" "docker" "media" ];
+            shell = pkgs.bash;
+            home = "/home/kin";
+            openssh = {
+              authorizedKeys = {
+                keys = [
+                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIS+eKj19lpFfENzaduMCgAqd6Borror02S8o2OF3Aiu vaultwarden"
+                ];
+              };
+            };
+          };
+          media = {
+            isSystemUser = true;
+            group = "media";
+            home = "/var/lib/media";
+            createHome = true;
+          };
         };
-        groups.media = {};
-        users.media = {
-          isSystemUser = true;
-          group = "media";
-          home = "/var/lib/media";
-          createHome = true;
+        groups = {
+          media = {};
         };
       };
 
@@ -3137,6 +3141,7 @@ The main peers would be:
           jellyfin-mpv-shim
           bitwarden-cli
           bitwarden-desktop
+
           (discord.override {
             withOpenASAR = true;
             withEquicord = true;
@@ -3150,6 +3155,7 @@ The main peers would be:
         sessionVariables = {
           GTK_DEBUG = "portals";
           GTK_USE_PORTAL = 1;
+          SSH_AUTH_SOCK = "/home/kin/.bitwarden-ssh-agent.sock";
         };
       };
       sops = {
