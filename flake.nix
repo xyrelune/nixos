@@ -8,6 +8,7 @@
     prismlauncher.url = "github:PrismLauncher/PrismLauncher?ref=release-9.x";
     xwayland-satellite-unscaled.url = "github:Supreeeme/xwayland-satellite?ref=unscaled-dpi";
     redlib-fork.url = "github:taglia/redlib?ref=dockerhub-redlib-0.36.0";
+    redlib-arrogant.url = "github:evrial/redlib";
     copyparty.url = "github:9001/copyparty";
 
     secrets = {

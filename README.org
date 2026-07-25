@@ -44,8 +44,9 @@ I also use flakes as a way to import my non-flake files and use it to import fil
       prismlauncher.url = "github:PrismLauncher/PrismLauncher?ref=release-9.x";
       xwayland-satellite-unscaled.url = "github:Supreeeme/xwayland-satellite?ref=unscaled-dpi";
       redlib-fork.url = "github:taglia/redlib?ref=dockerhub-redlib-0.36.0";
+      redlib-arrogant.url = "github:evrial/redlib";
       copyparty.url = "github:9001/copyparty";
-  
+
       secrets = {
         url = "git+ssh://git@github.com/xyrelune/nix-secrets?ref=main&shallow=1";
         flake = false;
@@ -2742,7 +2743,7 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
       services.redlib = { 
         enable = true;
         port = 5544;
-        package = inputs.redlib-fork.packages.${pkgs.system}.default;
+        package = inputs.redlib-arrogant.packages.${pkgs.system}.default;
 
         settings = {
           "REDLIB_DEFAULT_USE_HLS" = "on";
