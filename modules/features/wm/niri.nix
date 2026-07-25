@@ -96,6 +96,7 @@
               {app-id = "spotify";}
               {app-id = "Spotify";}
               {app-id = "equibop";}
+              {app-id = "discord";}
               {app-id = "zen-beta";}
               {app-id = "tidal-hifi";}
               {app-id = "chromium-browser";}
