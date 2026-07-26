@@ -109,6 +109,7 @@
       zip
       streamrip
       ffmpeg
+      btop
     ];
     networking = {
       hostName = "server";

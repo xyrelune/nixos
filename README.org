@@ -382,6 +382,7 @@ The default hosts structure goes as follows
         zip
         streamrip
         ffmpeg
+        btop
       ];
       networking = {
         hostName = "server";
