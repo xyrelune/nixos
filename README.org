@@ -27,10 +27,10 @@ To use this repo:
    home-manager switch --flake .#kin-lenovo
 #+end_src
    I only have one home-manager user configured, and that is for my ~lenovo~ machine.
-- For ~server~ deployments, use the following command to do remote rebuilds  
-  #+begin_src bash :tangle no
+- For ~server~ deployments, use the following command to do remote rebuilds
+#+begin_src bash :tangle no
     nixos-rebuild switch --flake .#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password
-  #+end_src
+#+end_src
   I am using my server as an example, ~server.lan~ is the local hostname assigned to it.
   | --target-host       | user@hostname              |
   | --build-host        | user@hostname or localhost |
