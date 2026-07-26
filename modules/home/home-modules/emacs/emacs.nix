@@ -29,6 +29,7 @@
         base16-theme
         yaml-mode
         powershell
+        multi-vterm
         elcord
       ];
     };
