@@ -56,6 +56,7 @@
 
 ;; Magit
 (use-package magit)
+(global-set-key (kbd "C-x g" #'magit-status)) 
 
 ;; Vterm toggle
 (use-package vterm-toggle

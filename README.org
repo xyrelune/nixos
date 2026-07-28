@@ -3617,6 +3617,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
 
   ;; Magit
   (use-package magit)
+  (global-set-key (kbd "C-x g" #'magit-status)) 
 
   ;; Vterm toggle
   (use-package vterm-toggle
