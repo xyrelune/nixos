@@ -55,6 +55,9 @@
         jellyfin-mpv-shim
         bitwarden-cli
         bitwarden-desktop
+        equibop
+        easyeffects
+
 
         (discord.override {
           withOpenASAR = true;

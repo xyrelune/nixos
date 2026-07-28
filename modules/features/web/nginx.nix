@@ -62,6 +62,14 @@
             proxyWebsockets = true;
           };
         };
+        "jf.peanutbutter.quest" = {
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:8096";
+            proxyWebsockets = true;
+          };
+        };
         "linkwarden.server.org" = {
           forceSSL = true;
           sslCertificate = "/etc/ssl/local/server.org.pem";

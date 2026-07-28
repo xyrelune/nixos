@@ -50,6 +50,19 @@
   :config
   (evil-mode 1))
 
+;; org-autolist
+(use-package org-autolist
+  :hook (org-mode . org-autolist-mode))
+
+;; Magit
+(use-package magit)
+
+;; Vterm toggle
+(use-package vterm-toggle
+  :after vterm
+  :bind
+  ("<f12>" . vterm-toggle))
+
 ;; Binding vterm
 (use-package vterm
 	:bind ("C-x C-t" . vterm))

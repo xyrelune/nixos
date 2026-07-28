@@ -31,6 +31,9 @@
         powershell
         multi-vterm
         elcord
+        org-autolist
+        magit
+        vterm-toggle
       ];
     };
 
