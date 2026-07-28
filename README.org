@@ -1,5 +1,5 @@
 #+TITLE: My NixOS Configuration
-#+OPTIONS: toc:nil broken-links: t
+#+OPTIONS: toc:t broken-links: t
 #+PROPERTY: header-args  :noweb tangle :results silent :mkdirp yes
 #+Startup: content
 
