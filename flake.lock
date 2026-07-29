@@ -52,10 +52,10 @@
     "custom-fonts": {
       "flake": false,
       "locked": {
-        "lastModified": 1781514424,
-        "narHash": "sha256-of0rvTcS/81MTu9DvE1pmmFkFPM4Kqs6N/EMIS2DfSY=",
+        "lastModified": 1785292516,
+        "narHash": "sha256-xbk4HJGg3wsNAYZWRdIcN2uk72uddlpUeFoV2/LPh/0=",
         "ref": "main",
-        "rev": "fb459a22f5cd9c8ebb76989eb3f458677c2df492",
+        "rev": "fefc72b8f54770b276963b3ff7f8fc38d66a4159",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/xyrelune/custom-fonts"

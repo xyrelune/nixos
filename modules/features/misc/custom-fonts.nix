@@ -11,13 +11,14 @@
       packages = [
         pkgs.nerd-fonts.iosevka
         self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
+        self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
       ];
       fontconfig = {
         enable = true;
         antialias = true;
         defaultFonts = {
-          serif = ["SF Pro"];
-          sansSerif = ["SF Pro"];
+          serif = ["Source Sans Pro"];
+          sansSerif = ["Source Sans Pro"];
           monospace = ["Iosevka Nerd Font Mono"];
         };
       };
@@ -29,7 +30,7 @@
   }: {
     gtk = {
       font = {
-        name = "SF Pro";
+        name = "Source Sans Pro";
         size = 12;
       };
     };
@@ -60,8 +61,15 @@
         cp SF-Pro.ttf -t $out/share/fonts/truetype/
       '';
     };
-    #packages.source-sans-pro = pkgs.stdenvNoCC.mkDerivation {
-    #  name = "
+    packages.source-sans-pro = pkgs.stdenvNoCC.mkDerivation {
+      name = "Source Sans Pro";
+      pname = "source-sans-pro";
+      src = "${customFontsDir}";
+      installPhase = ''
+        mkdir -p $out/share/fonts/truetype
+        cp source-sans-pro.regular.ttf -t $out/share/fonts/truetype/
+      '';
+    };
     packages.illinois-mono = pkgs.stdenvNoCC.mkDerivation {
       name = "Illinois Mono";
       pname = "illinois-mono";

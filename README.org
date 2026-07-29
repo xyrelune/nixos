@@ -1335,13 +1335,14 @@ The default hosts structure goes as follows
         packages = [
           pkgs.nerd-fonts.iosevka
           self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
+          self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
         ];
         fontconfig = {
           enable = true;
           antialias = true;
           defaultFonts = {
-            serif = ["SF Pro"];
-            sansSerif = ["SF Pro"];
+            serif = ["Source Sans Pro"];
+            sansSerif = ["Source Sans Pro"];
             monospace = ["Iosevka Nerd Font Mono"];
           };
         };
@@ -1353,7 +1354,7 @@ The default hosts structure goes as follows
     }: {
       gtk = {
         font = {
-          name = "SF Pro";
+          name = "Source Sans Pro";
           size = 12;
         };
       };
@@ -1384,8 +1385,15 @@ The default hosts structure goes as follows
           cp SF-Pro.ttf -t $out/share/fonts/truetype/
         '';
       };
-      #packages.source-sans-pro = pkgs.stdenvNoCC.mkDerivation {
-      #  name = "
+      packages.source-sans-pro = pkgs.stdenvNoCC.mkDerivation {
+        name = "Source Sans Pro";
+        pname = "source-sans-pro";
+        src = "${customFontsDir}";
+        installPhase = ''
+          mkdir -p $out/share/fonts/truetype
+          cp source-sans-pro.regular.ttf -t $out/share/fonts/truetype/
+        '';
+      };
       packages.illinois-mono = pkgs.stdenvNoCC.mkDerivation {
         name = "Illinois Mono";
         pname = "illinois-mono";
@@ -3245,8 +3253,8 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         };
         style = "
           #waybar {
-              font-family: 'SF Pro' , 'Iosevka Nerd Font Propo';
-              font-size: 14px;
+              font-family: 'Source Sans Pro' , 'Iosevka Nerd Font Propo';
+              font-size: 16px;
               font-weight: normal;
               background-color: rgba(31, 31, 40, 0.7);
           }
@@ -3593,16 +3601,11 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (custom-theme-set-faces
    'user
-   '(variable-pitch ((t (:family "SF Pro" :height 120))))
+   '(variable-pitch ((t (:family "Source Sans Pro" :height 120))))
    '(fixed-pitch ((t (:family "Iosevka Nerd Font Mono" :height 120))))
    '(org-table ((t (:inherit fixed-pitch))))
    '(org-code ((t (:inherit fixed-pitch))))
    '(org-block ((t (:inherit fixed-pitch)))))
-
-  ;; Custom folder which contains .el files that can be loaded by the load command
-  ;;(add-to-list 'load-path (expand-file-name "custom" user-emacs-directory))
-  ;; (load "rose-pine-color-theme")
-  ;; (load-theme 'rose-pine-color t)
 
   ;; Base16 Theme
   (use-package base16-theme
@@ -3707,7 +3710,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
 
   ;; elcord - Discord Rich Presence
-  (use-package elcord
-    :config
-    (elcord-mode)) 
+  ;; (use-package elcord
+  ;;   :config
+  ;;   (elcord-mode)) 
 #+end_src

@@ -27,16 +27,11 @@
 (add-hook 'org-mode-hook 'variable-pitch-mode)
 (custom-theme-set-faces
  'user
- '(variable-pitch ((t (:family "SF Pro" :height 120))))
+ '(variable-pitch ((t (:family "Source Sans Pro" :height 120))))
  '(fixed-pitch ((t (:family "Iosevka Nerd Font Mono" :height 120))))
  '(org-table ((t (:inherit fixed-pitch))))
  '(org-code ((t (:inherit fixed-pitch))))
  '(org-block ((t (:inherit fixed-pitch)))))
-
-;; Custom folder which contains .el files that can be loaded by the load command
-;;(add-to-list 'load-path (expand-file-name "custom" user-emacs-directory))
-;; (load "rose-pine-color-theme")
-;; (load-theme 'rose-pine-color t)
 
 ;; Base16 Theme
 (use-package base16-theme
@@ -141,6 +136,6 @@
 (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
 
 ;; elcord - Discord Rich Presence
-(use-package elcord
-  :config
-  (elcord-mode))
+;; (use-package elcord
+;;   :config
+;;   (elcord-mode))
