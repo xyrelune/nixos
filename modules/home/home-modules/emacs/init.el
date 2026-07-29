@@ -56,17 +56,6 @@
 
 ;; Magit
 (use-package magit)
-(global-set-key (kbd "C-x g" #'magit-status)) 
-
-;; Vterm toggle
-(use-package vterm-toggle
-  :after vterm
-  :bind
-  ("<f12>" . vterm-toggle))
-
-;; Binding vterm
-(use-package vterm
-	:bind ("C-x C-t" . vterm))
 
 ;; Nix Mode for syntax highlighting
 (use-package nix-mode
@@ -110,6 +99,9 @@
 
 ;; Multi-Vterm
 (use-package multi-vterm
+  :bind (("C-c t" . multi-vterm))
+        (("C-c [" . multi-vterm-prev))
+        (("C-c ]" . multi-vterm-next))
   :config
   (add-hook 'vterm-mode-hook
 		(lambda ()
@@ -145,6 +137,9 @@
 (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
 
 ;; elcord - Discord Rich Presence
-;;(use-package elcord
-;;  :config
-;;  (elcord-mode))
+(use-package elcord
+  :config
+  (elcord-mode)) 
+(use-package evil-collection
+  :config
+  (evil-collection-init))

@@ -13,12 +13,16 @@
       defaultEditor = true;
       startWithUserSession = true;
     };
+    home.packages = [
+      pkgs.nixd
+    ];
     programs.emacs = {
       enable = true;
       package = (pkgs.emacs-pgtk.override { withTreeSitter = true; });
 
       extraPackages = epkgs: with epkgs; [
         evil
+        evil-collection
         nerd-icons
 				vterm
 				autothemer

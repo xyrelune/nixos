@@ -42,7 +42,7 @@
   }: let 
     customFontsDir = builtins.toString inputs.custom-fonts;
   in { 
-    packages.futura = pkgs.stdenv.mkDerivation {
+    packages.futura = pkgs.stdenvNoCC.mkDerivation {
       name = "Futura";
       pname = "futura";
       src = "${customFontsDir}";
@@ -51,7 +51,7 @@
         cp futura.ttf -t $out/share/fonts/truetype/
       '';
     };
-    packages.san-francisco-pro = pkgs.stdenv.mkDerivation {
+    packages.san-francisco-pro = pkgs.stdenvNoCC.mkDerivation {
       name = "San Francico Pro";
       pname = "san-francisco-pro";
       src = "${customFontsDir}";
@@ -60,8 +60,9 @@
         cp SF-Pro.ttf -t $out/share/fonts/truetype/
       '';
     };
-
-    packages.illinois-mono = pkgs.stdenv.mkDerivation {
+    #packages.source-sans-pro = pkgs.stdenvNoCC.mkDerivation {
+    #  name = "
+    packages.illinois-mono = pkgs.stdenvNoCC.mkDerivation {
       name = "Illinois Mono";
       pname = "illinois-mono";
       src = "${customFontsDir}";
