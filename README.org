@@ -259,6 +259,15 @@ The default hosts structure goes as follows
       hardware.bluetooth = {
         enable = true;
         powerOnBoot = true;
+        settings = {
+          General = {
+            Experimental = true;
+            FastConnectable = true;
+          };
+          Policy = {
+            AutoEnable = true;
+          };
+        };
       };
       networking.wireless.enable = false;
       networking.wireless.iwd.enable = true;
@@ -647,7 +656,7 @@ The default hosts structure goes as follows
           binds = {
             "Mod+Return".spawn-sh = "foot";
             "Mod+D".spawn-sh = "fuzzel";
-            "Mod+B".spawn-sh = "chromium";
+            "Mod+B".spawn-sh = "firefox";
             "Mod+P".spawn-sh = "spotify";
             "Mod+U".spawn-sh = "emacsclient -c";
 
@@ -2755,6 +2764,7 @@ The main peers would be:
         self.homeModules.gtk
         self.homeModules.fuzzel
         self.homeModules.firefox
+        self.homeModules.librewolf
         self.homeModules.helix
         self.homeModules.chromium
         self.homeModules.gtk-fonts
@@ -2932,6 +2942,20 @@ The main peers would be:
     };
   }
 #+end_src
+*** Librewolf
+#+begin_src nix :tangle modules/home/home-modules/librewolf.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.homeModules.librewolf = {
+      programs.librewolf = {
+        enable = true;
+      };
+    };
+  }
+#+end_src
 *** Firefox
 #+begin_src nix :tangle modules/home/home-modules/firefox.nix
   {
@@ -2981,7 +3005,6 @@ The main peers would be:
           };
           SearchEngines = {
             Remove = [
-              "Google"
               "Bing"
               "Perplexity"
             ];
@@ -3024,6 +3047,7 @@ The main peers would be:
                 sponsorblock
                 violentmonkey
                 floccus
+                enhancer-for-youtube
                 stylus
               ];
             };

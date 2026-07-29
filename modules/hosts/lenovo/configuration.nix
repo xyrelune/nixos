@@ -104,6 +104,15 @@
     hardware.bluetooth = {
       enable = true;
       powerOnBoot = true;
+      settings = {
+        General = {
+          Experimental = true;
+          FastConnectable = true;
+        };
+        Policy = {
+          AutoEnable = true;
+        };
+      };
     };
     networking.wireless.enable = false;
     networking.wireless.iwd.enable = true;

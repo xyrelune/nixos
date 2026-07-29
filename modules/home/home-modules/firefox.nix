@@ -45,7 +45,6 @@
         };
         SearchEngines = {
           Remove = [
-            "Google"
             "Bing"
             "Perplexity"
           ];
@@ -88,6 +87,7 @@
               sponsorblock
               violentmonkey
               floccus
+              enhancer-for-youtube
               stylus
             ];
           };

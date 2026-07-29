@@ -17,6 +17,7 @@
       self.homeModules.gtk
       self.homeModules.fuzzel
       self.homeModules.firefox
+      self.homeModules.librewolf
       self.homeModules.helix
       self.homeModules.chromium
       self.homeModules.gtk-fonts
