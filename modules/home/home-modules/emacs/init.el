@@ -49,6 +49,10 @@
   (setq evil-want-C-u-scroll t)
   :config
   (evil-mode 1))
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
 
 ;; org-autolist
 (use-package org-autolist
@@ -139,7 +143,4 @@
 ;; elcord - Discord Rich Presence
 (use-package elcord
   :config
-  (elcord-mode)) 
-(use-package evil-collection
-  :config
-  (evil-collection-init))
+  (elcord-mode))
