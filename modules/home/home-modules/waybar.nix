@@ -59,7 +59,7 @@
       style = "
         #waybar {
             font-family: 'Source Sans Pro' , 'Iosevka Nerd Font Propo';
-            font-size: 16px;
+            font-size: 15px;
             font-weight: normal;
             background-color: rgba(31, 31, 40, 0.7);
         }

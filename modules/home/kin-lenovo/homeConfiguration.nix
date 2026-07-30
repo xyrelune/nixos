@@ -23,8 +23,8 @@
       self.homeModules.gtk-fonts
       self.homeModules.emacs
       self.homeModules.waybar
-      self.homeModules.rmpc
-      self.homeModules.mpd
+      #self.homeModules.rmpc
+      #self.homeModules.mpd
 
       inputs.sops-nix.homeManagerModules.sops
     ];

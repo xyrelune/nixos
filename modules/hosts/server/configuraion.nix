@@ -117,13 +117,14 @@
       firewall = {
         enable = false;
         allowedTCPPorts = [25575 25565 80 443 7878 8989 9696 42010];
-        allowedUDPPorts = [19132 5544 25565];
+        allowedUDPPorts = [19132 5544 25565 9];
         extraCommands = "  iptables -t mangle -A POSTROUTING -p tcp --tcp-flags SYN,RST SYN \
         -j TCPMSS --clamp-mss-to-pmtu";
       };
       interfaces = {
         eno1 = {
           mtu = 1250;
+          wakeOnLan.enable = true;
         };
       };
     };

@@ -223,6 +223,7 @@
 
           "Mod+T".spawn-sh = ''notify-send "Current Time" "$(date +"%I:%M %p")"'';
           "Mod+Shift+P".spawn-sh = "niri msg action power-off-monitors";
+          "Mod+e".spawn-sh = ''${lib.getExe pkgs.cliphist} list | ${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.myFuzzel} --dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe' pkgs.wl-clipboard "wl-copy"}'';
         };
         spawn-sh-at-startup = [
           "${lib.getExe pkgs.swaybg} -i ${wallspath}/ign_mountains.png"

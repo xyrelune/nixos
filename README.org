@@ -408,13 +408,14 @@ The default hosts structure goes as follows
         firewall = {
           enable = false;
           allowedTCPPorts = [25575 25565 80 443 7878 8989 9696 42010];
-          allowedUDPPorts = [19132 5544 25565];
+          allowedUDPPorts = [19132 5544 25565 9];
           extraCommands = "  iptables -t mangle -A POSTROUTING -p tcp --tcp-flags SYN,RST SYN \
           -j TCPMSS --clamp-mss-to-pmtu";
         };
         interfaces = {
           eno1 = {
             mtu = 1250;
+            wakeOnLan.enable = true;
           };
         };
       };
@@ -747,6 +748,7 @@ The default hosts structure goes as follows
 
             "Mod+T".spawn-sh = ''notify-send "Current Time" "$(date +"%I:%M %p")"'';
             "Mod+Shift+P".spawn-sh = "niri msg action power-off-monitors";
+            "Mod+e".spawn-sh = ''${lib.getExe pkgs.cliphist} list | ${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.myFuzzel} --dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe' pkgs.wl-clipboard "wl-copy"}'';
           };
           spawn-sh-at-startup = [
             "${lib.getExe pkgs.swaybg} -i ${wallspath}/ign_mountains.png"
@@ -2770,8 +2772,8 @@ The main peers would be:
         self.homeModules.gtk-fonts
         self.homeModules.emacs
         self.homeModules.waybar
-        self.homeModules.rmpc
-        self.homeModules.mpd
+        #self.homeModules.rmpc
+        #self.homeModules.mpd
 
         inputs.sops-nix.homeManagerModules.sops
       ];
@@ -2950,8 +2952,36 @@ The main peers would be:
     ...
   }: {
     flake.homeModules.librewolf = {
+      pkgs,
+      ...
+    }: {
       programs.librewolf = {
         enable = true;
+        profiles = {
+          standard = {
+            id = 0;
+            name = "standard";
+            isDefault = true;
+            settings = {
+              "webgl.disabled" = false;
+              "privacy.resistFingerprinting" = false;
+              "privacy.clearOnShutdown.history" = false;
+              "privacy.clearOnShutdown.cookies" = false;
+              "network.cookie.lifetimePolicy" = 0;
+            };
+            extensions = {
+              force = true;
+              packages = with pkgs.nur.repos.rycee.firefox-addons; [
+                ublock-origin
+                sponsorblock
+                violentmonkey
+                floccus
+                enhancer-for-youtube
+                stylus
+              ];
+            };
+          };
+        };
       };
     };
   }
@@ -3043,7 +3073,6 @@ The main peers would be:
               force = true;
               packages = with pkgs.nur.repos.rycee.firefox-addons; [
                 ublock-origin
-                bitwarden
                 sponsorblock
                 violentmonkey
                 floccus
@@ -3080,6 +3109,9 @@ The main peers would be:
       programs.fuzzel = {
         enable = true;
         package = self.packages.${pkgs.stdenv.hostPlatform.system}.myFuzzel;
+      };
+      services.cliphist = {
+        enable = true;
       };
     };
     perSystem = {
@@ -3159,10 +3191,10 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         enable = true;
         package = pkgs.evil-helix;
         settings = {
-          theme =  "kanagawa";
+          theme =  "transparent";
         };
-        themes."gruvbox_transparent" = {
-          inherits = "gruvbox";
+        themes."transparent" = {
+          inherits = "kanagawa";
           "ui.background" = {};
         };
       };
@@ -3193,7 +3225,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         inherit pkgs;
         settings = {
           sort = "-time";
-          font = "SF Pro";
+          font = "Source Sans Pro";
           layer = "overlay";
           anchor = "top-right";
           default-timeout = 5000;
@@ -3278,7 +3310,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         style = "
           #waybar {
               font-family: 'Source Sans Pro' , 'Iosevka Nerd Font Propo';
-              font-size: 16px;
+              font-size: 15px;
               font-weight: normal;
               background-color: rgba(31, 31, 40, 0.7);
           }

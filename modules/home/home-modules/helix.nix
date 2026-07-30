@@ -9,10 +9,10 @@
       enable = true;
       package = pkgs.evil-helix;
       settings = {
-        theme =  "kanagawa";
+        theme =  "transparent";
       };
-      themes."gruvbox_transparent" = {
-        inherits = "gruvbox";
+      themes."transparent" = {
+        inherits = "kanagawa";
         "ui.background" = {};
       };
     };
