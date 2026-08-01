@@ -55,7 +55,7 @@
               Description = "A privacy-respecting, hackable metasearch engine";
               Alias = "sng";
               Method = "POST";
-              URLTemplate = "https://search.server.org/search?q={searchTerms}";
+              URLTemplate = "https://search.peanutbutter.quest/search?q={searchTerms}";
             }
             {
               Name = "Searchix";
