@@ -27,15 +27,22 @@
         width = 300;
         height = 110;
         padding = "0,15,20";
-        background-color = "#1f1f28";
+        background-color = "#1a1b26";
+        text-color = "#c0caf5";
+        border-color = "#7aa2f7";
+        progress-color = "#414868";
+        
+        "urgency=low" = {
+          border-color = "#565f89";
+        };
         
         "urgency=normal" = {
-            border-color = "#7e9cd8";
+          border-color = "#7aa2f7";
         };
         
         "urgency=high" = {
-            border-color = "#e82424";
-            default-timeout = 0;
+          border-color = "#f7768e";
+          default-timeout = 0;
         };
       };
     };

@@ -765,7 +765,7 @@ The default hosts structure goes as follows
             "Mod+Shift+T".spawn-sh = "rofi-rbw --action type --target totp --clear-after 30"; 
           };
           spawn-sh-at-startup = [
-            "${lib.getExe pkgs.swaybg} -i ${wallspath}/ign_mountains.png"
+            "${lib.getExe pkgs.swaybg} -i ${wallspath}/dune.jpg"
             "waybar"
           ];
         };
@@ -835,31 +835,32 @@ The default hosts structure goes as follows
           colors-dark = {
             alpha = "1";
             blur = "no";
-            background = "1f1f28";
-            foreground = "dcd7ba";
-            
-            regular0 = "090618";
-            regular1 = "c34043";
-            regular2 = "76946a";
-            regular3 = "c0a36e";
-            regular4 = "7e9cd8";
-            regular5 = "957fb8";
-            regular6 = "6a9589";
-            regular7 = "c8c093";
-            
-            bright0 = "727169";
-            bright1 = "e82424";
-            bright2 = "98bb6c";
-            bright3 = "e6c384";
-            bright4 = "7fb4ca";
-            bright5 = "938aa9";
-            bright6 = "7aa89f";
-            bright7 = "dcd7ba";
 
-            selection-background = "504945";
-            selection-foreground = "ebdbb2";
+            foreground = "c0caf5";
+            background = "1a1b26";
 
-            urls = "83a598";
+            selection-foreground = "c0caf5";
+            selection-background = "283457";
+
+            urls = "73daca";
+
+            regular0 = "15161e";
+            regular1 = "f7768e";
+            regular2 = "9ece6a";
+            regular3 = "e0af68";
+            regular4 = "7aa2f7";
+            regular5 = "bb9af7";
+            regular6 = "7dcfff";
+            regular7 = "a9b1d6";
+
+            bright0 = "414868";
+            bright1 = "f7768e";
+            bright2 = "9ece6a";
+            bright3 = "e0af68";
+            bright4 = "7aa2f7";
+            bright5 = "bb9af7";
+            bright6 = "7dcfff";
+            bright7 = "c0caf5";
           };
         };
       };
@@ -1020,13 +1021,10 @@ The default hosts structure goes as follows
                     vim.lsp.enable('org')
                   '';
                 };
-                kanagawa = {
-                  package = kanagawa-nvim;
+                tokyonight = {
+                  package = tokyonight-nvim;
                   setup = ''
-                    require('kanagawa').setup({
-                      transparent = true,
-                    })
-                    vim.cmd("colorscheme kanagawa")
+                    vim.cmd("colorscheme tokyonight-night")
                   '';
                 };
               };
@@ -3176,13 +3174,13 @@ Fuzzel launcher with clipboard history and password manager.
             list-executables-in-path = "yes";
           };
           colors = {
-            background = "1f1f28ff";
-            text = "dcd7baff";
-            match = "ffa066ff";
-            selection = "2a2a37ff";
-            selection-match = "e6c384ff";
-            selection-text = "dcd7baff";
-            border = "54546dff";
+            background = "16161eff";
+            text = "c0caf5ff";
+            match = "2ac3deff";
+            selection = "343a55ff";
+            selection-match = "2ac3deff";
+            selection-text = "c0caf5ff";
+            border = "27a1b9ff";
           };
         };
       };
@@ -3241,7 +3239,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         enable = true;
         package = pkgs.evil-helix;
         settings = {
-          theme =  "kanagawa";
+          theme =  "tokyonight";
         };
         themes."transparent" = {
           inherits = "kanagawa";
@@ -3282,15 +3280,22 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
           width = 300;
           height = 110;
           padding = "0,15,20";
-          background-color = "#1f1f28";
+          background-color = "#1a1b26";
+          text-color = "#c0caf5";
+          border-color = "#7aa2f7";
+          progress-color = "#414868";
+          
+          "urgency=low" = {
+            border-color = "#565f89";
+          };
           
           "urgency=normal" = {
-              border-color = "#7e9cd8";
+            border-color = "#7aa2f7";
           };
           
           "urgency=high" = {
-              border-color = "#e82424";
-              default-timeout = 0;
+            border-color = "#f7768e";
+            default-timeout = 0;
           };
         };
       };
@@ -3359,54 +3364,54 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         };
         style = "
           #waybar {
-              font-family: 'Source Sans Pro' , 'Iosevka Nerd Font Propo';
+              font-family: 'Source Sans Pro', 'Iosevka Nerd Font Propo';
               font-size: 16px;
               font-weight: normal;
-              background-color: rgba(31, 31, 40, 1);
+              background-color: rgba(26, 27, 38, 1);
           }
           
           #cpu {
-              color: #938aa9;
+              color: #bb9af7;
           }
           
           #memory {
-              color: #98bb6c;
+              color: #9ece6a;
           }
           
           #battery {
-              color: #e6c384;
+              color: #e0af68;
           }
           
           #clock.date {
-              color: #ffa066;
+              color: #ff9e64;
           }
           
           #clock.time {
-              color: #e82424;
+              color: #f7768e;
           }
           
           #window {
-              color: #727169;
+              color: #565f89;
           }
           
           #workspaces button {
               all: initial;
-              color: #727169;
+              color: #565f89;
               padding: 0 8px;
               margin: 0;
           }
           
           #workspaces button.active {
-              color: #7e9cd8;
+              color: #7aa2f7;
           }
           
           #workspaces button:hover {
-              color: #dcd7ba;
+              color: #c0caf5;
           }
           
           #custom-seperator {
-              color: #54546d;
-              padding: 0px;
+              color: #414868;
+              padding: 0;
           }
         ";
       };
@@ -3716,7 +3721,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   ;; Base16 Theme
   (use-package base16-theme
     :config
-    (load-theme 'base16-kanagawa t))
+    (load-theme 'base16-tokyo-night-terminal-dark t))
 
   ;; Evil Mode
   (use-package evil

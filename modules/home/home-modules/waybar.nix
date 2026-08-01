@@ -58,54 +58,54 @@
       };
       style = "
         #waybar {
-            font-family: 'Source Sans Pro' , 'Iosevka Nerd Font Propo';
+            font-family: 'Source Sans Pro', 'Iosevka Nerd Font Propo';
             font-size: 16px;
             font-weight: normal;
-            background-color: rgba(31, 31, 40, 1);
+            background-color: rgba(26, 27, 38, 1);
         }
         
         #cpu {
-            color: #938aa9;
+            color: #bb9af7;
         }
         
         #memory {
-            color: #98bb6c;
+            color: #9ece6a;
         }
         
         #battery {
-            color: #e6c384;
+            color: #e0af68;
         }
         
         #clock.date {
-            color: #ffa066;
+            color: #ff9e64;
         }
         
         #clock.time {
-            color: #e82424;
+            color: #f7768e;
         }
         
         #window {
-            color: #727169;
+            color: #565f89;
         }
         
         #workspaces button {
             all: initial;
-            color: #727169;
+            color: #565f89;
             padding: 0 8px;
             margin: 0;
         }
         
         #workspaces button.active {
-            color: #7e9cd8;
+            color: #7aa2f7;
         }
         
         #workspaces button:hover {
-            color: #dcd7ba;
+            color: #c0caf5;
         }
         
         #custom-seperator {
-            color: #54546d;
-            padding: 0px;
+            color: #414868;
+            padding: 0;
         }
       ";
     };

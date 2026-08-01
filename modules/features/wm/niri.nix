@@ -228,7 +228,7 @@
           "Mod+Shift+T".spawn-sh = "rofi-rbw --action type --target totp --clear-after 30"; 
         };
         spawn-sh-at-startup = [
-          "${lib.getExe pkgs.swaybg} -i ${wallspath}/ign_mountains.png"
+          "${lib.getExe pkgs.swaybg} -i ${wallspath}/dune.jpg"
           "waybar"
         ];
       };

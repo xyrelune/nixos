@@ -43,13 +43,13 @@
           list-executables-in-path = "yes";
         };
         colors = {
-          background = "1f1f28ff";
-          text = "dcd7baff";
-          match = "ffa066ff";
-          selection = "2a2a37ff";
-          selection-match = "e6c384ff";
-          selection-text = "dcd7baff";
-          border = "54546dff";
+          background = "16161eff";
+          text = "c0caf5ff";
+          match = "2ac3deff";
+          selection = "343a55ff";
+          selection-match = "2ac3deff";
+          selection-text = "c0caf5ff";
+          border = "27a1b9ff";
         };
       };
     };

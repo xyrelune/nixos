@@ -9,7 +9,7 @@
       enable = true;
       package = pkgs.evil-helix;
       settings = {
-        theme =  "kanagawa";
+        theme =  "tokyonight";
       };
       themes."transparent" = {
         inherits = "kanagawa";

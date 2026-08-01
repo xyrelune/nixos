@@ -150,13 +150,10 @@
                   vim.lsp.enable('org')
                 '';
               };
-              kanagawa = {
-                package = kanagawa-nvim;
+              tokyonight = {
+                package = tokyonight-nvim;
                 setup = ''
-                  require('kanagawa').setup({
-                    transparent = true,
-                  })
-                  vim.cmd("colorscheme kanagawa")
+                  vim.cmd("colorscheme tokyonight-night")
                 '';
               };
             };

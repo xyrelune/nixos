@@ -36,7 +36,7 @@
 ;; Base16 Theme
 (use-package base16-theme
   :config
-  (load-theme 'base16-kanagawa t))
+  (load-theme 'base16-tokyo-night-terminal-dark t))
 
 ;; Evil Mode
 (use-package evil
