@@ -4,6 +4,7 @@
   ...
 }: {
   flake.homeModules.fuzzel = {
+    config,
     pkgs,
     ...
   }: {
@@ -14,6 +15,21 @@
     services.cliphist = {
       enable = true;
     };
+    programs.rbw = {
+      enable = true;
+      settings = {
+        base_url = "https://vault.server.org";
+        email = "tiredhames@gmail.com";
+        lock_timeout = 300;
+        pinentry = pkgs.pinentry-qt;
+      };
+    };
+    home.packages = with pkgs; [
+      rofi-rbw
+      wtype 
+      wl-clipboard
+      pinentry-qt
+    ];
   };
   perSystem = {
     pkgs,
@@ -23,7 +39,7 @@
       inherit pkgs;
       settings = {
         main = {
-          #font = "Futura:size=12";
+          #font = "Source Sans Pro:size=12";
           list-executables-in-path = "yes";
         };
         colors = {

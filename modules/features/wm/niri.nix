@@ -224,6 +224,8 @@
           "Mod+T".spawn-sh = ''notify-send "Current Time" "$(date +"%I:%M %p")"'';
           "Mod+Shift+P".spawn-sh = "niri msg action power-off-monitors";
           "Mod+e".spawn-sh = ''${lib.getExe pkgs.cliphist} list | ${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.myFuzzel} --dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe' pkgs.wl-clipboard "wl-copy"}'';
+          "Mod+Shift+I".spawn-sh = "rofi-rbw --clear-after 30";
+          "Mod+Shift+T".spawn-sh = "rofi-rbw --action type --target totp --clear-after 30"; 
         };
         spawn-sh-at-startup = [
           "${lib.getExe pkgs.swaybg} -i ${wallspath}/ign_mountains.png"

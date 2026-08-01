@@ -249,8 +249,7 @@ The default hosts structure goes as follows
           inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
         ];
         variables = {
-          EDITOR = "nvim";
-        };
+          EDITOR = "emacsclient -c";};
         sessionVariables = {
           NIXOS_OZONE_WL = "1";
         };
@@ -323,7 +322,6 @@ The default hosts structure goes as follows
         self.nixosModules.arr
         self.nixosModules.jellyfin
         self.nixosModules.copyparty
-        self.nixosModules.rclone
 
         inputs.sops-nix.nixosModules.sops
       ];
@@ -749,6 +747,8 @@ The default hosts structure goes as follows
             "Mod+T".spawn-sh = ''notify-send "Current Time" "$(date +"%I:%M %p")"'';
             "Mod+Shift+P".spawn-sh = "niri msg action power-off-monitors";
             "Mod+e".spawn-sh = ''${lib.getExe pkgs.cliphist} list | ${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.myFuzzel} --dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe' pkgs.wl-clipboard "wl-copy"}'';
+            "Mod+Shift+I".spawn-sh = "rofi-rbw --clear-after 30";
+            "Mod+Shift+T".spawn-sh = "rofi-rbw --action type --target totp --clear-after 30"; 
           };
           spawn-sh-at-startup = [
             "${lib.getExe pkgs.swaybg} -i ${wallspath}/ign_mountains.png"
@@ -1962,151 +1962,169 @@ For generating a certicate to domains ending with ~server.lan~ ,run the follow c
 Copy both the files into ~/etc/ssl/local~ and give it ~root:nginx~ permissions with mode ~640~.
 By not doing the above nginx will fail which can be parsed using the ~journalctl~ or ~systemctl~ command.
 #+begin_src nix :tangle modules/features/web/nginx.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.nixosModules.nginx = {
-      config,
+    {
+      self,
+      inputs,
       ...
     }: {
-      services.nginx = {
-        enable = true;
+      flake.nixosModules.nginx = {
+        config,
+        ...
+      }: {
+        services.nginx = {
+          enable = true;
 
-        recommendedGzipSettings = true;
-        recommendedProxySettings = true;
-        recommendedTlsSettings = true;
-        recommendedOptimisation = true;
+          recommendedGzipSettings = true;
+          recommendedProxySettings = true;
+          recommendedTlsSettings = true;
+          recommendedOptimisation = true;
 
-        virtualHosts = {
-          "vault.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-          };
-          "search.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-          };
-          "deluge.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:8112";
-              proxyWebsockets = true;
+          virtualHosts = {
+            "vault.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
             };
-          };
-          "scrobble.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:9078";
-              proxyWebsockets = true;
+            "search.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
             };
-          };
-          "party.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:3923";
-              proxyWebsockets = true;
+            "search.peanutbutter.quest" = {
+              forceSSL = true;
+              enableACME = true;
+              locations."/" = {
+                proxyPass = "http://unix:${config.services.anubis.instances.search.settings.BIND}";
+              };
             };
-          };
-          "jellyfin.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:8096";
-              proxyWebsockets = true;
+            "deluge.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:8112";
+                proxyWebsockets = true;
+              };
             };
-          };
-          "jf.peanutbutter.quest" = {
-            forceSSL = true;
-            enableACME = true;
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:8096";
-              proxyWebsockets = true;
+            "scrobble.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:9078";
+                proxyWebsockets = true;
+              };
             };
-          };
-          "linkwarden.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:3000";
-              proxyWebsockets = true;
+            "party.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:3923";
+                proxyWebsockets = true;
+              };
             };
-          };
-          "komga.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:10060";
-              proxyWebsockets = true;
+            "jellyfin.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:8096";
+                proxyWebsockets = true;
+              };
             };
-          };
-          "radarr.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:7878";
-              proxyWebsockets = true;
+            "jf.peanutbutter.quest" = {
+              forceSSL = true;
+              enableACME = true;
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:8096";
+                proxyWebsockets = true;
+              };
             };
-          };
-          "sonarr.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:8989";
-              proxyWebsockets = true;
+            "linkwarden.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:3000";
+                proxyWebsockets = true;
+              };
             };
-          };
-          "prowlarr.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:9696";
-              proxyWebsockets = true;
+            "komga.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:10060";
+                proxyWebsockets = true;
+              };
             };
-          };
-          "lidarr.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:8686";
-              proxyWebsockets = true;
+            "radarr.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:7878";
+                proxyWebsockets = true;
+              };
             };
-          };
-          "qb.server.org" = {
-            forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:8888";
-              proxyWebsockets = true;
+            "sonarr.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:8989";
+                proxyWebsockets = true;
+              };
+            };
+            "prowlarr.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:9696";
+                proxyWebsockets = true;
+              };
+            };
+            "lidarr.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:8686";
+                proxyWebsockets = true;
+              };
+            };
+            "qb.server.org" = {
+              forceSSL = true;
+              sslCertificate = "/etc/ssl/local/server.org.pem";
+              sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+              locations."/" = {
+                proxyPass = "http://127.0.0.1:8888";
+                proxyWebsockets = true;
+              };
             };
           };
         };
-      };
-      security.acme = {
-        defaults.email = "clovertight@gmail.com";
-        acceptTerms = true;
-      };
+        services.anubis = {
+          instances.search = {
+            enable = true;
+            settings = {
+              TARGET = "http://127.0.0.1:8080";
+            };
+          };
+        };
+        users.users.nginx.extraGroups = [
+          config.users.groups.anubis.name
+        ];
+        security.acme = {
+          defaults.email = "clovertight@gmail.com";
+          acceptTerms = true;
+        };
 
-      systemd.services.nginx.serviceConfig.ProtectHome = false;
-    };
-  }
+        systemd.services.nginx.serviceConfig.ProtectHome = false;
+      };
+    }
 #+end_src
 *** Nixflix 
 #+begin_src nix :tangle modules/features/web/nixflix.nix
@@ -3096,6 +3114,7 @@ The main peers would be:
 
 #+end_src
 *** Fuzzel
+Fuzzel launcher with clipboard history and password manager. 
 #+begin_src nix :tangle modules/home/home-modules/fuzzel.nix
   {
     self,
@@ -3103,6 +3122,7 @@ The main peers would be:
     ...
   }: {
     flake.homeModules.fuzzel = {
+      config,
       pkgs,
       ...
     }: {
@@ -3113,6 +3133,21 @@ The main peers would be:
       services.cliphist = {
         enable = true;
       };
+      programs.rbw = {
+        enable = true;
+        settings = {
+          base_url = "https://vault.server.org";
+          email = "tiredhames@gmail.com";
+          lock_timeout = 300;
+          pinentry = pkgs.pinentry-qt;
+        };
+      };
+      home.packages = with pkgs; [
+        rofi-rbw
+        wtype 
+        wl-clipboard
+        pinentry-qt
+      ];
     };
     perSystem = {
       pkgs,
@@ -3122,7 +3157,7 @@ The main peers would be:
         inherit pkgs;
         settings = {
           main = {
-            #font = "Futura:size=12";
+            #font = "Source Sans Pro:size=12";
             list-executables-in-path = "yes";
           };
           colors = {

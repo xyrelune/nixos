@@ -26,6 +26,13 @@
           sslCertificate = "/etc/ssl/local/server.org.pem";
           sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
         };
+        "search.peanutbutter.quest" = {
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://unix:${config.services.anubis.instances.search.settings.BIND}";
+          };
+        };
         "deluge.server.org" = {
           forceSSL = true;
           sslCertificate = "/etc/ssl/local/server.org.pem";
@@ -135,6 +142,17 @@
         };
       };
     };
+    services.anubis = {
+      instances.search = {
+        enable = true;
+        settings = {
+          TARGET = "http://127.0.0.1:8080";
+        };
+      };
+    };
+    users.users.nginx.extraGroups = [
+      config.users.groups.anubis.name
+    ];
     security.acme = {
       defaults.email = "clovertight@gmail.com";
       acceptTerms = true;

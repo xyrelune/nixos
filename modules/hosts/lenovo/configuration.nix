@@ -94,8 +94,7 @@
         inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
       ];
       variables = {
-        EDITOR = "nvim";
-      };
+        EDITOR = "emacsclient -c";};
       sessionVariables = {
         NIXOS_OZONE_WL = "1";
       };
