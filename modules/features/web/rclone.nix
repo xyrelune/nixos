@@ -20,12 +20,12 @@
       client_id = ${config.sops.placeholder."rclone/tiredlamp/client_id"}
       client_secret = ${config.sops.placeholder."rclone/tiredlamp/client_secret"}
       scope = drive
-      token = {"access_token":"${config.sops.placeholder."rclone/tiredlamp/token/access_token"}","token_type":"Bearer","refresh_token":"${config.sops.placeholder."rclone/tiredlamp/token/refresh_token"}","expiry":"2026-07-22T09:30:31.915272781+05:30","expires_in":3599}
+      token = {"access_token":"${config.sops.placeholder."rclone/tiredlamp/token/access_token"}","token_type":"Bearer","refresh_token":"${config.sops.placeholder."rclone/tiredlamp/token/refresh_token"}","expiry":"2026-08-01T16:45:32.335812921+05:30","expires_in":3599}
       teamdrive = 
     '';
     environment.systemPackages = [ pkgs.rclone ];
     fileSystems."/mnt/tiredlamp" = {
-      device = "tiredlamp_gdrive:bitwarden";
+      device = "tiredlamp_gdrive:BitwardenBackup";
       fsType = "rclone";
       options = [
         "nodev"

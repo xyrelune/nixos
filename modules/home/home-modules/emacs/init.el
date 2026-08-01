@@ -21,7 +21,7 @@
 (electric-indent-mode 1)
 
 ;; Transparency 
-(add-to-list 'default-frame-alist '(alpha-background . 70))
+;;(add-to-list 'default-frame-alist '(alpha-background . 70))
 
 ;; Custom Fonts for org mode
 (add-hook 'org-mode-hook 'variable-pitch-mode)
@@ -48,6 +48,12 @@
   :after evil
   :config
   (evil-collection-init))
+
+;; Org mode evil next line
+(with-eval-after-load 'org
+  (evil-define-key 'normal org-mode-map
+    (kbd "gj") #'evil-next-visual-line
+    (kbd "gk") #'evil-previous-visual-line))
 
 ;; org-autolist
 (use-package org-autolist

@@ -36,7 +36,6 @@ To use this repo:
   | --build-host        | user@hostname or localhost |
   | --sudo              | running as root            |
   | --ask-sudo-password | self-explanatory           |
-   
 * The Flake File
 In NixOS flakes are used to package and manage Nix projects, flakes are used as a way to produce reproducible builds as well as controlling multiple systems.
 
@@ -322,6 +321,7 @@ The default hosts structure goes as follows
         self.nixosModules.arr
         self.nixosModules.jellyfin
         self.nixosModules.copyparty
+        self.nixosModules.rclone
 
         inputs.sops-nix.nixosModules.sops
       ];
@@ -416,6 +416,17 @@ The default hosts structure goes as follows
             wakeOnLan.enable = true;
           };
         };
+      };
+      systemd.services.set-brightness = {
+        description = "Set screen brightness to 0";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "systemd-backlight@backlight:intel_backlight.service" ];
+
+        serviceConfig.Type = "oneshot";
+
+        script = ''
+          echo 0 > /sys/class/backlight/intel_backlight/brightness
+        '';
       };
       swapDevices = [
         {
@@ -567,19 +578,19 @@ The default hosts structure goes as follows
             };
           };
           layout = {
-            gaps = 6;
+            gaps = 0.5;
             center-focused-column = "never";
             focus-ring = {
               active-color = "#7e9cd8";
               inactive-color = "#54546d";
-              width = 2;
+              width = 0.5;
             };
           };
           outputs = {
             "eDP-1" = {
               # off = _: {};
               mode = "1920x1080@165.002";
-              scale = 1.25;
+              scale = 1;
               position = _: {
                 props = {
                   x = 0;
@@ -819,7 +830,7 @@ The default hosts structure goes as follows
             font = "Iosevka Nerd Font Mono:size=12";
           };
           colors-dark = {
-            alpha = "0.7";
+            alpha = "1";
             blur = "no";
             background = "1f1f28";
             foreground = "dcd7ba";
@@ -2606,12 +2617,12 @@ Templates can be used for generating config files with secrets embedded in them.
         client_id = ${config.sops.placeholder."rclone/tiredlamp/client_id"}
         client_secret = ${config.sops.placeholder."rclone/tiredlamp/client_secret"}
         scope = drive
-        token = {"access_token":"${config.sops.placeholder."rclone/tiredlamp/token/access_token"}","token_type":"Bearer","refresh_token":"${config.sops.placeholder."rclone/tiredlamp/token/refresh_token"}","expiry":"2026-07-22T09:30:31.915272781+05:30","expires_in":3599}
+        token = {"access_token":"${config.sops.placeholder."rclone/tiredlamp/token/access_token"}","token_type":"Bearer","refresh_token":"${config.sops.placeholder."rclone/tiredlamp/token/refresh_token"}","expiry":"2026-08-01T16:45:32.335812921+05:30","expires_in":3599}
         teamdrive = 
       '';
       environment.systemPackages = [ pkgs.rclone ];
       fileSystems."/mnt/tiredlamp" = {
-        device = "tiredlamp_gdrive:bitwarden";
+        device = "tiredlamp_gdrive:BitwardenBackup";
         fsType = "rclone";
         options = [
           "nodev"
@@ -3189,8 +3200,8 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         enable = true;
         gtk4.theme = null;
         theme = {
-          name = "Kanagawa-B-LB";
-          package = pkgs.kanagawa-gtk-theme; 
+          name = "adw-gtk3-dark";
+          package = pkgs.adw-gtk3; 
         };
       };
       qt = {
@@ -3345,9 +3356,9 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         style = "
           #waybar {
               font-family: 'Source Sans Pro' , 'Iosevka Nerd Font Propo';
-              font-size: 15px;
+              font-size: 16px;
               font-weight: normal;
-              background-color: rgba(31, 31, 40, 0.7);
+              background-color: rgba(31, 31, 40, 1);
           }
           
           #cpu {
@@ -3686,7 +3697,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (electric-indent-mode 1)
 
   ;; Transparency 
-  (add-to-list 'default-frame-alist '(alpha-background . 70))
+  ;;(add-to-list 'default-frame-alist '(alpha-background . 70))
 
   ;; Custom Fonts for org mode
   (add-hook 'org-mode-hook 'variable-pitch-mode)
@@ -3713,6 +3724,12 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
     :after evil
     :config
     (evil-collection-init))
+
+  ;; Org mode evil next line
+  (with-eval-after-load 'org
+    (evil-define-key 'normal org-mode-map
+      (kbd "gj") #'evil-next-visual-line
+      (kbd "gk") #'evil-previous-visual-line))
 
   ;; org-autolist
   (use-package org-autolist

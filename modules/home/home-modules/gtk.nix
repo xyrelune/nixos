@@ -10,8 +10,8 @@
       enable = true;
       gtk4.theme = null;
       theme = {
-        name = "Kanagawa-B-LB";
-        package = pkgs.kanagawa-gtk-theme; 
+        name = "adw-gtk3-dark";
+        package = pkgs.adw-gtk3; 
       };
     };
     qt = {

@@ -32,6 +32,7 @@
       self.nixosModules.arr
       self.nixosModules.jellyfin
       self.nixosModules.copyparty
+      self.nixosModules.rclone
 
       inputs.sops-nix.nixosModules.sops
     ];
@@ -126,6 +127,17 @@
           wakeOnLan.enable = true;
         };
       };
+    };
+    systemd.services.set-brightness = {
+      description = "Set screen brightness to 0";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "systemd-backlight@backlight:intel_backlight.service" ];
+
+      serviceConfig.Type = "oneshot";
+
+      script = ''
+        echo 0 > /sys/class/backlight/intel_backlight/brightness
+      '';
     };
     swapDevices = [
       {
