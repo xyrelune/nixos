@@ -117,6 +117,9 @@
     networking.wireless.iwd.enable = true;
     networking.networkmanager.wifi.backend = "iwd";
 
+    systemd.services.systemd-rfkill.enable = false;
+    systemd.sockets.systemd-rfkill.enable = false;
+
     services.mullvad-vpn = {
       enable = true;
     };

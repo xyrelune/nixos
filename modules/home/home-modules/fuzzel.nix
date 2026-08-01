@@ -39,7 +39,7 @@
       inherit pkgs;
       settings = {
         main = {
-          #font = "Source Sans Pro:size=12";
+          font = "Iosevka Nerd Font Mono:size=9";
           list-executables-in-path = "yes";
         };
         colors = {

@@ -271,6 +271,9 @@ The default hosts structure goes as follows
       networking.wireless.iwd.enable = true;
       networking.networkmanager.wifi.backend = "iwd";
 
+      systemd.services.systemd-rfkill.enable = false;
+      systemd.sockets.systemd-rfkill.enable = false;
+
       services.mullvad-vpn = {
         enable = true;
       };
@@ -3115,6 +3118,7 @@ The main peers would be:
               "network.auth.subresource-http-auth-allow" = 1;
               "editor.truncate_user_pastes" = false;
               "widget.use-xdg-desktop-portal.file-picker" = 1;
+              "ui.key.menuAccessKeyFocuses" = false;
             };
           };
         };
@@ -3168,7 +3172,7 @@ Fuzzel launcher with clipboard history and password manager.
         inherit pkgs;
         settings = {
           main = {
-            #font = "Source Sans Pro:size=12";
+            font = "Iosevka Nerd Font Mono:size=9";
             list-executables-in-path = "yes";
           };
           colors = {
@@ -3237,7 +3241,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         enable = true;
         package = pkgs.evil-helix;
         settings = {
-          theme =  "transparent";
+          theme =  "kanagawa";
         };
         themes."transparent" = {
           inherits = "kanagawa";
@@ -3818,7 +3822,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
 
   ;; elcord - Discord Rich Presence
-  ;; (use-package elcord
-  ;;   :config
-  ;;   (elcord-mode)) 
+  (use-package elcord
+    :config
+    (elcord-mode)) 
 #+end_src

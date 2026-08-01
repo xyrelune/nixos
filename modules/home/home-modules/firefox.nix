@@ -96,6 +96,7 @@
             "network.auth.subresource-http-auth-allow" = 1;
             "editor.truncate_user_pastes" = false;
             "widget.use-xdg-desktop-portal.file-picker" = 1;
+            "ui.key.menuAccessKeyFocuses" = false;
           };
         };
       };

@@ -142,6 +142,6 @@
 (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
 
 ;; elcord - Discord Rich Presence
-;; (use-package elcord
-;;   :config
-;;   (elcord-mode))
+(use-package elcord
+  :config
+  (elcord-mode))
