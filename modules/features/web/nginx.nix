@@ -86,6 +86,14 @@
             proxyWebsockets = true;
           };
         };
+        "linkwarden.peanutbutter.quest" = {
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:3000";
+            proxyWebsockets = true;
+          };
+        };
         "komga.server.org" = {
           forceSSL = true;
           sslCertificate = "/etc/ssl/local/server.org.pem";
