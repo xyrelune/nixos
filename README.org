@@ -36,6 +36,7 @@ To use this repo:
   | --build-host        | user@hostname or localhost |
   | --sudo              | running as root            |
   | --ask-sudo-password | self-explanatory           |
+
 * The Flake File
 In NixOS flakes are used to package and manage Nix projects, flakes are used as a way to produce reproducible builds as well as controlling multiple systems.
 
@@ -571,7 +572,7 @@ The default hosts structure goes as follows
               xkb.layout = "us";
             };
             touchpad = {
-              #off = _: {};
+              off = _: {};
               tap = _: {};
               natural-scroll = _: {};
               accel-speed = 0.2;
