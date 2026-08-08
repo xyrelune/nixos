@@ -179,6 +179,7 @@ The default hosts structure goes as follows
         self.nixosModules.localCA
         self.nixosModules.customFonts
         self.nixosModules.virt-manager
+        self.nixosModules.wg-quick
 
         inputs.sops-nix.nixosModules.sops
       ];
@@ -1887,6 +1888,51 @@ That would conclude the steps needed for windows vm with GPU passthrough to work
       programs = {
         virt-manager = {
           enable = true;
+        };
+      };
+    };
+  }
+#+end_src
+*** Wg-Quick
+To use the vpn execute the following.
+#+begin_src bash :tangle no
+  sudo systemctl start/stop wg-quick-wg0.service
+#+end_src
+This uses a wireguard config running on my openwrt router.
+#+begin_src nix :tangle modules/features/misc/wg-quick.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.wg-quick = {
+      lib,
+      config,
+      ...
+    }: {
+      sops.secrets = {
+        "wg-quick/laptop/private_key" = {};
+        "wg-quick/laptop/psk" = {};
+      };
+      systemd.services.wg-quick-wg0.wantedBy = lib.mkForce [];
+      networking.wg-quick.interfaces = {
+        wg0 = {
+          address = [
+            "10.0.1.11/24"
+          ];
+          dns = [ "192.168.0.1" ];
+          privateKeyFile = config.sops.secrets."wg-quick/laptop/private_key".path;
+          peers = [
+            {
+              publicKey = "UvvGldyGgF4dtj71VLd0Xwqs9NM9j2ElzYqLrIXxkV4=";
+              allowedIPs = [
+                "0.0.0.0/0"
+                "::/0"
+              ];
+              endpoint = "peanutbutter.quest:4444"; 
+              presharedKeyFile = config.sops.secrets."wg-quick/laptop/psk".path;
+            }
+          ];
         };
       };
     };
