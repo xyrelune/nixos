@@ -10,15 +10,25 @@
     fonts = {
       packages = [
         pkgs.nerd-fonts.iosevka
+        pkgs.jost
         self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
+        self.packages.${pkgs.stdenv.hostPlatform.system}.futura
       ];
       fontconfig = {
         enable = true;
         antialias = true;
+        hinting = {
+          enable = true;
+          style = "slight";
+        };
+        subpixel = {
+          rgba = "rgb";
+          lcdfilter = "default";
+        };
         defaultFonts = {
-          serif = ["Source Sans Pro"];
-          sansSerif = ["Source Sans Pro"];
+          serif = ["Futura"];
+          sansSerif = ["Futura"];
           monospace = ["Iosevka Nerd Font Mono"];
         };
       };
@@ -30,8 +40,8 @@
   }: {
     gtk = {
       font = {
-        name = "Source Sans Pro";
-        size = 12;
+        name = "Futura";
+        size = 10;
       };
     };
   };

@@ -582,19 +582,19 @@ The default hosts structure goes as follows
             };
           };
           layout = {
-            gaps = 0.5;
+            gaps = 15;
             center-focused-column = "never";
             focus-ring = {
               active-color = "#7e9cd8";
               inactive-color = "#54546d";
-              width = 0.5;
+              width = 2;
             };
           };
           outputs = {
             "eDP-1" = {
               # off = _: {};
               mode = "1920x1080@165.002";
-              scale = 1;
+              scale = 1.25;
               position = _: {
                 props = {
                   x = 0;
@@ -831,7 +831,7 @@ The default hosts structure goes as follows
         inherit pkgs;
         settings = {
           main = {
-            font = "Iosevka Nerd Font Mono:size=12";
+            font = "Iosevka Nerd Font Mono:size=11";
           };
           colors-dark = {
             alpha = "1";
@@ -1358,15 +1358,25 @@ The default hosts structure goes as follows
       fonts = {
         packages = [
           pkgs.nerd-fonts.iosevka
+          pkgs.jost
           self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
+          self.packages.${pkgs.stdenv.hostPlatform.system}.futura
         ];
         fontconfig = {
           enable = true;
           antialias = true;
+          hinting = {
+            enable = true;
+            style = "slight";
+          };
+          subpixel = {
+            rgba = "rgb";
+            lcdfilter = "default";
+          };
           defaultFonts = {
-            serif = ["Source Sans Pro"];
-            sansSerif = ["Source Sans Pro"];
+            serif = ["Futura"];
+            sansSerif = ["Futura"];
             monospace = ["Iosevka Nerd Font Mono"];
           };
         };
@@ -1378,8 +1388,8 @@ The default hosts structure goes as follows
     }: {
       gtk = {
         font = {
-          name = "Source Sans Pro";
-          size = 12;
+          name = "Futura";
+          size = 10;
         };
       };
     };
@@ -1993,10 +2003,9 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
         recommendedOptimisation = true;
 
         virtualHosts = {
-          "vault.server.org" = {
+          "vault.peanutbutter.quest" = {
             forceSSL = true;
-            sslCertificate = "/etc/ssl/local/server.org.pem";
-            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+            enableACME = true;
           };
           "search.server.org" = {
             forceSSL = true;
@@ -2008,6 +2017,13 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
             enableACME = true;
             locations."/" = {
               proxyPass = "http://unix:${config.services.anubis.instances.search.settings.BIND}";
+            };
+          };
+          "pdf.peanutbutter.quest" = {
+            forceSSL = true;
+            enableACME = true;
+            locations."/" = {
+              proxyPass = "http://unix:${config.services.anubis.instances.pdf.settings.BIND}";
             };
           };
           "deluge.server.org" = {
@@ -2128,10 +2144,18 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
         };
       };
       services.anubis = {
-        instances.search = {
-          enable = true;
-          settings = {
-            TARGET = "http://127.0.0.1:8080";
+        instances = {
+          search = {
+            enable = true;
+            settings = {
+              TARGET = "http://127.0.0.1:8080";
+            };
+          };
+          pdf = {
+            enable = true;
+            settings = {
+              TARGET = "http://127.0.0.1:8877";
+            };
           };
         };
       };
@@ -2469,8 +2493,24 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
     ...
   }: {
     flake.nixosModules.jellyfin = {
+      pkgs,
+      ...
+    }: {
       services.jellyfin = {
         enable = true;
+        hardwareAcceleration = {
+          enable = true;
+          type = "vaapi";
+          device = "/dev/dri/by-path/pci-0000:00:02.0-render";
+        };
+      };
+      hardware.graphics = {
+        enable = true;
+        extraPackages = with pkgs; [
+          intel-media-driver
+          intel-compute-runtime
+          vpl-gpu-rt
+        ];
       };
     };
   }
@@ -2592,7 +2632,7 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
     flake.nixosModules.vaultwarden = {
       services.vaultwarden = {
         enable = true;
-        domain = "vault.server.org";
+        domain = "vault.peanutbutter.quest";
         configureNginx = true;
         environmentFile = "/var/lib/vaultwarden.env";
       };
@@ -2811,6 +2851,7 @@ The main peers would be:
         self.homeModules.gtk-fonts
         self.homeModules.emacs
         self.homeModules.waybar
+        self.homeModules.easyeffects
         #self.homeModules.rmpc
         #self.homeModules.mpd
 
@@ -2845,8 +2886,7 @@ The main peers would be:
           bitwarden-cli
           bitwarden-desktop
           equibop
-          easyeffects
-
+          hydra-check
 
           (discord.override {
             withOpenASAR = true;
@@ -2874,6 +2914,42 @@ The main peers would be:
   }
 #+end_src
 ** Home Modules
+*** Easyeffects
+#+begin_src nix :tangle modules/home/home-modules/easyeffects.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.homeModules.easyeffects = {
+      services.easyeffects = {
+        enable = true;
+        preset = "my-preset";
+        extraPresets = {
+          my-preset = {
+            input = {
+              blocklist = [];
+              "rnnoise#0" = {
+                bypass = false;
+                enable-vad = false;
+                input-gain = 0.0;
+                model-name = "\\";
+                output-gain = 0.0;
+                release = 20.0;
+                use-standard-model = true;
+                vad-thres = 30.0;
+                wet = 0.0;
+              };
+              plugins_order = [
+                "rnnoise#0"
+              ];
+            };
+          };
+        };
+      };
+    };
+  }
+#+end_src
 *** Alacritty
 #+begin_src nix :tangle modules/home/home-modules/alacritty.nix
   {
@@ -3117,6 +3193,7 @@ The main peers would be:
                 floccus
                 enhancer-for-youtube
                 stylus
+                foxyproxy-standard
               ];
             };
             settings = {
@@ -3127,6 +3204,7 @@ The main peers would be:
               "widget.use-xdg-desktop-portal.file-picker" = 1;
               "ui.key.menuAccessKeyFocuses" = false;
               "browser.sessionstore.resume_from_crash" = false;
+              "extensions.autoDisableScopes" = 0;
             };
           };
         };
@@ -3159,7 +3237,7 @@ Fuzzel launcher with clipboard history and password manager.
       programs.rbw = {
         enable = true;
         settings = {
-          base_url = "https://vault.server.org";
+          base_url = "https://vault.peanutbutter.quest";
           email = "tiredhames@gmail.com";
           lock_timeout = 300;
           pinentry = pkgs.pinentry-qt;
@@ -3180,7 +3258,7 @@ Fuzzel launcher with clipboard history and password manager.
         inherit pkgs;
         settings = {
           main = {
-            font = "Iosevka Nerd Font Mono:size=9";
+            font = "Iosevka Nerd Font Mono:size=11";
             list-executables-in-path = "yes";
           };
           colors = {
@@ -3283,7 +3361,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         inherit pkgs;
         settings = {
           sort = "-time";
-          font = "Source Sans Pro";
+          font = "Iosevka Nerd Font Mono";
           layer = "overlay";
           anchor = "top-right";
           default-timeout = 5000;
@@ -3326,7 +3404,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
           mainBar = {
             layer = "top";
             position = "top";
-            height = 23;
+            height = 15;
             spacing = 5;
             modules-left = ["niri/workspaces" "mpris" ];
             modules-center = [];
@@ -3374,8 +3452,8 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         };
         style = "
           #waybar {
-              font-family: 'Source Sans Pro', 'Iosevka Nerd Font Propo';
-              font-size: 16px;
+              font-family: 'Iosevka Nerd Font Propo';
+              font-size: 14px;
               font-weight: normal;
               background-color: rgba(26, 27, 38, 1);
           }
@@ -3655,6 +3733,8 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
           org-autolist
           magit
           vterm-toggle
+          emacs-application-framework
+          eaf-browser
         ];
       };
 
@@ -3699,8 +3779,8 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (global-set-key (kbd "C-x c") #'org-capture)
 
   ;; Font 
-  (set-face-attribute 'default nil :family "Iosevka Nerd Font Mono" :height 120)
-  (set-frame-font "Iosevka Nerd Font Mono 12" nil t)
+  (set-face-attribute 'default nil :family "Iosevka Nerd Font Mono" :height 110)
+  (set-frame-font "Iosevka Nerd Font Mono 11" nil t)
 
   ;; qol customizations
   (global-display-line-numbers-mode 1)
@@ -3721,8 +3801,8 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (custom-theme-set-faces
    'user
-   '(variable-pitch ((t (:family "Source Sans Pro" :height 120))))
-   '(fixed-pitch ((t (:family "Iosevka Nerd Font Mono" :height 120))))
+   '(variable-pitch ((t (:family "Futura" :height 110))))
+   '(fixed-pitch ((t (:family "Iosevka Nerd Font Mono" :height 110))))
    '(org-table ((t (:inherit fixed-pitch))))
    '(org-code ((t (:inherit fixed-pitch))))
    '(org-block ((t (:inherit fixed-pitch)))))
@@ -3834,4 +3914,9 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
   (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
   (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
+
+  (use-package eaf)
+  (use-package eaf-browser
+    :config
+    (setq eaf-browser-chrome-browser-name "Chromium" ))
 #+end_src

@@ -16,10 +16,9 @@
       recommendedOptimisation = true;
 
       virtualHosts = {
-        "vault.server.org" = {
+        "vault.peanutbutter.quest" = {
           forceSSL = true;
-          sslCertificate = "/etc/ssl/local/server.org.pem";
-          sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+          enableACME = true;
         };
         "search.server.org" = {
           forceSSL = true;
@@ -31,6 +30,13 @@
           enableACME = true;
           locations."/" = {
             proxyPass = "http://unix:${config.services.anubis.instances.search.settings.BIND}";
+          };
+        };
+        "pdf.peanutbutter.quest" = {
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://unix:${config.services.anubis.instances.pdf.settings.BIND}";
           };
         };
         "deluge.server.org" = {
@@ -151,10 +157,18 @@
       };
     };
     services.anubis = {
-      instances.search = {
-        enable = true;
-        settings = {
-          TARGET = "http://127.0.0.1:8080";
+      instances = {
+        search = {
+          enable = true;
+          settings = {
+            TARGET = "http://127.0.0.1:8080";
+          };
+        };
+        pdf = {
+          enable = true;
+          settings = {
+            TARGET = "http://127.0.0.1:8877";
+          };
         };
       };
     };

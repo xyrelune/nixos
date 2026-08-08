@@ -88,6 +88,7 @@
               floccus
               enhancer-for-youtube
               stylus
+              foxyproxy-standard
             ];
           };
           settings = {
@@ -98,6 +99,7 @@
             "widget.use-xdg-desktop-portal.file-picker" = 1;
             "ui.key.menuAccessKeyFocuses" = false;
             "browser.sessionstore.resume_from_crash" = false;
+            "extensions.autoDisableScopes" = 0;
           };
         };
       };

@@ -5,8 +5,8 @@
 (global-set-key (kbd "C-x c") #'org-capture)
 
 ;; Font 
-(set-face-attribute 'default nil :family "Iosevka Nerd Font Mono" :height 120)
-(set-frame-font "Iosevka Nerd Font Mono 12" nil t)
+(set-face-attribute 'default nil :family "Iosevka Nerd Font Mono" :height 110)
+(set-frame-font "Iosevka Nerd Font Mono 11" nil t)
 
 ;; qol customizations
 (global-display-line-numbers-mode 1)
@@ -27,8 +27,8 @@
 (add-hook 'org-mode-hook 'variable-pitch-mode)
 (custom-theme-set-faces
  'user
- '(variable-pitch ((t (:family "Source Sans Pro" :height 120))))
- '(fixed-pitch ((t (:family "Iosevka Nerd Font Mono" :height 120))))
+ '(variable-pitch ((t (:family "Futura" :height 110))))
+ '(fixed-pitch ((t (:family "Iosevka Nerd Font Mono" :height 110))))
  '(org-table ((t (:inherit fixed-pitch))))
  '(org-code ((t (:inherit fixed-pitch))))
  '(org-block ((t (:inherit fixed-pitch)))))
@@ -140,3 +140,8 @@
 (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
 (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
 (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
+
+(use-package eaf)
+(use-package eaf-browser
+  :config
+  (setq eaf-browser-chrome-browser-name "Chromium" ))

@@ -18,7 +18,7 @@
     programs.rbw = {
       enable = true;
       settings = {
-        base_url = "https://vault.server.org";
+        base_url = "https://vault.peanutbutter.quest";
         email = "tiredhames@gmail.com";
         lock_timeout = 300;
         pinentry = pkgs.pinentry-qt;
@@ -39,7 +39,7 @@
       inherit pkgs;
       settings = {
         main = {
-          font = "Iosevka Nerd Font Mono:size=9";
+          font = "Iosevka Nerd Font Mono:size=11";
           list-executables-in-path = "yes";
         };
         colors = {

@@ -23,6 +23,7 @@
       self.homeModules.gtk-fonts
       self.homeModules.emacs
       self.homeModules.waybar
+      self.homeModules.easyeffects
       #self.homeModules.rmpc
       #self.homeModules.mpd
 
@@ -57,8 +58,7 @@
         bitwarden-cli
         bitwarden-desktop
         equibop
-        easyeffects
-
+        hydra-check
 
         (discord.override {
           withOpenASAR = true;
