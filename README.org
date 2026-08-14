@@ -573,10 +573,10 @@ The default hosts structure goes as follows
               xkb.layout = "us";
             };
             touchpad = {
-              off = _: {};
+              #off = _: {};
               tap = _: {};
               natural-scroll = _: {};
-              accel-speed = 0.2;
+              accel-speed = 0;
             };
             mouse = {
               accel-speed = 0;
@@ -832,7 +832,7 @@ The default hosts structure goes as follows
         inherit pkgs;
         settings = {
           main = {
-            font = "Iosevka Nerd Font Mono:size=11";
+            font = "JetBrainsMono Nerd Font Mono:size=11";
           };
           colors-dark = {
             alpha = "1";
@@ -1359,7 +1359,8 @@ The default hosts structure goes as follows
       fonts = {
         packages = [
           pkgs.nerd-fonts.iosevka
-          pkgs.jost
+          pkgs.nerd-fonts.jetbrains-mono
+          pkgs.noto-fonts
           self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -1376,9 +1377,9 @@ The default hosts structure goes as follows
             lcdfilter = "default";
           };
           defaultFonts = {
-            serif = ["Futura"];
-            sansSerif = ["Futura"];
-            monospace = ["Iosevka Nerd Font Mono"];
+            serif = ["Noto Sans"];
+            sansSerif = ["Noto Serif"];
+            monospace = ["JetBrainsMono Nerd Font Mono"];
           };
         };
       };
@@ -1389,7 +1390,7 @@ The default hosts structure goes as follows
     }: {
       gtk = {
         font = {
-          name = "Futura";
+          name = "Noto Sans";
           size = 10;
         };
       };
@@ -2078,6 +2079,15 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
             sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
             locations."/" = {
               proxyPass = "http://127.0.0.1:8112";
+              proxyWebsockets = true;
+            };
+          };
+          "rss.server.org" = {
+            forceSSL = true;
+            sslCertificate = "/etc/ssl/local/server.org.pem";
+            sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+            locations."/" = {
+              proxyPass = "http://127.0.0.1:9090";
               proxyWebsockets = true;
             };
           };
@@ -2933,6 +2943,7 @@ The main peers would be:
           bitwarden-desktop
           equibop
           hydra-check
+          thunar
 
           (discord.override {
             withOpenASAR = true;
@@ -3199,7 +3210,7 @@ The main peers would be:
               "Bing"
               "Perplexity"
             ];
-            Default = "SearXNG";
+            Default = "Google";
             Add = [
               {
                 Name = "SearXNG";
@@ -3407,7 +3418,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         inherit pkgs;
         settings = {
           sort = "-time";
-          font = "Iosevka Nerd Font Mono";
+          font = "JetBrainsMono Nerd Font Mono";
           layer = "overlay";
           anchor = "top-right";
           default-timeout = 5000;
@@ -3498,7 +3509,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         };
         style = "
           #waybar {
-              font-family: 'Iosevka Nerd Font Propo';
+              font-family: 'JetBrainsMono Nerd Font Propo';
               font-size: 14px;
               font-weight: normal;
               background-color: rgba(26, 27, 38, 1);
@@ -3825,8 +3836,8 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (global-set-key (kbd "C-x c") #'org-capture)
 
   ;; Font 
-  (set-face-attribute 'default nil :family "Iosevka Nerd Font Mono" :height 110)
-  (set-frame-font "Iosevka Nerd Font Mono 11" nil t)
+  (set-face-attribute 'default nil :family "JetBrainsMono Nerd Font Mono" :height 110)
+  (set-frame-font "JetBrainsMono Nerd Font Mono 11" nil t)
 
   ;; qol customizations
   (global-display-line-numbers-mode 1)
@@ -3847,8 +3858,8 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (custom-theme-set-faces
    'user
-   '(variable-pitch ((t (:family "Futura" :height 110))))
-   '(fixed-pitch ((t (:family "Iosevka Nerd Font Mono" :height 110))))
+   '(variable-pitch ((t (:family "Noto Sans" :height 110))))
+   '(fixed-pitch ((t (:family "JetBrainsMono Nerd Font Mono" :height 110))))
    '(org-table ((t (:inherit fixed-pitch))))
    '(org-code ((t (:inherit fixed-pitch))))
    '(org-block ((t (:inherit fixed-pitch)))))

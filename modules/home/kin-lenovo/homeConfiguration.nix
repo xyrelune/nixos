@@ -59,6 +59,7 @@
         bitwarden-desktop
         equibop
         hydra-check
+        thunar
 
         (discord.override {
           withOpenASAR = true;

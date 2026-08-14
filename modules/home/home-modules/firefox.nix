@@ -48,7 +48,7 @@
             "Bing"
             "Perplexity"
           ];
-          Default = "SearXNG";
+          Default = "Google";
           Add = [
             {
               Name = "SearXNG";

@@ -34,10 +34,10 @@
             xkb.layout = "us";
           };
           touchpad = {
-            off = _: {};
+            #off = _: {};
             tap = _: {};
             natural-scroll = _: {};
-            accel-speed = 0.2;
+            accel-speed = 0;
           };
           mouse = {
             accel-speed = 0;

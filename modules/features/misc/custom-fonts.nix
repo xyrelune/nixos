@@ -10,7 +10,8 @@
     fonts = {
       packages = [
         pkgs.nerd-fonts.iosevka
-        pkgs.jost
+        pkgs.nerd-fonts.jetbrains-mono
+        pkgs.noto-fonts
         self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -27,9 +28,9 @@
           lcdfilter = "default";
         };
         defaultFonts = {
-          serif = ["Futura"];
-          sansSerif = ["Futura"];
-          monospace = ["Iosevka Nerd Font Mono"];
+          serif = ["Noto Sans"];
+          sansSerif = ["Noto Serif"];
+          monospace = ["JetBrainsMono Nerd Font Mono"];
         };
       };
     };
@@ -40,7 +41,7 @@
   }: {
     gtk = {
       font = {
-        name = "Futura";
+        name = "Noto Sans";
         size = 10;
       };
     };
