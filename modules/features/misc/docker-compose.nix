@@ -15,6 +15,11 @@
     # Runtime
     virtualisation.podman = {
         enable = true;
+        defaultNetwork = {
+          settings = {
+            dns_enabled = false;
+          };
+        };
         autoPrune.enable = true;
     };
 
