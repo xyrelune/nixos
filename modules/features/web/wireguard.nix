@@ -12,7 +12,7 @@
       "wireguard/privatekey" = {};
     };
 
-    networking.firewall.allowedUDPPorts = [ 51820 ];
+    networking.firewall.allowedUDPPorts = [ 53 ];
 
     boot.kernel.sysctl = {
       "net.ipv4.ip_forward" = 1;
@@ -31,7 +31,7 @@
       interfaces = {
         wg0 = {
           ips = [ "10.0.0.1/24" ];
-          listenPort = 51820;
+          listenPort = 53;
           privateKeyFile = config.sops.secrets."wireguard/privatekey".path;
 
           peers = [
