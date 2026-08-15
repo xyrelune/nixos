@@ -22,7 +22,7 @@
       self.nixosModules.vaultwarden
       self.nixosModules.komga
       self.nixosModules.miniflux
-      #self.nixosModules.docker
+      self.nixosModules.docker
       self.nixosModules.bash
       self.nixosModules.yazi
       self.nixosModules.stirlingpdf
