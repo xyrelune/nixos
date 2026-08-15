@@ -316,7 +316,7 @@ The default hosts structure goes as follows
         self.nixosModules.vaultwarden
         self.nixosModules.komga
         self.nixosModules.miniflux
-        #self.nixosModules.docker
+        self.nixosModules.docker
         self.nixosModules.bash
         self.nixosModules.yazi
         self.nixosModules.stirlingpdf
@@ -1478,13 +1478,13 @@ The default hosts structure goes as follows
       };
 
       # Enable container name DNS for all Podman networks.
-      networking.firewall.interfaces = let
-          matchAll = if !config.networking.nftables.enable then "podman+" else "podman*";
-      in {
-          "${matchAll}".allowedUDPPorts = [ 53 ];
-      };
+      #networking.firewall.interfaces = let
+      #    matchAll = if !config.networking.nftables.enable then "podman+" else "podman*";
+      #in {
+      #    "${matchAll}".allowedUDPPorts = [ 53 ];
+      #};
 
-      virtualisation.oci-containers.backend = "podman";
+      #virtualisation.oci-containers.backend = "podman";
 
       # Containers
       virtualisation.oci-containers.containers."multi-scrobbler" = {
