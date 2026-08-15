@@ -11,8 +11,10 @@
     sops.secrets = {
       "wg-quick/laptop/private_key" = {};
       "wg-quick/laptop/psk" = {};
+      "wg-quick/lenovo/private_key" = {};
     };
     systemd.services.wg-quick-wg0.wantedBy = lib.mkForce [];
+    systemd.services.wg-quick-lenovo.wantedBy = lib.mkForce [];
     networking.wg-quick.interfaces = {
       wg0 = {
         address = [
@@ -29,6 +31,22 @@
             ];
             endpoint = "peanutbutter.quest:4444"; 
             presharedKeyFile = config.sops.secrets."wg-quick/laptop/psk".path;
+          }
+        ];
+      };
+      lenovo = {
+        address = [
+          "10.0.0.4/32"
+        ];
+        dns = [ "192.168.0.1" ];
+        privateKeyFile = config.sops.secrets."wg-quick/lenovo/private_key".path;
+        peers = [
+          {
+            publicKey = "CctP255U9x7ZhnEvQ4cN4/LjXkfZpcc4ErJR5zkjXQk=";
+            allowedIPs = [
+              "0.0.0.0/0"
+            ];
+            endpoint = "peanutbutter.quest:53";
           }
         ];
       };
