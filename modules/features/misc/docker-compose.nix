@@ -189,7 +189,7 @@
         ExecStop = "podman network rm -f services_default";
         };
         script = ''
-        podman network inspect services_default || podman network create services_default
+        podman network inspect services_default || podman network create --disable-dns services_default
         '';
         partOf = [ "podman-compose-services-root.target" ];
         wantedBy = [ "podman-compose-services-root.target" ];
