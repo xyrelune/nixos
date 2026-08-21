@@ -19,7 +19,7 @@
       mpd = {
         enable = true;
         network.port = 6600;
-        musicDirectory = "/home/kin/audio";
+        musicDirectory = "/home/kin/personal-music";
         extraConfig = ''
           audio_output {
             type "pulse"

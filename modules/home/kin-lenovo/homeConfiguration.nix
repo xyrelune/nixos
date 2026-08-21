@@ -57,22 +57,17 @@
         jellyfin-mpv-shim
         bitwarden-cli
         bitwarden-desktop
-        equibop
         hydra-check
         thunar
-
-        (discord.override {
-          withOpenASAR = true;
-          withEquicord = true;
-        })
+        zathura
+        speedtest-cli
 
         inputs.prismlauncher.packages.${pkgs.system}.prismlauncher
-
-        nur.repos.tnmt.brave-origin
       ];
       sessionVariables = {
         GTK_DEBUG = "portals";
         GTK_USE_PORTAL = 1;
+        QT_QPA_PLATFORM = "wayland";
       };
     };
     sops = {

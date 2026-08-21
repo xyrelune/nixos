@@ -37,8 +37,6 @@
         org-autolist
         magit
         vterm-toggle
-        emacs-application-framework
-        eaf-browser
       ];
     };
 

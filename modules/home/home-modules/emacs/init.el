@@ -140,8 +140,3 @@
 (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
 (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
 (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
-
-(use-package eaf)
-(use-package eaf-browser
-  :config
-  (setq eaf-browser-chrome-browser-name "Chromium" ))
