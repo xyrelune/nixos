@@ -44,12 +44,12 @@
           };
         };
         layout = {
-          gaps = 15;
+          gaps = 0.5;
           center-focused-column = "never";
           focus-ring = {
             active-color = "#7e9cd8";
             inactive-color = "#54546d";
-            width = 2;
+            width = 0.5;
           };
         };
         outputs = {
