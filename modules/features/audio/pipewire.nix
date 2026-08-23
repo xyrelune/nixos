@@ -23,8 +23,8 @@
         pipewire = {
           "65-hires-audio.conf" = {
             "context.properties" = {
-              "default.clock.rate" = "44100";
-              "default.clock.allowed.rates" = [ "44100" ];
+              "default.clock.rate" = "48000";
+              "default.clock.allowed.rates" = [ "48000" ];
               "default.clock.quantum" = "1024";
               "default.clock.max-quantum" = "8192";
               "default.clock.min-quantum" = "32";

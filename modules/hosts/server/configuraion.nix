@@ -140,6 +140,22 @@
         echo 0 > /sys/class/backlight/intel_backlight/brightness
       '';
     };
+
+    services.vsftpd = {
+      enable = true;
+      localUsers = true;
+      writeEnable = false;
+      extraConfig = ''
+        local_enable=YES
+        pasv_enable=YES
+        pasv_min_port=40000
+        pasv_max_port=40100
+      '';
+    };
+    security.pam.services.vsftpd = {
+      unixAuth = true;
+    };
+
     swapDevices = [
       {
         device = "/.swapfile";

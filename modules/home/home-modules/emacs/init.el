@@ -19,19 +19,20 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (electric-indent-mode 1)
+(add-hook 'org-mode-hook #'org-indent-mode)
 
 ;; Transparency 
 ;;(add-to-list 'default-frame-alist '(alpha-background . 70))
 
 ;; Custom Fonts for org mode
-(add-hook 'org-mode-hook 'variable-pitch-mode)
-(custom-theme-set-faces
- 'user
- '(variable-pitch ((t (:family "Noto Sans" :height 110))))
- '(fixed-pitch ((t (:family "JetBrainsMono Nerd Font Mono" :height 110))))
- '(org-table ((t (:inherit fixed-pitch))))
- '(org-code ((t (:inherit fixed-pitch))))
- '(org-block ((t (:inherit fixed-pitch)))))
+;;(add-hook 'org-mode-hook 'variable-pitch-mode)
+;;(custom-theme-set-faces
+;; 'user
+;; '(variable-pitch ((t (:family "Noto Sans" :height 110))))
+;; '(fixed-pitch ((t (:family "JetBrainsMono Nerd Font Mono" :height 110))))
+;; '(org-table ((t (:inherit fixed-pitch))))
+;; '(org-code ((t (:inherit fixed-pitch))))
+;; '(org-block ((t (:inherit fixed-pitch)))))
 
 ;; Base16 Theme
 (use-package base16-theme
@@ -140,3 +141,31 @@
 (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
 (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
 (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
+
+;; org-agenda
+(use-package org
+  :init
+  (setq org-directory "~/org")
+  (setq org-agenda-files
+        '("~/org/agenda.org"
+          "~/org/caldav-inbox.org"))
+  :bind
+  (("C-x a" . org-agenda)))
+;; caldav
+(use-package org-caldav
+  :after org
+  :init
+  (setq org-caldav-url
+        "https://radicale.peanutbutter.quest/kin/")
+  (setq org-caldav-calendar-id
+        "3824000232454627070")
+  (setq org-caldav-inbox
+        "~/org/caldav-inbox.org")
+  (setq org-caldav-files
+        '("~/org/agenda.org"))
+  (setq org-caldav-sync-direction
+        'twoway)
+  (setq org-icalendar-timezone
+        "Asia/Kolkata")
+  :bind
+  (("C-c c" . org-caldav-sync)))

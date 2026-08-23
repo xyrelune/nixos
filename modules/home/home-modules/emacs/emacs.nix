@@ -34,9 +34,11 @@
         yaml-mode
         powershell
         multi-vterm
-        org-autolist
         magit
         vterm-toggle
+        org
+        org-caldav
+        org-autolist
       ];
     };
 

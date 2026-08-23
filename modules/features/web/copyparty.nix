@@ -19,6 +19,9 @@
       enable = true;
       user = "kin";
       group = "users";
+      settings = {
+        i = "0.0.0.0";
+      };
       accounts = {
         kin.passwordFile = config.sops.secrets."copyparty/kin/password".path;
       };
