@@ -1964,6 +1964,7 @@ This uses a config generated for wireguard servers running at my home.
           address = [
             "10.0.0.4/32"
           ];
+          mtu = 1300;
           dns = [ "192.168.0.1" ];
           privateKeyFile = config.sops.secrets."wg-quick/lenovo/private_key".path;
           peers = [
@@ -2879,7 +2880,7 @@ The main peers would be:
           wg0 = {
             ips = [ "10.0.0.1/24" ];
             listenPort = 53;
-            mtu = 1380;
+            mtu = 1300;
             privateKeyFile = config.sops.secrets."wireguard/privatekey".path;
 
             peers = [
