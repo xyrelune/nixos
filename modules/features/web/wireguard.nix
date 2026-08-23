@@ -32,7 +32,7 @@
         wg0 = {
           ips = [ "10.0.0.1/24" ];
           listenPort = 53;
-          mtu = 1300;
+          mtu = 1420;
           privateKeyFile = config.sops.secrets."wireguard/privatekey".path;
 
           peers = [

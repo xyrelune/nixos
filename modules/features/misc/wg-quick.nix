@@ -38,7 +38,7 @@
         address = [
           "10.0.0.4/32"
         ];
-        mtu = 1300;
+        mtu = 1420;
         dns = [ "192.168.0.1" ];
         privateKeyFile = config.sops.secrets."wg-quick/lenovo/private_key".path;
         peers = [
