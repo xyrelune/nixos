@@ -29,7 +29,6 @@
         "/" = {
           path = "/home/kin";
           access = {
-            r = "*";
             rw = [ "kin" ];
           };
           flags = {
@@ -40,7 +39,6 @@
         "/mnt" = {
           path = "/mnt";
           access = {
-            r = "*";
             rw = [ "kin" ];
           };
           flags = {
