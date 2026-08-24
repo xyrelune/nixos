@@ -29,7 +29,7 @@
         };
         defaultFonts = {
           serif = ["Noto Sans"];
-          sansSerif = ["Noto Serif"];
+          sansSerif = ["Noto Sans"];
           monospace = ["JetBrainsMono Nerd Font Mono"];
         };
       };

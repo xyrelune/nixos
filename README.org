@@ -612,7 +612,7 @@ The default hosts structure goes as follows
             "eDP-1" = {
               # off = _: {};
               mode = "1920x1080@165.002";
-              scale = 1.25;
+              scale = 1;
               position = _: {
                 props = {
                   x = 0;
@@ -688,7 +688,7 @@ The default hosts structure goes as follows
           binds = {
             "Mod+Return".spawn-sh = "foot";
             "Mod+D".spawn-sh = "fuzzel";
-            "Mod+B".spawn-sh = "helium";
+            "Mod+B".spawn-sh = "firefox";
             "Mod+P".spawn-sh = "spotify";
             "Mod+U".spawn-sh = "emacsclient -c";
 
@@ -1395,7 +1395,7 @@ The default hosts structure goes as follows
           };
           defaultFonts = {
             serif = ["Noto Sans"];
-            sansSerif = ["Noto Serif"];
+            sansSerif = ["Noto Sans"];
             monospace = ["JetBrainsMono Nerd Font Mono"];
           };
         };
@@ -3562,7 +3562,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
           mainBar = {
             layer = "top";
             position = "top";
-            height = 15;
+            height = 20;
             spacing = 5;
             modules-left = ["niri/workspaces" "mpris" ];
             modules-center = [];
@@ -3611,7 +3611,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         style = "
           #waybar {
               font-family: 'JetBrainsMono Nerd Font Propo';
-              font-size: 14px;
+              font-size: 16px;
               font-weight: normal;
               background-color: rgba(26, 27, 38, 1);
           }
@@ -3890,6 +3890,8 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
           multi-vterm
           magit
           vterm-toggle
+          ghostel
+          evil-ghostel
           org
           org-caldav
           org-autolist
@@ -4083,6 +4085,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
             "~/org/caldav-inbox.org"))
     :bind
     (("C-x a" . org-agenda)))
+
   ;; caldav
   (use-package org-caldav
     :after org
@@ -4101,4 +4104,12 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
           "Asia/Kolkata")
     :bind
     (("C-c c" . org-caldav-sync)))
+
+  ;; Ghostel  
+  (use-package ghostel
+    :bind
+    (("C-x t" . ghostel)))
+  (use-package evil-ghostel
+    :after (ghostel evil)
+    :hook (ghostel-mode . evil-ghostel-mode))
 #+end_src

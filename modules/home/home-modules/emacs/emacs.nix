@@ -36,6 +36,8 @@
         multi-vterm
         magit
         vterm-toggle
+        ghostel
+        evil-ghostel
         org
         org-caldav
         org-autolist

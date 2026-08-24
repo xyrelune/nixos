@@ -151,6 +151,7 @@
           "~/org/caldav-inbox.org"))
   :bind
   (("C-x a" . org-agenda)))
+
 ;; caldav
 (use-package org-caldav
   :after org
@@ -169,3 +170,11 @@
         "Asia/Kolkata")
   :bind
   (("C-c c" . org-caldav-sync)))
+
+;; Ghostel  
+(use-package ghostel
+  :bind
+  (("C-x t" . ghostel)))
+(use-package evil-ghostel
+  :after (ghostel evil)
+  :hook (ghostel-mode . evil-ghostel-mode))

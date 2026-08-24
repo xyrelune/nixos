@@ -10,7 +10,7 @@
         mainBar = {
           layer = "top";
           position = "top";
-          height = 15;
+          height = 20;
           spacing = 5;
           modules-left = ["niri/workspaces" "mpris" ];
           modules-center = [];
@@ -59,7 +59,7 @@
       style = "
         #waybar {
             font-family: 'JetBrainsMono Nerd Font Propo';
-            font-size: 14px;
+            font-size: 16px;
             font-weight: normal;
             background-color: rgba(26, 27, 38, 1);
         }

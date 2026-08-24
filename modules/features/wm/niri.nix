@@ -56,7 +56,7 @@
           "eDP-1" = {
             # off = _: {};
             mode = "1920x1080@165.002";
-            scale = 1.25;
+            scale = 1;
             position = _: {
               props = {
                 x = 0;
@@ -132,7 +132,7 @@
         binds = {
           "Mod+Return".spawn-sh = "foot";
           "Mod+D".spawn-sh = "fuzzel";
-          "Mod+B".spawn-sh = "helium";
+          "Mod+B".spawn-sh = "firefox";
           "Mod+P".spawn-sh = "spotify";
           "Mod+U".spawn-sh = "emacsclient -c";
 
