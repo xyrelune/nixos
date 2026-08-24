@@ -90,6 +90,14 @@
             proxyWebsockets = true;
           };
         };
+        "party.peanutbutter.quest" = {
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:3923";
+            proxyWebsockets = true;
+          };
+        };
         "jellyfin.server.org" = {
           forceSSL = true;
           sslCertificate = "/etc/ssl/local/server.org.pem";
