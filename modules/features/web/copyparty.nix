@@ -36,16 +36,6 @@
             e2d = true;
           };
         };
-        "/mnt" = {
-          path = "/mnt";
-          access = {
-            rw = [ "kin" ];
-          };
-          flags = {
-            scan = 60;
-            e2d = true;
-          };
-        };
         "/personal-music" = {
           path = "/home/kin/personal-music";
           access = {
