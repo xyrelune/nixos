@@ -27,7 +27,7 @@
       };
       volumes = {
         "/" = {
-          path = "/home/kin";
+          path = "/home/kin/data/copyparty";
           access = {
             rw = [ "kin" ];
           };
@@ -38,6 +38,16 @@
         };
         "/mnt" = {
           path = "/mnt";
+          access = {
+            rw = [ "kin" ];
+          };
+          flags = {
+            scan = 60;
+            e2d = true;
+          };
+        };
+        "/personal-music" = {
+          path = "/home/kin/personal-music";
           access = {
             rw = [ "kin" ];
           };
