@@ -9,7 +9,7 @@
       user = "media";
       group = "media";
       settings = {
-        MusicFolder = "/home/kin/personal-music";
+        MusicFolder = "/mnt/downloads/personal-music";
       };
     };
   };
