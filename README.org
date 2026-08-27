@@ -1905,6 +1905,9 @@ That would conclude the steps needed for windows vm with GPU passthrough to work
             verbatimConfig = ''
               namespaces = []
             '';
+            vhostUserPackages = with pkgs; [
+              virtiofsd
+            ];
           };
         };
       };
@@ -2947,6 +2950,23 @@ The main peers would be:
   }
 
 #+end_src
+*** Navidrome
+#+begin_src nix :tangle modules/features/web/navidrome.nix
+  {
+    self,
+    input,
+    ...
+  }: {
+    flake.nixosModules.navidrome = {
+      services.navidrome = {
+        enable = true;
+        settings = {
+          MusicFolder = "/home/kin/personal-music";
+        };
+      };
+    };
+  }
+#+end_src
 * Home
 ** Home Users
 *** Lenovo
@@ -3047,6 +3067,7 @@ The main peers would be:
           thunar
           zathura
           speedtest-cli
+          vlc
 
           inputs.prismlauncher.packages.${pkgs.system}.prismlauncher
         ];

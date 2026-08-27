@@ -61,6 +61,7 @@
         thunar
         zathura
         speedtest-cli
+        vlc
 
         inputs.prismlauncher.packages.${pkgs.system}.prismlauncher
       ];

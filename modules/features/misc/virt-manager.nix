@@ -47,6 +47,9 @@
           verbatimConfig = ''
             namespaces = []
           '';
+          vhostUserPackages = with pkgs; [
+            virtiofsd
+          ];
         };
       };
     };
