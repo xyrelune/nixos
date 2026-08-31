@@ -64,6 +64,7 @@
         vlc
 
         inputs.prismlauncher.packages.${pkgs.system}.prismlauncher
+        zulu25
       ];
       sessionVariables = {
         GTK_DEBUG = "portals";

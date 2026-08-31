@@ -13,8 +13,10 @@
       defaultEditor = true;
       startWithUserSession = true;
     };
-    home.packages = [
-      pkgs.nixd
+    home.packages = with pkgs; [
+      nixd
+      python314
+      pyright
     ];
     programs.emacs = {
       enable = true;

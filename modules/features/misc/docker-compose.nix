@@ -180,6 +180,34 @@
         "podman-compose-services-root.target"
       ];
     };
+    virtualisation.oci-containers.containers."doplarr" = {
+      image = "ghcr.io/activexray/doplarr_rs:latest";
+      volumes = [
+        "/home/kin/data/doplarr_rs/config.toml:/config.toml:ro"
+      ];
+      log-driver = "journald";
+      extraOptions = [
+        "--network-alias=doplarr"
+        "--network=services_default"
+      ];
+    };
+    systemd.services."podman-doplarr" = {
+      serviceConfig = {
+        Restart = lib.mkOverride 90 "always";
+      };
+      after = [
+        "podman-network-services_default.service"
+      ];
+      requires = [
+        "podman-network-services_default.service"
+      ];
+      partOf = [
+        "podman-compose-services-root.target"
+      ];
+      wantedBy = [
+        "podman-compose-services-root.target"
+      ];
+    };
     # Networks
     systemd.services."podman-network-services_default" = {
         path = [ pkgs.podman ];

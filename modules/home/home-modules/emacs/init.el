@@ -178,3 +178,6 @@
 (use-package evil-ghostel
   :after (ghostel evil)
   :hook (ghostel-mode . evil-ghostel-mode))
+(use-package eglot
+  :hook
+  (python-mode . eglot-ensure))

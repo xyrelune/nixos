@@ -37,7 +37,7 @@
           };
         };
         "/personal-music" = {
-          path = "/home/kin/personal-music";
+          path = "/mnt/downloads/personal-music";
           access = {
             rw = [ "kin" ];
           };

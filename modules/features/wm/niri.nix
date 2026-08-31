@@ -56,7 +56,7 @@
           "eDP-1" = {
             # off = _: {};
             mode = "1920x1080@165.002";
-            scale = 1;
+            scale = 1.25;
             position = _: {
               props = {
                 x = 0;

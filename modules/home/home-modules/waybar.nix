@@ -59,7 +59,7 @@
       style = "
         #waybar {
             font-family: 'JetBrainsMono Nerd Font Propo';
-            font-size: 16px;
+            font-size: 14px;
             font-weight: normal;
             background-color: rgba(26, 27, 38, 1);
         }

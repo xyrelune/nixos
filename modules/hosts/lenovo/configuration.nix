@@ -23,7 +23,7 @@
       self.nixosModules.bash
       self.nixosModules.localCA
       self.nixosModules.customFonts
-      self.nixosModules.virt-manager
+      #self.nixosModules.virt-manager
       self.nixosModules.wg-quick
 
       inputs.sops-nix.nixosModules.sops
@@ -32,8 +32,11 @@
     boot = {
       loader = {
         efi.canTouchEfiVariables = true;
-        systemd-boot = {
+        grub = {
           enable = true;
+          efiSupport = true;
+          device = "nodev";
+          useOSProber = true;
         };
       };
     };
@@ -43,6 +46,7 @@
 
     networking.networkmanager.enable = true;
     time.timeZone = "Asia/Kolkata";
+    services.timesyncd.enable = true;
 
     users.users.kin = {
       isNormalUser = true;
@@ -83,9 +87,6 @@
       localsend.enable = true;
     };
 
-    hardware.graphics.enable = true;
-    hardware.graphics.enable32Bit = true;
-
     environment = { 
       systemPackages = with pkgs; [
         git
@@ -101,19 +102,29 @@
       };
     };
 
-    hardware.bluetooth = {
-      enable = true;
-      powerOnBoot = true;
-      settings = {
-        General = {
-          Experimental = true;
-          FastConnectable = true;
-        };
-        Policy = {
-          AutoEnable = true;
+    hardware = {
+      bluetooth = {
+        enable = true;
+        powerOnBoot = true;
+        settings = {
+          General = {
+            Experimental = true;
+            FastConnectable = true;
+          };
+          Policy = {
+            AutoEnable = true;
+          };
         };
       };
+      graphics = {
+        enable = true;
+      };
+      nvidia = {
+        open = true;
+      };
     };
+    services.xserver.videoDrivers = [ "nvidia" ];
+
     networking.wireless.enable = false;
     networking.wireless.iwd.enable = true;
     networking.networkmanager.wifi.backend = "iwd";

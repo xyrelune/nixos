@@ -42,7 +42,7 @@
     gtk = {
       font = {
         name = "Noto Sans";
-        size = 10;
+        size = 11;
       };
     };
   };

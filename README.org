@@ -178,7 +178,7 @@ The default hosts structure goes as follows
         self.nixosModules.bash
         self.nixosModules.localCA
         self.nixosModules.customFonts
-        self.nixosModules.virt-manager
+        #self.nixosModules.virt-manager
         self.nixosModules.wg-quick
 
         inputs.sops-nix.nixosModules.sops
@@ -187,8 +187,11 @@ The default hosts structure goes as follows
       boot = {
         loader = {
           efi.canTouchEfiVariables = true;
-          systemd-boot = {
+          grub = {
             enable = true;
+            efiSupport = true;
+            device = "nodev";
+            useOSProber = true;
           };
         };
       };
@@ -198,6 +201,7 @@ The default hosts structure goes as follows
 
       networking.networkmanager.enable = true;
       time.timeZone = "Asia/Kolkata";
+      services.timesyncd.enable = true;
 
       users.users.kin = {
         isNormalUser = true;
@@ -238,9 +242,6 @@ The default hosts structure goes as follows
         localsend.enable = true;
       };
 
-      hardware.graphics.enable = true;
-      hardware.graphics.enable32Bit = true;
-
       environment = { 
         systemPackages = with pkgs; [
           git
@@ -256,19 +257,29 @@ The default hosts structure goes as follows
         };
       };
 
-      hardware.bluetooth = {
-        enable = true;
-        powerOnBoot = true;
-        settings = {
-          General = {
-            Experimental = true;
-            FastConnectable = true;
-          };
-          Policy = {
-            AutoEnable = true;
+      hardware = {
+        bluetooth = {
+          enable = true;
+          powerOnBoot = true;
+          settings = {
+            General = {
+              Experimental = true;
+              FastConnectable = true;
+            };
+            Policy = {
+              AutoEnable = true;
+            };
           };
         };
+        graphics = {
+          enable = true;
+        };
+        nvidia = {
+          open = true;
+        };
       };
+      services.xserver.videoDrivers = [ "nvidia" ];
+
       networking.wireless.enable = false;
       networking.wireless.iwd.enable = true;
       networking.networkmanager.wifi.backend = "iwd";
@@ -613,7 +624,7 @@ The default hosts structure goes as follows
             "eDP-1" = {
               # off = _: {};
               mode = "1920x1080@165.002";
-              scale = 1;
+              scale = 1.25;
               position = _: {
                 props = {
                   x = 0;
@@ -1409,7 +1420,7 @@ The default hosts structure goes as follows
       gtk = {
         font = {
           name = "Noto Sans";
-          size = 10;
+          size = 11;
         };
       };
     };
@@ -1652,6 +1663,34 @@ The default hosts structure goes as follows
           "podman-compose-services-root.target"
         ];
       };
+      virtualisation.oci-containers.containers."doplarr" = {
+        image = "ghcr.io/activexray/doplarr_rs:latest";
+        volumes = [
+          "/home/kin/data/doplarr_rs/config.toml:/config.toml:ro"
+        ];
+        log-driver = "journald";
+        extraOptions = [
+          "--network-alias=doplarr"
+          "--network=services_default"
+        ];
+      };
+      systemd.services."podman-doplarr" = {
+        serviceConfig = {
+          Restart = lib.mkOverride 90 "always";
+        };
+        after = [
+          "podman-network-services_default.service"
+        ];
+        requires = [
+          "podman-network-services_default.service"
+        ];
+        partOf = [
+          "podman-compose-services-root.target"
+        ];
+        wantedBy = [
+          "podman-compose-services-root.target"
+        ];
+      };
       # Networks
       systemd.services."podman-network-services_default" = {
           path = [ pkgs.podman ];
@@ -1770,7 +1809,7 @@ To use this program, after installing run this:
 Installing Virt-manager and other qemu stuff.
 Usage will be with looking glass client, a dual gpu system is assumed, and a dummy hdmi plug will be used. 
 
-To find the iommu group and id run the following bash script with the below command. 
+To find the iommu group and id, run the following bash script with the below command. 
 #+begin_src bash 
   nix run .#iommu-groups
 #+end_src
@@ -1839,7 +1878,7 @@ Back on the vm xml file add the following snippet for looking glass to work.
   <shmem name="looking-glass">
     <model type="ivshmem-plain"/>
     <size unit="M">32</size>
-    <address type="pci" domain="0x0000" bus="0x0b" slot="0x01" function="0x0"/>
+    <address type="pci" domain="0x0000" bus="0x0b" slot="0x00" function="0x0"/>
   </shmem>
 #+end_src
 Change video mode to none under devices.
@@ -2131,6 +2170,14 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
             enableACME = true;
             locations."/" = {
               proxyPass = "http://unix:${config.services.anubis.instances.pdf.settings.BIND}";
+            };
+          };
+          "seerr.peanutbutter.quest" = {
+            forceSSL = true;
+            enableACME = true;
+            locations."/" = {
+              proxyPass = "http://127.0.0.1:5055";
+              proxyWebsockets = true;
             };
           };
           "deluge.server.org" = {
@@ -2613,6 +2660,10 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
             };
           };
         };
+        seerr = {
+          enable = true;
+          port = 5055;
+        };
       };
     };
   }
@@ -2688,7 +2739,7 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
             };
           };
           "/personal-music" = {
-            path = "/home/kin/personal-music";
+            path = "/mnt/downloads/personal-music";
             access = {
               rw = [ "kin" ];
             };
@@ -2966,14 +3017,29 @@ The main peers would be:
     ...
   }: {
     flake.nixosModules.navidrome = {
+      pkgs,
+      ...
+    }: {    
       services.navidrome = {
         enable = true;
         user = "media";
         group = "media";
+        plugins = with pkgs.navidromePlugins; [
+          discord-rich-presence
+          apple-music
+        ];
         settings = {
           MusicFolder = "/mnt/downloads/personal-music";
+          Plugins = {
+            Enabled = true;
+          };
+          Agents = "apple-music,deezer,lastfm";
+          ListenBrainz.BaseURL = "http://127.0.0.1:9078/1/";
         };
       };
+      systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [
+        "/mnt/external-hdd/stream/music"
+      ];
     };
   }
 #+end_src
@@ -3080,6 +3146,7 @@ The main peers would be:
           vlc
 
           inputs.prismlauncher.packages.${pkgs.system}.prismlauncher
+          zulu25
         ];
         sessionVariables = {
           GTK_DEBUG = "portals";
@@ -3642,7 +3709,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         style = "
           #waybar {
               font-family: 'JetBrainsMono Nerd Font Propo';
-              font-size: 16px;
+              font-size: 14px;
               font-weight: normal;
               background-color: rgba(26, 27, 38, 1);
           }
@@ -3898,8 +3965,10 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         defaultEditor = true;
         startWithUserSession = true;
       };
-      home.packages = [
-        pkgs.nixd
+      home.packages = with pkgs; [
+        nixd
+        python314
+        pyright
       ];
       programs.emacs = {
         enable = true;
@@ -4143,4 +4212,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (use-package evil-ghostel
     :after (ghostel evil)
     :hook (ghostel-mode . evil-ghostel-mode))
+  (use-package eglot
+    :hook
+    (python-mode . eglot-ensure)) 
 #+end_src
