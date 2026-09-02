@@ -23,7 +23,8 @@
       self.nixosModules.bash
       self.nixosModules.localCA
       self.nixosModules.customFonts
-      #self.nixosModules.virt-manager
+      self.nixosModules.graphics
+      self.nixosModules.virt-manager
       self.nixosModules.wg-quick
 
       inputs.sops-nix.nixosModules.sops
@@ -115,18 +116,6 @@
             AutoEnable = true;
           };
         };
-      };
-    };
-    specialisation = {
-      nvidia.configuration = {
-        hardware.graphics.enable = true;
-        hardware.nvidia.open = true;
-        services.xserver.videoDrivers = [ "nvidia" ];
-      };
-      amd.configuration = {
-        hardware.graphics.enable = true;
-        hardware.graphics.enable32Bit = true;
-        services.xserver.videoDrivers = [ "amdgpu" ];
       };
     };
 

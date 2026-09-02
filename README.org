@@ -178,7 +178,8 @@ The default hosts structure goes as follows
         self.nixosModules.bash
         self.nixosModules.localCA
         self.nixosModules.customFonts
-        #self.nixosModules.virt-manager
+        self.nixosModules.graphics
+        self.nixosModules.virt-manager
         self.nixosModules.wg-quick
 
         inputs.sops-nix.nixosModules.sops
@@ -270,18 +271,6 @@ The default hosts structure goes as follows
               AutoEnable = true;
             };
           };
-        };
-      };
-      specialisation = {
-        nvidia.configuration = {
-          hardware.graphics.enable = true;
-          hardware.nvidia.open = true;
-          services.xserver.videoDrivers = [ "nvidia" ];
-        };
-        amd.configuration = {
-          hardware.graphics.enable = true;
-          hardware.graphics.enable32Bit = true;
-          services.xserver.videoDrivers = [ "amdgpu" ];
         };
       };
 
@@ -649,7 +638,7 @@ The default hosts structure goes as follows
               };
             };
             "HDMI-A-1" = {
-              #off = _: {};
+              off = _: {};
               mode = "3840x2160@143.988";
               scale = 2;
               position = _: {
@@ -1915,50 +1904,61 @@ That would conclude the steps needed for windows vm with GPU passthrough to work
       platform = "amd";
       vfioIds = [ "10de:2560" "10de:228e" ];
     in  {
-      boot = {
-        kernelModules = [ "kvm-${platform}"  "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
-        kernelParams = [ "${platform}_iommu=on" "${platform}_iommu=pt" "kvm.ignore_msrs=1" ];
-        extraModprobeConfig = "options vfio-pci ids=${builtins.concatStringsSep "," vfioIds}"; 
-      };
-      systemd.tmpfiles.rules = [
-          "f /dev/shm/looking-glass 0660 ${user} qemu-libvirtd -"
-      ];
-      environment.systemPackages = with pkgs; [
-        dnsmasq
-
-        (pkgs.writeShellScriptBin "looking-glass" ''
-          exec ${pkgs.systemd}/bin/systemd-inhibit \
-            --what=idle\
-            --why="Looking Glass" \
-            ${pkgs.looking-glass-client}/bin/looking-glass-client "$@"
-        '')
-      ];
-      networking.firewall.trustedInterfaces = [ "vibr0" ];
-
-      users.users.kin.extraGroups = [ "libvirtd" "qemu-libvirtd" "disk" "kvm" ];
-      virtualisation = {
-        libvirtd = {
-          enable = true;
-          extraConfig = ''
-            user="${user}"
-          '';
-          onBoot = "ignore";
-          onShutdown = "shutdown";
-          qemu = {
-            package = pkgs.qemu_kvm;
-            runAsRoot = true;
-            verbatimConfig = ''
-              namespaces = []
-            '';
-            vhostUserPackages = with pkgs; [
-              virtiofsd
-            ];
+      specialisation = {
+        virt-manager.configuration = {
+          hardware = {
+            graphics = {
+              enable = true;
+              enable32Bit = true;
+            };
           };
-        };
-      };
-      programs = {
-        virt-manager = {
-          enable = true;
+          services.xserver.videoDrivers = [ "amdgpu" ];
+          boot = {
+            kernelModules = [ "kvm-${platform}"  "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
+            kernelParams = [ "${platform}_iommu=on" "${platform}_iommu=pt" "kvm.ignore_msrs=1" ];
+            extraModprobeConfig = "options vfio-pci ids=${builtins.concatStringsSep "," vfioIds}"; 
+          };
+          systemd.tmpfiles.rules = [
+              "f /dev/shm/looking-glass 0660 ${user} qemu-libvirtd -"
+          ];
+          environment.systemPackages = with pkgs; [
+            dnsmasq
+
+            (pkgs.writeShellScriptBin "looking-glass" ''
+              exec ${pkgs.systemd}/bin/systemd-inhibit \
+                --what=idle\
+                --why="Looking Glass" \
+                ${pkgs.looking-glass-client}/bin/looking-glass-client "$@"
+            '')
+          ];
+          networking.firewall.trustedInterfaces = [ "vibr0" ];
+
+          users.users.kin.extraGroups = [ "libvirtd" "qemu-libvirtd" "disk" "kvm" ];
+          virtualisation = {
+            libvirtd = {
+              enable = true;
+              extraConfig = ''
+                user="${user}"
+              '';
+              onBoot = "ignore";
+              onShutdown = "shutdown";
+              qemu = {
+                package = pkgs.qemu_kvm;
+                runAsRoot = true;
+                verbatimConfig = ''
+                  namespaces = []
+                '';
+                vhostUserPackages = with pkgs; [
+                  virtiofsd
+                ];
+              };
+            };
+          };
+          programs = {
+            virt-manager = {
+              enable = true;
+            };
+          };
         };
       };
     };
@@ -2024,6 +2024,35 @@ This uses a config generated for wireguard servers running at my home.
               endpoint = "peanutbutter.quest:53";
             }
           ];
+        };
+      };
+    };
+  }
+#+end_src
+*** Graphics
+#+begin_src nix :tangle modules/features/misc/graphics.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.graphics = {
+      specialisation = {
+        nvidia.configuration = {
+          hardware = {
+            graphics.enable = true;
+            nvidia.open = true;
+          };
+          services.xserver.videoDrivers = [ "nvidia" ];
+        };
+        amd.configuration = {
+          hardware = {
+            graphics = {
+              enable = true;
+              enable32Bit = true;
+            };
+          };
+          services.xserver.videoDrivers = [ "amdgpu" ];
         };
       };
     };
@@ -4082,7 +4111,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (use-package evil
     :init
     (setq evil-want-C-u-scroll t)
-    (setq evil-want-keybindings nil)
+    (setq evil-want-keybinding nil)
     :config
     (evil-mode 1))
   (use-package evil-collection
