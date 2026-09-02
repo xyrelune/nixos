@@ -116,14 +116,19 @@
           };
         };
       };
-      graphics = {
-        enable = true;
+    };
+    specialisation = {
+      nvidia.configuration = {
+        hardware.graphics.enable = true;
+        hardware.nvidia.open = true;
+        services.xserver.videoDrivers = [ "nvidia" ];
       };
-      nvidia = {
-        open = true;
+      amd.configuration = {
+        hardware.graphics.enable = true;
+        hardware.graphics.enable32Bit = true;
+        services.xserver.videoDrivers = [ "amdgpu" ];
       };
     };
-    services.xserver.videoDrivers = [ "nvidia" ];
 
     networking.wireless.enable = false;
     networking.wireless.iwd.enable = true;

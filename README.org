@@ -271,14 +271,19 @@ The default hosts structure goes as follows
             };
           };
         };
-        graphics = {
-          enable = true;
+      };
+      specialisation = {
+        nvidia.configuration = {
+          hardware.graphics.enable = true;
+          hardware.nvidia.open = true;
+          services.xserver.videoDrivers = [ "nvidia" ];
         };
-        nvidia = {
-          open = true;
+        amd.configuration = {
+          hardware.graphics.enable = true;
+          hardware.graphics.enable32Bit = true;
+          services.xserver.videoDrivers = [ "amdgpu" ];
         };
       };
-      services.xserver.videoDrivers = [ "nvidia" ];
 
       networking.wireless.enable = false;
       networking.wireless.iwd.enable = true;
@@ -624,7 +629,7 @@ The default hosts structure goes as follows
             "eDP-1" = {
               # off = _: {};
               mode = "1920x1080@165.002";
-              scale = 1.25;
+              scale = 1;
               position = _: {
                 props = {
                   x = 0;
@@ -633,7 +638,7 @@ The default hosts structure goes as follows
               };
             };
             "eDP-2" = {
-              off = _: {};
+              #off = _: {};
               mode = "1920x1080@165.000";
               scale = 1;
               position = _: {
@@ -644,7 +649,7 @@ The default hosts structure goes as follows
               };
             };
             "HDMI-A-1" = {
-              off = _: {};
+              #off = _: {};
               mode = "3840x2160@143.988";
               scale = 2;
               position = _: {
@@ -3093,7 +3098,7 @@ The main peers would be:
       secretspath = builtins.toString inputs.secrets;
     in {
       imports = [
-        self.homeModules.lock
+        #self.homeModules.lock
         self.homeModules.mako
         self.homeModules.alacritty
         self.homeModules.gtk
@@ -4077,6 +4082,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (use-package evil
     :init
     (setq evil-want-C-u-scroll t)
+    (setq evil-want-keybindings nil)
     :config
     (evil-mode 1))
   (use-package evil-collection

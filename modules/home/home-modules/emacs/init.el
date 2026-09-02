@@ -43,6 +43,7 @@
 (use-package evil
   :init
   (setq evil-want-C-u-scroll t)
+  (setq evil-want-keybindings nil)
   :config
   (evil-mode 1))
 (use-package evil-collection

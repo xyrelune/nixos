@@ -56,7 +56,7 @@
           "eDP-1" = {
             # off = _: {};
             mode = "1920x1080@165.002";
-            scale = 1.25;
+            scale = 1;
             position = _: {
               props = {
                 x = 0;
@@ -65,7 +65,7 @@
             };
           };
           "eDP-2" = {
-            off = _: {};
+            #off = _: {};
             mode = "1920x1080@165.000";
             scale = 1;
             position = _: {
@@ -76,7 +76,7 @@
             };
           };
           "HDMI-A-1" = {
-            off = _: {};
+            #off = _: {};
             mode = "3840x2160@143.988";
             scale = 2;
             position = _: {
