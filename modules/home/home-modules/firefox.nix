@@ -89,6 +89,7 @@
               enhancer-for-youtube
               stylus
               foxyproxy-standard
+              web-scrobbler
             ];
           };
           settings = {

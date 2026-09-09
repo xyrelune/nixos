@@ -10,7 +10,7 @@
         mainBar = {
           layer = "top";
           position = "top";
-          height = 20;
+          height = 25;
           spacing = 5;
           modules-left = ["niri/workspaces" "mpris" ];
           modules-center = [];
@@ -58,53 +58,53 @@
       };
       style = "
         #waybar {
-            font-family: 'JetBrainsMono Nerd Font Propo';
-            font-size: 14px;
+            font-family: 'Roboto', 'RobotoMono Nerd Font Propo';
+            font-size: 16px;
             font-weight: normal;
-            background-color: rgba(26, 27, 38, 1);
+            background-color: rgba(40, 40, 40, 0.2);
         }
         
         #cpu {
-            color: #bb9af7;
+            color: #d79921;
         }
         
         #memory {
-            color: #9ece6a;
+            color: #98971a;
         }
         
         #battery {
-            color: #e0af68;
+            color: #d65d0e;
         }
         
         #clock.date {
-            color: #ff9e64;
+            color: #fe8019;
         }
         
         #clock.time {
-            color: #f7768e;
+            color: #fb4934;
         }
         
         #window {
-            color: #565f89;
+            color: #928374;
         }
         
         #workspaces button {
             all: initial;
-            color: #565f89;
+            color: #928374;
             padding: 0 8px;
             margin: 0;
         }
         
         #workspaces button.active {
-            color: #7aa2f7;
+            color: #83a598;
         }
         
         #workspaces button:hover {
-            color: #c0caf5;
+            color: #ebdbb2;
         }
         
         #custom-seperator {
-            color: #414868;
+            color: #665c54;
             padding: 0;
         }
       ";

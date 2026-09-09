@@ -5,8 +5,8 @@
 (global-set-key (kbd "C-x c") #'org-capture)
 
 ;; Font 
-(set-face-attribute 'default nil :family "JetBrainsMono Nerd Font Mono" :height 110)
-(set-frame-font "JetBrainsMono Nerd Font Mono 11" nil t)
+(set-face-attribute 'default nil :family "RobotoMono Nerd Font Mono" :height 115)
+(set-frame-font "RobotoMono Nerd Font Mono 11.5" nil t)
 
 ;; qol customizations
 (global-display-line-numbers-mode 1)
@@ -22,7 +22,7 @@
 (add-hook 'org-mode-hook #'org-indent-mode)
 
 ;; Transparency 
-;;(add-to-list 'default-frame-alist '(alpha-background . 70))
+(add-to-list 'default-frame-alist '(alpha-background . 60))
 
 ;; Custom Fonts for org mode
 ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
@@ -35,9 +35,10 @@
 ;; '(org-block ((t (:inherit fixed-pitch)))))
 
 ;; Base16 Theme
-(use-package base16-theme
-  :config
-  (load-theme 'base16-tokyo-night-terminal-dark t))
+;;(use-package base16-theme
+;;  :config
+;;  (load-theme 'base16-tokyo-night-terminal-dark t))
+(load-theme 'gruvbox-dark-medium t)
 
 ;; Evil Mode
 (use-package evil

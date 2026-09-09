@@ -11,7 +11,9 @@
       packages = [
         pkgs.nerd-fonts.iosevka
         pkgs.nerd-fonts.jetbrains-mono
+        pkgs.nerd-fonts.roboto-mono
         pkgs.noto-fonts
+        pkgs.roboto
         self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -28,9 +30,9 @@
           lcdfilter = "default";
         };
         defaultFonts = {
-          serif = ["Noto Sans"];
-          sansSerif = ["Noto Sans"];
-          monospace = ["JetBrainsMono Nerd Font Mono"];
+          serif = ["Roboto"];
+          sansSerif = ["Roboto"];
+          monospace = ["RobotoMono Nerd Font Mono"];
         };
       };
     };
@@ -41,8 +43,8 @@
   }: {
     gtk = {
       font = {
-        name = "Noto Sans";
-        size = 11;
+        name = "Roboto";
+        size = 11.5;
       };
     };
   };

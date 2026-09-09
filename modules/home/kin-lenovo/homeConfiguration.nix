@@ -34,7 +34,6 @@
       homeDirectory = "/home/kin";
       stateVersion = "25.11";
       packages = with pkgs; [
-        spotify
         swappy
         libreoffice
         fastfetch
@@ -62,6 +61,7 @@
         zathura
         speedtest-cli
         vlc
+        onlyoffice-desktopeditors
 
         inputs.prismlauncher.packages.${pkgs.system}.prismlauncher
         zulu25

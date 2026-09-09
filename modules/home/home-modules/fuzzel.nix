@@ -39,17 +39,17 @@
       inherit pkgs;
       settings = {
         main = {
-          font = "Iosevka Nerd Font Mono:size=11";
+          font = "Roboto:size=8";
           list-executables-in-path = "yes";
         };
         colors = {
-          background = "16161eff";
-          text = "c0caf5ff";
-          match = "2ac3deff";
-          selection = "343a55ff";
-          selection-match = "2ac3deff";
-          selection-text = "c0caf5ff";
-          border = "27a1b9ff";
+          background       = "28282866";
+          text             = "ebdbb2ff";
+          match            = "fabd2fff";
+          selection        = "3c3836ff";
+          selection-match  = "fabd2fff";
+          selection-text   = "ebdbb2ff";
+          border           = "665c54ff";
         };
       };
     };

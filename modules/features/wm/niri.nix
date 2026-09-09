@@ -47,8 +47,8 @@
           gaps = 0.5;
           center-focused-column = "never";
           focus-ring = {
-            active-color = "#7e9cd8";
-            inactive-color = "#54546d";
+            active-color = "#d65d0e";
+            inactive-color = "#665c54";
             width = 0.5;
           };
         };
@@ -133,7 +133,6 @@
           "Mod+Return".spawn-sh = "foot";
           "Mod+D".spawn-sh = "fuzzel";
           "Mod+B".spawn-sh = "firefox";
-          "Mod+P".spawn-sh = "spotify";
           "Mod+U".spawn-sh = "emacsclient -c";
 
           "Mod+F".maximize-column = _: {};
@@ -228,7 +227,7 @@
           "Mod+Shift+T".spawn-sh = "rofi-rbw --action type --target totp --clear-after 30"; 
         };
         spawn-sh-at-startup = [
-          "${lib.getExe pkgs.swaybg} -i ${wallspath}/dune.jpg"
+          "${lib.getExe pkgs.swaybg} -i ${wallspath}/railway.jpg"
           "waybar"
         ];
       };

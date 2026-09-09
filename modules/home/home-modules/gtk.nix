@@ -10,12 +10,12 @@
       enable = true;
       gtk4.theme = null;
       theme = {
-        name = "adw-gtk3-dark";
-        package = pkgs.adw-gtk3; 
+        name = "Gruvbox-Dark";
+        package = pkgs.gruvbox-gtk-theme; 
       };
       iconTheme = {
-        package = pkgs.adwaita-icon-theme;
-        name = "Adwaita";
+        package = pkgs.gruvbox-plus-icons;
+        name = "Gruvbox-Plus-Dark";
       };
     };
     qt = {
@@ -31,7 +31,7 @@
     home.pointerCursor = {
       enable = true;
       gtk.enable = true;
-      name = "Bibata-Modern-Ice";
+      name = "Bibata-Modern-Classic";
       package = pkgs.bibata-cursors;
     };
   };

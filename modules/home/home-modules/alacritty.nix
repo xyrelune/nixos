@@ -27,49 +27,56 @@
         };
         colors = {
           primary = {
-            background = "#191724";
-            foreground = "#e0def4";
+            background = "#1a1b26";
+            foreground = "#c0caf5";
           };
+          
           cursor = {
-            text = "#e0def4";
-            cursor = "#524f67";
+            text = "#1a1b26";
+            cursor = "#c0caf5";
           };
+          
           vi_mode_cursor = {
-            text = "#e0def4";
-            cursor = "#524f67";
+            text = "#1a1b26";
+            cursor = "#c0caf5";
           };
+          
           selection = {
-            text = "#e0def4";
-            background = "#403d52";
+            text = "#c0caf5";
+            background = "#283457";
           };
+          
           normal = {
-            black = "#26233a";
-            red = "#eb6f92";
-            green = "#31748f";
-            yellow = "#f6c177";
-            blue = "#9ccfd8";
-            magenta = "#c4a7e7";
-            cyan = "#ebbcba";
-            white = "#e0def4";
+            black = "#15161e";
+            red = "#f7768e";
+            green = "#9ece6a";
+            yellow = "#e0af68";
+            blue = "#7aa2f7";
+            magenta = "#bb9af7";
+            cyan = "#7dcfff";
+            white = "#a9b1d6";
           };
+          
           bright = {
-            black = "#6e6a86";
-            red = "#eb6f92";
-            green = "#31748f";
-            yellow = "#f6c177";
-            blue = "#9ccfd8";
-            magenta = "#c4a7e7";
-            cyan = "#ebbcba";
-            white = "#e0def4";
+            black = "#414868";
+            red = "#f7768e";
+            green = "#9ece6a";
+            yellow = "#e0af68";
+            blue = "#7aa2f7";
+            magenta = "#bb9af7";
+            cyan = "#7dcfff";
+            white = "#c0caf5";
           };
+          
           hints = {
             start = {
-              foreground = "#908caa";
-              background = "#1f1d2e";
+              foreground = "#a9b1d6";
+              background = "#1a1b26";
             };
+            
             end = {
-              foreground = "#6e6a86";
-              background = "#1f1d2e";
+              foreground = "#414868";
+              background = "#1a1b26";
             };
           };
         };

@@ -43,6 +43,7 @@
         org
         org-caldav
         org-autolist
+        gruvbox-theme
       ];
     };
 

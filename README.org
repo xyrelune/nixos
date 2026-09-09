@@ -609,8 +609,8 @@ The default hosts structure goes as follows
             gaps = 0.5;
             center-focused-column = "never";
             focus-ring = {
-              active-color = "#7e9cd8";
-              inactive-color = "#54546d";
+              active-color = "#d65d0e";
+              inactive-color = "#665c54";
               width = 0.5;
             };
           };
@@ -695,7 +695,6 @@ The default hosts structure goes as follows
             "Mod+Return".spawn-sh = "foot";
             "Mod+D".spawn-sh = "fuzzel";
             "Mod+B".spawn-sh = "firefox";
-            "Mod+P".spawn-sh = "spotify";
             "Mod+U".spawn-sh = "emacsclient -c";
 
             "Mod+F".maximize-column = _: {};
@@ -790,7 +789,7 @@ The default hosts structure goes as follows
             "Mod+Shift+T".spawn-sh = "rofi-rbw --action type --target totp --clear-after 30"; 
           };
           spawn-sh-at-startup = [
-            "${lib.getExe pkgs.swaybg} -i ${wallspath}/dune.jpg"
+            "${lib.getExe pkgs.swaybg} -i ${wallspath}/railway.jpg"
             "waybar"
           ];
         };
@@ -831,66 +830,66 @@ The default hosts structure goes as follows
 #+end_src
 *** Foot
 #+begin_src nix :tangle modules/features/apps/foot.nix 
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.nixosModules.foot = {
-      pkgs,
-      lib,
+    {
+      self,
+      inputs,
       ...
     }: {
-      programs.foot = {
-        enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myFoot;
+      flake.nixosModules.foot = {
+        pkgs,
+        lib,
+        ...
+      }: {
+        programs.foot = {
+          enable = true;
+          package = self.packages.${pkgs.stdenv.hostPlatform.system}.myFoot;
+        };
       };
-    };
-    perSystem = {
-      pkgs,
-      lib,
-      ...
-    }: {
-      packages.myFoot = inputs.wrapper-modules.wrappers.foot.wrap {
-        inherit pkgs;
-        settings = {
-          main = {
-            font = "JetBrainsMono Nerd Font Mono:size=11";
-          };
-          colors-dark = {
-            alpha = "1";
-            blur = "no";
-
-            foreground = "c0caf5";
-            background = "1a1b26";
-
-            selection-foreground = "c0caf5";
-            selection-background = "283457";
-
-            urls = "73daca";
-
-            regular0 = "15161e";
-            regular1 = "f7768e";
-            regular2 = "9ece6a";
-            regular3 = "e0af68";
-            regular4 = "7aa2f7";
-            regular5 = "bb9af7";
-            regular6 = "7dcfff";
-            regular7 = "a9b1d6";
-
-            bright0 = "414868";
-            bright1 = "f7768e";
-            bright2 = "9ece6a";
-            bright3 = "e0af68";
-            bright4 = "7aa2f7";
-            bright5 = "bb9af7";
-            bright6 = "7dcfff";
-            bright7 = "c0caf5";
+      perSystem = {
+        pkgs,
+        lib,
+        ...
+      }: {
+        packages.myFoot = inputs.wrapper-modules.wrappers.foot.wrap {
+          inherit pkgs;
+          settings = {
+            main = {
+              font = "RobotoMono Nerd Font Propo:size=11.5";
+            };
+            colors-dark = {
+              alpha = "0.6";
+              blur = "no";
+              
+              foreground = "ebdbb2";
+              background = "282828";
+              
+              selection-foreground = "ebdbb2";
+              selection-background = "504945";
+              
+              urls = "83a598";
+              
+              regular0 = "282828";
+              regular1 = "cc241d";
+              regular2 = "98971a";
+              regular3 = "d79921";
+              regular4 = "458588";
+              regular5 = "b16286";
+              regular6 = "689d6a";
+              regular7 = "a89984";
+              
+              bright0 = "928374";
+              bright1 = "fb4934";
+              bright2 = "b8bb26";
+              bright3 = "fabd2f";
+              bright4 = "83a598";
+              bright5 = "d3869b";
+              bright6 = "8ec07c";
+              bright7 = "ebdbb2";
+            };
           };
         };
       };
-    };
-  }
+    }
 #+end_src
 *** NVF
 #+begin_src nix :tangle modules/features/apps/nvf.nix 
@@ -1383,7 +1382,9 @@ The default hosts structure goes as follows
         packages = [
           pkgs.nerd-fonts.iosevka
           pkgs.nerd-fonts.jetbrains-mono
+          pkgs.nerd-fonts.roboto-mono
           pkgs.noto-fonts
+          pkgs.roboto
           self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -1400,9 +1401,9 @@ The default hosts structure goes as follows
             lcdfilter = "default";
           };
           defaultFonts = {
-            serif = ["Noto Sans"];
-            sansSerif = ["Noto Sans"];
-            monospace = ["JetBrainsMono Nerd Font Mono"];
+            serif = ["Roboto"];
+            sansSerif = ["Roboto"];
+            monospace = ["RobotoMono Nerd Font Mono"];
           };
         };
       };
@@ -1413,8 +1414,8 @@ The default hosts structure goes as follows
     }: {
       gtk = {
         font = {
-          name = "Noto Sans";
-          size = 11;
+          name = "Roboto";
+          size = 11.5;
         };
       };
     };
@@ -3150,7 +3151,6 @@ The main peers would be:
         homeDirectory = "/home/kin";
         stateVersion = "25.11";
         packages = with pkgs; [
-          spotify
           swappy
           libreoffice
           fastfetch
@@ -3178,6 +3178,7 @@ The main peers would be:
           zathura
           speedtest-cli
           vlc
+          onlyoffice-desktopeditors
 
           inputs.prismlauncher.packages.${pkgs.system}.prismlauncher
           zulu25
@@ -3267,49 +3268,56 @@ The main peers would be:
           };
           colors = {
             primary = {
-              background = "#191724";
-              foreground = "#e0def4";
+              background = "#1a1b26";
+              foreground = "#c0caf5";
             };
+            
             cursor = {
-              text = "#e0def4";
-              cursor = "#524f67";
+              text = "#1a1b26";
+              cursor = "#c0caf5";
             };
+            
             vi_mode_cursor = {
-              text = "#e0def4";
-              cursor = "#524f67";
+              text = "#1a1b26";
+              cursor = "#c0caf5";
             };
+            
             selection = {
-              text = "#e0def4";
-              background = "#403d52";
+              text = "#c0caf5";
+              background = "#283457";
             };
+            
             normal = {
-              black = "#26233a";
-              red = "#eb6f92";
-              green = "#31748f";
-              yellow = "#f6c177";
-              blue = "#9ccfd8";
-              magenta = "#c4a7e7";
-              cyan = "#ebbcba";
-              white = "#e0def4";
+              black = "#15161e";
+              red = "#f7768e";
+              green = "#9ece6a";
+              yellow = "#e0af68";
+              blue = "#7aa2f7";
+              magenta = "#bb9af7";
+              cyan = "#7dcfff";
+              white = "#a9b1d6";
             };
+            
             bright = {
-              black = "#6e6a86";
-              red = "#eb6f92";
-              green = "#31748f";
-              yellow = "#f6c177";
-              blue = "#9ccfd8";
-              magenta = "#c4a7e7";
-              cyan = "#ebbcba";
-              white = "#e0def4";
+              black = "#414868";
+              red = "#f7768e";
+              green = "#9ece6a";
+              yellow = "#e0af68";
+              blue = "#7aa2f7";
+              magenta = "#bb9af7";
+              cyan = "#7dcfff";
+              white = "#c0caf5";
             };
+            
             hints = {
               start = {
-                foreground = "#908caa";
-                background = "#1f1d2e";
+                foreground = "#a9b1d6";
+                background = "#1a1b26";
               };
+              
               end = {
-                foreground = "#6e6a86";
-                background = "#1f1d2e";
+                foreground = "#414868";
+                background = "#1a1b26";
               };
             };
           };
@@ -3480,6 +3488,7 @@ The main peers would be:
                 enhancer-for-youtube
                 stylus
                 foxyproxy-standard
+                web-scrobbler
               ];
             };
             settings = {
@@ -3544,17 +3553,17 @@ Fuzzel launcher with clipboard history and password manager.
         inherit pkgs;
         settings = {
           main = {
-            font = "Iosevka Nerd Font Mono:size=11";
+            font = "Roboto:size=8";
             list-executables-in-path = "yes";
           };
           colors = {
-            background = "16161eff";
-            text = "c0caf5ff";
-            match = "2ac3deff";
-            selection = "343a55ff";
-            selection-match = "2ac3deff";
-            selection-text = "c0caf5ff";
-            border = "27a1b9ff";
+            background       = "28282866";
+            text             = "ebdbb2ff";
+            match            = "fabd2fff";
+            selection        = "3c3836ff";
+            selection-match  = "fabd2fff";
+            selection-text   = "ebdbb2ff";
+            border           = "665c54ff";
           };
         };
       };
@@ -3563,6 +3572,8 @@ Fuzzel launcher with clipboard history and password manager.
 #+end_src
 *** GTK
 Check the theme repo for the appropriate name to give in <name> attribute of the gtk theme.
+One can use nwg-look to check the various names for the available variants, even for the icons.
+For icons specifically add hyphens after each word, for example "Gruvbox Plus Dark" need to be entered as "Gruvbox-Plus-Dark".
 #+begin_src nix :tangle modules/home/home-modules/gtk.nix
   {
     self,
@@ -3576,12 +3587,12 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         enable = true;
         gtk4.theme = null;
         theme = {
-          name = "adw-gtk3-dark";
-          package = pkgs.adw-gtk3; 
+          name = "Gruvbox-Dark";
+          package = pkgs.gruvbox-gtk-theme; 
         };
         iconTheme = {
-          package = pkgs.adwaita-icon-theme;
-          name = "Adwaita";
+          package = pkgs.gruvbox-plus-icons;
+          name = "Gruvbox-Plus-Dark";
         };
       };
       qt = {
@@ -3597,7 +3608,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
       home.pointerCursor = {
         enable = true;
         gtk.enable = true;
-        name = "Bibata-Modern-Ice";
+        name = "Bibata-Modern-Classic";
         package = pkgs.bibata-cursors;
       };
     };
@@ -3694,7 +3705,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
           mainBar = {
             layer = "top";
             position = "top";
-            height = 20;
+            height = 25;
             spacing = 5;
             modules-left = ["niri/workspaces" "mpris" ];
             modules-center = [];
@@ -3742,53 +3753,53 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
         };
         style = "
           #waybar {
-              font-family: 'JetBrainsMono Nerd Font Propo';
-              font-size: 14px;
+              font-family: 'Roboto', 'RobotoMono Nerd Font Propo';
+              font-size: 16px;
               font-weight: normal;
-              background-color: rgba(26, 27, 38, 1);
+              background-color: rgba(40, 40, 40, 0.2);
           }
           
           #cpu {
-              color: #bb9af7;
+              color: #d79921;
           }
           
           #memory {
-              color: #9ece6a;
+              color: #98971a;
           }
           
           #battery {
-              color: #e0af68;
+              color: #d65d0e;
           }
           
           #clock.date {
-              color: #ff9e64;
+              color: #fe8019;
           }
           
           #clock.time {
-              color: #f7768e;
+              color: #fb4934;
           }
           
           #window {
-              color: #565f89;
+              color: #928374;
           }
           
           #workspaces button {
               all: initial;
-              color: #565f89;
+              color: #928374;
               padding: 0 8px;
               margin: 0;
           }
           
           #workspaces button.active {
-              color: #7aa2f7;
+              color: #83a598;
           }
           
           #workspaces button:hover {
-              color: #c0caf5;
+              color: #ebdbb2;
           }
           
           #custom-seperator {
-              color: #414868;
+              color: #665c54;
               padding: 0;
           }
         ";
@@ -4029,6 +4040,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
           org
           org-caldav
           org-autolist
+          gruvbox-theme
         ];
       };
 
@@ -4073,8 +4085,8 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (global-set-key (kbd "C-x c") #'org-capture)
 
   ;; Font 
-  (set-face-attribute 'default nil :family "JetBrainsMono Nerd Font Mono" :height 110)
-  (set-frame-font "JetBrainsMono Nerd Font Mono 11" nil t)
+  (set-face-attribute 'default nil :family "RobotoMono Nerd Font Mono" :height 115)
+  (set-frame-font "RobotoMono Nerd Font Mono 11.5" nil t)
 
   ;; qol customizations
   (global-display-line-numbers-mode 1)
@@ -4090,7 +4102,7 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   (add-hook 'org-mode-hook #'org-indent-mode)
 
   ;; Transparency 
-  ;;(add-to-list 'default-frame-alist '(alpha-background . 70))
+  (add-to-list 'default-frame-alist '(alpha-background . 60))
 
   ;; Custom Fonts for org mode
   ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
@@ -4103,9 +4115,10 @@ Check the theme repo for the appropriate name to give in <name> attribute of the
   ;; '(org-block ((t (:inherit fixed-pitch)))))
 
   ;; Base16 Theme
-  (use-package base16-theme
-    :config
-    (load-theme 'base16-tokyo-night-terminal-dark t))
+  ;;(use-package base16-theme
+  ;;  :config
+  ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
+  (load-theme 'gruvbox-dark-medium t)
 
   ;; Evil Mode
   (use-package evil
