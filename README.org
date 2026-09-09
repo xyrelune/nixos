@@ -3079,6 +3079,20 @@ The main peers would be:
   }
 #+end_src
 * Home
+- For setting default applications with ~xdg-mime~, run the following command
+  example for pdfs
+  #+begin_src bash :tangle no
+    xdg-mime default helium.desktop application/pdf
+  #+end_src
+- For getting the .desktop names for run the following commands
+  #+begin_src bash :tangle no
+    find /run/current-system/sw/share/applications -name '*.desktop'
+    find ~/.nix-profile/share/applications -name '*.desktop'
+  #+end_src
+- For setting default web browser use the following
+  #+begin_src bash :tangle no
+    xdg-settings set default-web-browser helium.desktop
+  #+end_src
 ** Home Users
 *** Lenovo
 **** kin
