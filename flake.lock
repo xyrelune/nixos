@@ -796,10 +796,10 @@
     "walls": {
       "flake": false,
       "locked": {
-        "lastModified": 1784922021,
-        "narHash": "sha256-Z4Qk41o0b8BdYIwdXoxhR0IlGqm/Pe68RTOyoaloV9g=",
+        "lastModified": 1788958603,
+        "narHash": "sha256-1ldszkQ4Gyyr7oJc3ZRES6pUPR7fZE+oeF7Gv6VwVuI=",
         "ref": "main",
-        "rev": "cd036c6ade2d1ab72f60b0fea57a5158231ac10a",
+        "rev": "f3f4c6c2f88b62cbb4fa84142bc0be86842c4d86",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/xyrelune/walls"

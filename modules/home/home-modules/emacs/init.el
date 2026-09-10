@@ -20,6 +20,9 @@
 (setq auto-save-default nil)
 (electric-indent-mode 1)
 (add-hook 'org-mode-hook #'org-indent-mode)
+(dolist (mode '(vterm-mode-hook
+                ghostel-mode-hook))
+  (add-hook mode (lambda() (display-line-numbers-mode 0))))
 
 ;; Transparency 
 (add-to-list 'default-frame-alist '(alpha-background . 60))
@@ -107,9 +110,9 @@
 
 ;; Multi-Vterm
 (use-package multi-vterm
-  :bind (("C-c t" . multi-vterm))
-        (("C-c [" . multi-vterm-prev))
-        (("C-c ]" . multi-vterm-next))
+  :bind (("C-x t" . multi-vterm))
+        (("C-x [" . multi-vterm-prev))
+        (("C-x ]" . multi-vterm-next))
   :config
   (add-hook 'vterm-mode-hook
 		(lambda ()
@@ -176,7 +179,7 @@
 ;; Ghostel  
 (use-package ghostel
   :bind
-  (("C-x t" . ghostel)))
+  (("C-c t" . ghostel)))
 (use-package evil-ghostel
   :after (ghostel evil)
   :hook (ghostel-mode . evil-ghostel-mode))

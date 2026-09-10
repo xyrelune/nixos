@@ -150,10 +150,10 @@
                   vim.lsp.enable('org')
                 '';
               };
-              tokyonight = {
-                package = tokyonight-nvim;
+              gruvbox = {
+                package = gruvbox-nvim;
                 setup = ''
-                  vim.cmd("colorscheme tokyonight-night")
+                  vim.cmd("colorscheme gruvbox")
                 '';
               };
             };

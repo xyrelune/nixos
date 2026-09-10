@@ -694,7 +694,7 @@ The default hosts structure goes as follows
           binds = {
             "Mod+Return".spawn-sh = "foot";
             "Mod+D".spawn-sh = "fuzzel";
-            "Mod+B".spawn-sh = "firefox";
+            "Mod+B".spawn-sh = "helium";
             "Mod+U".spawn-sh = "emacsclient -c";
 
             "Mod+F".maximize-column = _: {};
@@ -789,7 +789,7 @@ The default hosts structure goes as follows
             "Mod+Shift+T".spawn-sh = "rofi-rbw --action type --target totp --clear-after 30"; 
           };
           spawn-sh-at-startup = [
-            "${lib.getExe pkgs.swaybg} -i ${wallspath}/railway.jpg"
+            "${lib.getExe pkgs.swaybg} -i ${wallspath}/flowers.jpg"
             "waybar"
           ];
         };
@@ -1045,10 +1045,10 @@ The default hosts structure goes as follows
                     vim.lsp.enable('org')
                   '';
                 };
-                tokyonight = {
-                  package = tokyonight-nvim;
+                gruvbox = {
+                  package = gruvbox-nvim;
                   setup = ''
-                    vim.cmd("colorscheme tokyonight-night")
+                    vim.cmd("colorscheme gruvbox")
                   '';
                 };
               };
@@ -4199,11 +4199,16 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
     (emms-default-players)
     (setq emms-player-list '(emms-player-mpv)))
 
+  ;; To make line numbers disappear in terminal mode
+  (dolist (mode '(vterm-mode-hook
+                  ghostel-mode-hook))
+    (add-hook mode (lambda() (display-line-numbers-mode 0))))
+
   ;; Multi-Vterm
   (use-package multi-vterm
-    :bind (("C-c t" . multi-vterm))
-          (("C-c [" . multi-vterm-prev))
-          (("C-c ]" . multi-vterm-next))
+    :bind (("C-x t" . multi-vterm))
+          (("C-x [" . multi-vterm-prev))
+          (("C-x ]" . multi-vterm-next))
     :config
     (add-hook 'vterm-mode-hook
   		(lambda ()
@@ -4270,7 +4275,7 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
   ;; Ghostel  
   (use-package ghostel
     :bind
-    (("C-x t" . ghostel)))
+    (("C-c t" . ghostel)))
   (use-package evil-ghostel
     :after (ghostel evil)
     :hook (ghostel-mode . evil-ghostel-mode))

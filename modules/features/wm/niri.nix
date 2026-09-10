@@ -132,7 +132,7 @@
         binds = {
           "Mod+Return".spawn-sh = "foot";
           "Mod+D".spawn-sh = "fuzzel";
-          "Mod+B".spawn-sh = "firefox";
+          "Mod+B".spawn-sh = "helium";
           "Mod+U".spawn-sh = "emacsclient -c";
 
           "Mod+F".maximize-column = _: {};
@@ -227,7 +227,7 @@
           "Mod+Shift+T".spawn-sh = "rofi-rbw --action type --target totp --clear-after 30"; 
         };
         spawn-sh-at-startup = [
-          "${lib.getExe pkgs.swaybg} -i ${wallspath}/railway.jpg"
+          "${lib.getExe pkgs.swaybg} -i ${wallspath}/flowers.jpg"
           "waybar"
         ];
       };
