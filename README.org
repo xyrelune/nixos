@@ -115,17 +115,17 @@ The default hosts structure goes as follows
 2. configuration.nix
 3. hardware.nix 
 ** Default   
-*** Lenovo Laptop 
-#+begin_src nix :tangle modules/hosts/lenovo/default.nix 
+*** Laptop 
+#+begin_src nix :tangle modules/hosts/laptop/default.nix 
   {
     withSystem,
     self,
     inputs,
     ...
   }: {
-    flake.nixosConfigurations.lenovo = inputs.nixpkgs.lib.nixosSystem {
+    flake.nixosConfigurations.laptop = inputs.nixpkgs.lib.nixosSystem {
       modules = [
-        self.nixosModules.lenovoConfiguration
+        self.nixosModules.laptopConfiguration
         ({pkgs, ...}: {
           nixpkgs.config.allowUnfree = true;
           nixpkgs.overlays = [
@@ -151,14 +151,14 @@ The default hosts structure goes as follows
   }
 #+end_src
 ** Configuration 
-*** Lenovo Laptop
-#+begin_src nix :tangle modules/hosts/lenovo/configuration.nix
+*** Laptop
+#+begin_src nix :tangle modules/hosts/laptop/configuration.nix
   {
     self,
     inputs,
     ...
   }: {
-    flake.nixosModules.lenovoConfiguration = {
+    flake.nixosModules.laptopConfiguration = {
       config,
       pkgs,
       ...
@@ -166,7 +166,7 @@ The default hosts structure goes as follows
       secretspath = builtins.toString inputs.secrets;
     in {
       imports = [
-        self.nixosModules.lenovoHardware
+        self.nixosModules.laptopHardware
         self.nixosModules.niri
         self.nixosModules.ly
         self.nixosModules.pipewire
@@ -178,8 +178,6 @@ The default hosts structure goes as follows
         self.nixosModules.bash
         self.nixosModules.localCA
         self.nixosModules.customFonts
-        self.nixosModules.graphics
-        self.nixosModules.virt-manager
         self.nixosModules.wg-quick
 
         inputs.sops-nix.nixosModules.sops
@@ -189,16 +187,30 @@ The default hosts structure goes as follows
         loader = {
           efi.canTouchEfiVariables = true;
           grub = {
-            enable = true;
+            enable = false;
             efiSupport = true;
             device = "nodev";
             useOSProber = true;
           };
+          systemd-boot = {
+            enable = true;
+            configurationLimit = 3;
+          };
         };
       };
+
+      hardware = {
+        graphics = {
+          enable = true;
+          enable32Bit = true;
+        };
+      }; 
+      services.xserver.videoDrivers = [ "modesetting" ];
+      hardware.enableRedistributableFirmware = true;
+
       boot.kernelPackages = pkgs.linuxPackages_zen;
 
-      networking.hostName = "lenovo";
+      networking.hostName = "laptop";
 
       networking.networkmanager.enable = true;
       time.timeZone = "Asia/Kolkata";
@@ -370,6 +382,13 @@ The default hosts structure goes as follows
           media = {};
         };
       };
+      hardware = {
+        graphics = {
+          enable = true;
+          enable32Bit = true;
+        };
+      };
+      services.xserver.videoDrivers = [ "amdgpu" ];
 
       virtualisation.docker = {
         enable = true;
@@ -469,14 +488,14 @@ The default hosts structure goes as follows
   }
 #+end_src
 ** Hardware
-*** Lenovo Laptop
-#+begin_src nix :tangle modules/hosts/lenovo/hardware.nix 
+*** Laptop
+#+begin_src nix :tangle modules/hosts/laptop/hardware.nix 
   {
     self,
     inputs,
     ...
   }: {
-    flake.nixosModules.lenovoHardware = {
+    flake.nixosModules.laptopHardware = {
       config,
       lib,
       pkgs,
@@ -609,7 +628,7 @@ The default hosts structure goes as follows
             gaps = 0.5;
             center-focused-column = "never";
             focus-ring = {
-              active-color = "#d65d0e";
+              active-color = "#ebdbb2";
               inactive-color = "#665c54";
               width = 0.5;
             };
@@ -617,14 +636,14 @@ The default hosts structure goes as follows
           outputs = {
             "eDP-1" = {
               # off = _: {};
-              mode = "1920x1080@165.002";
+              mode = "1920x1200@60.003";
               scale = 1;
-              position = _: {
-                props = {
-                  x = 0;
-                  y = 1080;
-                };
-              };
+              #position = _: {
+              #  props = {
+              #    x = 0;
+              #    y = 1080;
+              #  };
+              #};
             };
             "eDP-2" = {
               #off = _: {};
@@ -857,7 +876,7 @@ The default hosts structure goes as follows
               font = "RobotoMono Nerd Font Propo:size=11.5";
             };
             colors-dark = {
-              alpha = "0.6";
+              alpha = "1";
               blur = "no";
               
               foreground = "ebdbb2";
@@ -3719,7 +3738,7 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
           mainBar = {
             layer = "top";
             position = "top";
-            height = 25;
+            height = 20;
             spacing = 5;
             modules-left = ["niri/workspaces" "mpris" ];
             modules-center = [];
@@ -3770,7 +3789,7 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
               font-family: 'Roboto', 'RobotoMono Nerd Font Propo';
               font-size: 16px;
               font-weight: normal;
-              background-color: rgba(40, 40, 40, 0.2);
+              background-color: rgba(40, 40, 40, 1);
           }
           
           #cpu {
@@ -4028,6 +4047,7 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
         nixd
         python314
         pyright
+        texliveFull
       ];
       programs.emacs = {
         enable = true;
@@ -4116,7 +4136,7 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
   (add-hook 'org-mode-hook #'org-indent-mode)
 
   ;; Transparency 
-  (add-to-list 'default-frame-alist '(alpha-background . 60))
+  ;; (add-to-list 'default-frame-alist '(alpha-background . 60))
 
   ;; Custom Fonts for org mode
   ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
@@ -4252,25 +4272,6 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
             "~/org/caldav-inbox.org"))
     :bind
     (("C-x a" . org-agenda)))
-
-  ;; caldav
-  (use-package org-caldav
-    :after org
-    :init
-    (setq org-caldav-url
-          "https://radicale.peanutbutter.quest/kin/")
-    (setq org-caldav-calendar-id
-          "3824000232454627070")
-    (setq org-caldav-inbox
-          "~/org/caldav-inbox.org")
-    (setq org-caldav-files
-          '("~/org/agenda.org"))
-    (setq org-caldav-sync-direction
-          'twoway)
-    (setq org-icalendar-timezone
-          "Asia/Kolkata")
-    :bind
-    (("C-c c" . org-caldav-sync)))
 
   ;; Ghostel  
   (use-package ghostel

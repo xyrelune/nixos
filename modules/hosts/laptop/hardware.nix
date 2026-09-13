@@ -3,7 +3,7 @@
   inputs,
   ...
 }: {
-  flake.nixosModules.lenovoHardware = {
+  flake.nixosModules.laptopHardware = {
     config,
     lib,
     pkgs,

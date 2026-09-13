@@ -47,7 +47,7 @@
           gaps = 0.5;
           center-focused-column = "never";
           focus-ring = {
-            active-color = "#d65d0e";
+            active-color = "#ebdbb2";
             inactive-color = "#665c54";
             width = 0.5;
           };
@@ -55,14 +55,14 @@
         outputs = {
           "eDP-1" = {
             # off = _: {};
-            mode = "1920x1080@165.002";
+            mode = "1920x1200@60.003";
             scale = 1;
-            position = _: {
-              props = {
-                x = 0;
-                y = 1080;
-              };
-            };
+            #position = _: {
+            #  props = {
+            #    x = 0;
+            #    y = 1080;
+            #  };
+            #};
           };
           "eDP-2" = {
             #off = _: {};

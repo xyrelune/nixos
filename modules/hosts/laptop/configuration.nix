@@ -3,7 +3,7 @@
   inputs,
   ...
 }: {
-  flake.nixosModules.lenovoConfiguration = {
+  flake.nixosModules.laptopConfiguration = {
     config,
     pkgs,
     ...
@@ -11,7 +11,7 @@
     secretspath = builtins.toString inputs.secrets;
   in {
     imports = [
-      self.nixosModules.lenovoHardware
+      self.nixosModules.laptopHardware
       self.nixosModules.niri
       self.nixosModules.ly
       self.nixosModules.pipewire
@@ -23,8 +23,6 @@
       self.nixosModules.bash
       self.nixosModules.localCA
       self.nixosModules.customFonts
-      self.nixosModules.graphics
-      self.nixosModules.virt-manager
       self.nixosModules.wg-quick
 
       inputs.sops-nix.nixosModules.sops
@@ -34,16 +32,30 @@
       loader = {
         efi.canTouchEfiVariables = true;
         grub = {
-          enable = true;
+          enable = false;
           efiSupport = true;
           device = "nodev";
           useOSProber = true;
         };
+        systemd-boot = {
+          enable = true;
+          configurationLimit = 3;
+        };
       };
     };
+
+    hardware = {
+      graphics = {
+        enable = true;
+        enable32Bit = true;
+      };
+    }; 
+    services.xserver.videoDrivers = [ "modesetting" ];
+    hardware.enableRedistributableFirmware = true;
+
     boot.kernelPackages = pkgs.linuxPackages_zen;
 
-    networking.hostName = "lenovo";
+    networking.hostName = "laptop";
 
     networking.networkmanager.enable = true;
     time.timeZone = "Asia/Kolkata";

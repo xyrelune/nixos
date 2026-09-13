@@ -20,12 +20,9 @@
 (setq auto-save-default nil)
 (electric-indent-mode 1)
 (add-hook 'org-mode-hook #'org-indent-mode)
-(dolist (mode '(vterm-mode-hook
-                ghostel-mode-hook))
-  (add-hook mode (lambda() (display-line-numbers-mode 0))))
 
 ;; Transparency 
-(add-to-list 'default-frame-alist '(alpha-background . 60))
+;; (add-to-list 'default-frame-alist '(alpha-background . 60))
 
 ;; Custom Fonts for org mode
 ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
@@ -108,6 +105,11 @@
   (emms-default-players)
   (setq emms-player-list '(emms-player-mpv)))
 
+;; To make line numbers disappear in terminal mode
+(dolist (mode '(vterm-mode-hook
+                ghostel-mode-hook))
+  (add-hook mode (lambda() (display-line-numbers-mode 0))))
+
 ;; Multi-Vterm
 (use-package multi-vterm
   :bind (("C-x t" . multi-vterm))
@@ -156,25 +158,6 @@
           "~/org/caldav-inbox.org"))
   :bind
   (("C-x a" . org-agenda)))
-
-;; caldav
-(use-package org-caldav
-  :after org
-  :init
-  (setq org-caldav-url
-        "https://radicale.peanutbutter.quest/kin/")
-  (setq org-caldav-calendar-id
-        "3824000232454627070")
-  (setq org-caldav-inbox
-        "~/org/caldav-inbox.org")
-  (setq org-caldav-files
-        '("~/org/agenda.org"))
-  (setq org-caldav-sync-direction
-        'twoway)
-  (setq org-icalendar-timezone
-        "Asia/Kolkata")
-  :bind
-  (("C-c c" . org-caldav-sync)))
 
 ;; Ghostel  
 (use-package ghostel

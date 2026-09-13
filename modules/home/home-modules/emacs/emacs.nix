@@ -17,6 +17,7 @@
       nixd
       python314
       pyright
+      texliveFull
     ];
     programs.emacs = {
       enable = true;

@@ -10,7 +10,7 @@
         mainBar = {
           layer = "top";
           position = "top";
-          height = 25;
+          height = 20;
           spacing = 5;
           modules-left = ["niri/workspaces" "mpris" ];
           modules-center = [];
@@ -61,7 +61,7 @@
             font-family: 'Roboto', 'RobotoMono Nerd Font Propo';
             font-size: 16px;
             font-weight: normal;
-            background-color: rgba(40, 40, 40, 0.2);
+            background-color: rgba(40, 40, 40, 1);
         }
         
         #cpu {

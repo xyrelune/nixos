@@ -25,7 +25,7 @@
           font = "RobotoMono Nerd Font Propo:size=11.5";
         };
         colors-dark = {
-          alpha = "0.6";
+          alpha = "1";
           blur = "no";
           
           foreground = "ebdbb2";
