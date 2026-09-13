@@ -5,8 +5,8 @@
 (global-set-key (kbd "C-x c") #'org-capture)
 
 ;; Font 
-(set-face-attribute 'default nil :family "RobotoMono Nerd Font Mono" :height 115)
-(set-frame-font "RobotoMono Nerd Font Mono 11.5" nil t)
+(set-face-attribute 'default nil :family "Iosevka Nerd Font Mono" :height 110)
+(set-frame-font "Iosevka Nerd Font Mono 11.5" nil t)
 
 ;; qol customizations
 (global-display-line-numbers-mode 1)

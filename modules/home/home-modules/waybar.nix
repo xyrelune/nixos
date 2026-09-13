@@ -58,7 +58,7 @@
       };
       style = "
         #waybar {
-            font-family: 'Roboto', 'RobotoMono Nerd Font Propo';
+            font-family: 'Iosevka Nerd Font Propo';
             font-size: 16px;
             font-weight: normal;
             background-color: rgba(40, 40, 40, 1);

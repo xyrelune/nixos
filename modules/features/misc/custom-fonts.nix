@@ -32,7 +32,7 @@
         defaultFonts = {
           serif = ["Roboto"];
           sansSerif = ["Roboto"];
-          monospace = ["RobotoMono Nerd Font Mono"];
+          monospace = ["Iosevka Nerd Font Mono"];
         };
       };
     };
@@ -44,7 +44,7 @@
     gtk = {
       font = {
         name = "Roboto";
-        size = 11.5;
+        size = 11;
       };
     };
   };

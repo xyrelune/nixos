@@ -103,10 +103,10 @@
     environment = { 
       systemPackages = with pkgs; [
         git
-        mullvad
-        mullvad-vpn
+        #mullvad
+        #mullvad-vpn
 
-        inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
+        #inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
       ];
       variables = {
         EDITOR = "emacsclient -c";};

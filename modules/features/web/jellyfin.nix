@@ -4,6 +4,8 @@
   ...
 }: {
   flake.nixosModules.jellyfin = {
+    lib,
+    config,
     pkgs,
     ...
   }: {
@@ -11,16 +13,35 @@
       enable = true;
       hardwareAcceleration = {
         enable = true;
-        type = "vaapi";
-        device = "/dev/dri/by-path/pci-0000:00:02.0-render";
+        type = "nvenc";
+        device = "/dev/dri/renderD128";
+      };
+      transcoding = {
+        enableHardwareEncoding = true;
+        hardwareDecodingCodecs = {
+          h264 = true;
+          hevc = true;
+          hevc10bit = true;
+          mpeg2 = true;
+          vc1 = true;
+          vp8 = true;
+          vp9 = true;
+        };
+        hardwareEncodingCodecs.hevc = true;
       };
     };
-    hardware.graphics = {
-      enable = true;
-      extraPackages = with pkgs; [
-        intel-media-driver
-        intel-compute-runtime
-        vpl-gpu-rt
+    systemd.services.jellyfin.serviceConfig = {
+      SystemCallFilter = lib.mkForce [
+        "@system-service"
+        "ioctl"
+        "~@priveleged"
+      ];
+      DeviceAllow = lib.mkForce [
+        "/dev/nvidia0 rw"
+        "/dev/nvidiactl rw"
+        "/dev/nvidia-uvm rw"
+        "/dev/nvidia-modeset rw"
+        "/dev/dri/renderD128 rw"
       ];
     };
   };

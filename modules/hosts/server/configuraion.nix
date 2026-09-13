@@ -20,7 +20,6 @@
       self.nixosModules.nginx
       self.nixosModules.qbittorrent
       self.nixosModules.vaultwarden
-      self.nixosModules.komga
       self.nixosModules.miniflux
       self.nixosModules.docker
       self.nixosModules.bash
@@ -71,18 +70,16 @@
         media = {};
       };
     };
+    
     hardware = {
-      graphics = {
-        enable = true;
-        enable32Bit = true;
-      };
+      graphics.enable = true;
+      nvidia.open = true;
     };
-    services.xserver.videoDrivers = [ "amdgpu" ];
+    services.xserver.videoDrivers = [ "nvidia" ];
 
     virtualisation.docker = {
       enable = true;
     };
-    
     sops = {
       defaultSopsFile = "${secretspath}/secrets/server.yaml";
       age = {
@@ -136,17 +133,6 @@
           wakeOnLan.enable = true;
         };
       };
-    };
-    systemd.services.set-brightness = {
-      description = "Set screen brightness to 0";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "systemd-backlight@backlight:intel_backlight.service" ];
-
-      serviceConfig.Type = "oneshot";
-
-      script = ''
-        echo 0 > /sys/class/backlight/intel_backlight/brightness
-      '';
     };
 
     services.vsftpd = {

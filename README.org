@@ -6,7 +6,7 @@
 Hello! This is my [[https://nixos.org/][NixOS]] configuration that I use to maintain my machines. 
 
 The machines:
-- ~lenovo~
+- ~laptop~
 - ~server~
 
 I use [[https://orgmode.org/][org-mode]] in [[https://www.gnu.org/software//emacs/][emacs]] to manage my NixOS configuration.
@@ -26,7 +26,7 @@ To use this repo:
 #+begin_src bash :tangle no
    home-manager switch --flake .#kin-lenovo
 #+end_src
-   I only have one home-manager user configured, and that is for my ~lenovo~ machine.
+   I only have one home-manager user configured, and that is for my ~laptop~ machine.
 - For ~server~ deployments, use the following command to do remote rebuilds
 #+begin_src bash :tangle no
     nixos-rebuild switch --flake .#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password
@@ -146,6 +146,11 @@ The default hosts structure goes as follows
     flake.nixosConfigurations.server = inputs.nixpkgs-stable.lib.nixosSystem {
       modules = [
         self.nixosModules.serverConfiguration
+        ({pkgs, ...}: {
+          nixpkgs.config.allowUnfree = true;
+          nixpkgs.overlays = [
+          ];
+        })
       ];
     };
   }
@@ -258,10 +263,10 @@ The default hosts structure goes as follows
       environment = { 
         systemPackages = with pkgs; [
           git
-          mullvad
-          mullvad-vpn
+          #mullvad
+          #mullvad-vpn
 
-          inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
+          #inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
         ];
         variables = {
           EDITOR = "emacsclient -c";};
@@ -331,7 +336,6 @@ The default hosts structure goes as follows
         self.nixosModules.nginx
         self.nixosModules.qbittorrent
         self.nixosModules.vaultwarden
-        self.nixosModules.komga
         self.nixosModules.miniflux
         self.nixosModules.docker
         self.nixosModules.bash
@@ -382,18 +386,16 @@ The default hosts structure goes as follows
           media = {};
         };
       };
+      
       hardware = {
-        graphics = {
-          enable = true;
-          enable32Bit = true;
-        };
+        graphics.enable = true;
+        nvidia.open = true;
       };
-      services.xserver.videoDrivers = [ "amdgpu" ];
+      services.xserver.videoDrivers = [ "nvidia" ];
 
       virtualisation.docker = {
         enable = true;
       };
-      
       sops = {
         defaultSopsFile = "${secretspath}/secrets/server.yaml";
         age = {
@@ -447,17 +449,6 @@ The default hosts structure goes as follows
             wakeOnLan.enable = true;
           };
         };
-      };
-      systemd.services.set-brightness = {
-        description = "Set screen brightness to 0";
-        wantedBy = [ "multi-user.target" ];
-        after = [ "systemd-backlight@backlight:intel_backlight.service" ];
-
-        serviceConfig.Type = "oneshot";
-
-        script = ''
-          echo 0 > /sys/class/backlight/intel_backlight/brightness
-        '';
       };
 
       services.vsftpd = {
@@ -637,7 +628,7 @@ The default hosts structure goes as follows
             "eDP-1" = {
               # off = _: {};
               mode = "1920x1200@60.003";
-              scale = 1;
+              scale = 1.25;
               #position = _: {
               #  props = {
               #    x = 0;
@@ -873,7 +864,7 @@ The default hosts structure goes as follows
           inherit pkgs;
           settings = {
             main = {
-              font = "RobotoMono Nerd Font Propo:size=11.5";
+              font = "Iosevka Nerd Font Propo:size=11";
             };
             colors-dark = {
               alpha = "1";
@@ -1422,7 +1413,7 @@ The default hosts structure goes as follows
           defaultFonts = {
             serif = ["Roboto"];
             sansSerif = ["Roboto"];
-            monospace = ["RobotoMono Nerd Font Mono"];
+            monospace = ["Iosevka Nerd Font Mono"];
           };
         };
       };
@@ -1434,7 +1425,7 @@ The default hosts structure goes as follows
       gtk = {
         font = {
           name = "Roboto";
-          size = 11.5;
+          size = 11;
         };
       };
     };
@@ -2730,6 +2721,8 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
     ...
   }: {
     flake.nixosModules.jellyfin = {
+      lib,
+      config,
       pkgs,
       ...
     }: {
@@ -2737,16 +2730,35 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
         enable = true;
         hardwareAcceleration = {
           enable = true;
-          type = "vaapi";
-          device = "/dev/dri/by-path/pci-0000:00:02.0-render";
+          type = "nvenc";
+          device = "/dev/dri/renderD128";
+        };
+        transcoding = {
+          enableHardwareEncoding = true;
+          hardwareDecodingCodecs = {
+            h264 = true;
+            hevc = true;
+            hevc10bit = true;
+            mpeg2 = true;
+            vc1 = true;
+            vp8 = true;
+            vp9 = true;
+          };
+          hardwareEncodingCodecs.hevc = true;
         };
       };
-      hardware.graphics = {
-        enable = true;
-        extraPackages = with pkgs; [
-          intel-media-driver
-          intel-compute-runtime
-          vpl-gpu-rt
+      systemd.services.jellyfin.serviceConfig = {
+        SystemCallFilter = lib.mkForce [
+          "@system-service"
+          "ioctl"
+          "~@priveleged"
+        ];
+        DeviceAllow = lib.mkForce [
+          "/dev/nvidia0 rw"
+          "/dev/nvidiactl rw"
+          "/dev/nvidia-uvm rw"
+          "/dev/nvidia-modeset rw"
+          "/dev/dri/renderD128 rw"
         ];
       };
     };
@@ -3113,7 +3125,7 @@ The main peers would be:
   xdg-settings set default-web-browser helium.desktop
 #+end_src
 ** Home Users
-*** Lenovo
+*** Laptop
 **** kin
 ***** Default
 #+begin_src nix :tangle modules/home/kin-lenovo/home.nix 
@@ -3123,7 +3135,7 @@ The main peers would be:
     inputs,
     ...
   }: {
-    flake.homeConfigurations.kin-lenovo = inputs.home-manager.lib.homeManagerConfiguration {
+    flake.homeConfigurations.kin-laptop = inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = import inputs.nixpkgs {
         system = "x86_64-linux";
         overlays = [
@@ -3586,7 +3598,7 @@ Fuzzel launcher with clipboard history and password manager.
         inherit pkgs;
         settings = {
           main = {
-            font = "Roboto:size=8";
+            font = "Iosevka:size=11";
             list-executables-in-path = "yes";
           };
           colors = {
@@ -3786,7 +3798,7 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
         };
         style = "
           #waybar {
-              font-family: 'Roboto', 'RobotoMono Nerd Font Propo';
+              font-family: 'Iosevka Nerd Font Propo';
               font-size: 16px;
               font-weight: normal;
               background-color: rgba(40, 40, 40, 1);
@@ -4119,8 +4131,8 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
   (global-set-key (kbd "C-x c") #'org-capture)
 
   ;; Font 
-  (set-face-attribute 'default nil :family "RobotoMono Nerd Font Mono" :height 115)
-  (set-frame-font "RobotoMono Nerd Font Mono 11.5" nil t)
+  (set-face-attribute 'default nil :family "Iosevka Nerd Font Mono" :height 110)
+  (set-frame-font "Iosevka Nerd Font Mono 11.5" nil t)
 
   ;; qol customizations
   (global-display-line-numbers-mode 1)

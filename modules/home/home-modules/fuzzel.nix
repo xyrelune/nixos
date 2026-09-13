@@ -39,7 +39,7 @@
       inherit pkgs;
       settings = {
         main = {
-          font = "Roboto:size=8";
+          font = "Iosevka:size=11";
           list-executables-in-path = "yes";
         };
         colors = {
