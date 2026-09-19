@@ -457,6 +457,22 @@
     },
     "nixpkgs_7": {
       "locked": {
+        "lastModified": 1788752844,
+        "narHash": "sha256-VaWGJ6+cIYN2erfSecbRV+4ljI185Ty2wUrXyvQbgOw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "dc5d91f840324650bac8c379428c7037a416959a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_8": {
+      "locked": {
         "lastModified": 1788431191,
         "narHash": "sha256-MFClkboDeW56feBCAeAV3Z3J2quGSZFlAOXQ4JjIlIA=",
         "owner": "NixOS",
@@ -471,7 +487,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_8": {
+    "nixpkgs_9": {
       "locked": {
         "lastModified": 1759281824,
         "narHash": "sha256-FIBE1qXv9TKvSNwst6FumyHwCRH3BlWDpfsnqRDCll0=",
@@ -608,6 +624,7 @@
         "redlib-arrogant": "redlib-arrogant",
         "redlib-fork": "redlib-fork",
         "secrets": "secrets",
+        "sidra": "sidra",
         "sops-nix": "sops-nix",
         "walls": "walls",
         "wrapper-modules": "wrapper-modules",
@@ -693,6 +710,24 @@
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/xyrelune/nix-secrets"
+      }
+    },
+    "sidra": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_7"
+      },
+      "locked": {
+        "lastModified": 1789160807,
+        "narHash": "sha256-/ZtmocXdg21L6zEbUrsHdjqYEFKi3hK0vQXvEou3zts=",
+        "owner": "wimpysworld",
+        "repo": "sidra",
+        "rev": "f703605a8eef9c12734197f3d8658ede8a8cf368",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wimpysworld",
+        "repo": "sidra",
+        "type": "github"
       }
     },
     "sops-nix": {
@@ -813,7 +848,7 @@
     },
     "wrapper-modules": {
       "inputs": {
-        "nixpkgs": "nixpkgs_7"
+        "nixpkgs": "nixpkgs_8"
       },
       "locked": {
         "lastModified": 1788981141,
@@ -832,7 +867,7 @@
     "xwayland-satellite-unscaled": {
       "inputs": {
         "flake-utils": "flake-utils_4",
-        "nixpkgs": "nixpkgs_8",
+        "nixpkgs": "nixpkgs_9",
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {

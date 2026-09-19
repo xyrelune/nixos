@@ -62,8 +62,12 @@
         speedtest-cli
         vlc
         onlyoffice-desktopeditors
+        teams-for-linux
+        spotify
+        stirling-pdf-desktop
 
-        inputs.prismlauncher.packages.${pkgs.system}.prismlauncher
+        inputs.sidra.packages.${pkgs.stdenv.hostPlatform.system}.default
+        inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
         zulu25
       ];
       sessionVariables = {

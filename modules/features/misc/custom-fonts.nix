@@ -12,6 +12,7 @@
         pkgs.nerd-fonts.iosevka
         pkgs.nerd-fonts.jetbrains-mono
         pkgs.nerd-fonts.roboto-mono
+        pkgs.nerd-fonts.symbols-only
         pkgs.noto-fonts
         pkgs.roboto
         self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
@@ -44,7 +45,7 @@
     gtk = {
       font = {
         name = "Roboto";
-        size = 11;
+        size = 12;
       };
     };
   };

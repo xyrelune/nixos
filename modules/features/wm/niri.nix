@@ -56,7 +56,7 @@
           "eDP-1" = {
             # off = _: {};
             mode = "1920x1200@60.003";
-            scale = 1.25;
+            scale = 1;
             #position = _: {
             #  props = {
             #    x = 0;
@@ -134,6 +134,7 @@
           "Mod+D".spawn-sh = "fuzzel";
           "Mod+B".spawn-sh = "helium";
           "Mod+U".spawn-sh = "emacsclient -c";
+          "Mod+P".spawn-sh = "Spotify";
 
           "Mod+F".maximize-column = _: {};
           "Mod+Shift+F".fullscreen-window = _: {};

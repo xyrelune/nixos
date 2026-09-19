@@ -1,0 +1,2 @@
+alias nrs sudo nixos-rebuild switch --flake ~/nixos#${hostname}
+alias hms home-manager switch --flake ~/nixos#${whoami}-${hostname}

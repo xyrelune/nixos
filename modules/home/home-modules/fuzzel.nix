@@ -43,7 +43,7 @@
           list-executables-in-path = "yes";
         };
         colors = {
-          background       = "28282866";
+          background       = "282828ff";
           text             = "ebdbb2ff";
           match            = "fabd2fff";
           selection        = "3c3836ff";

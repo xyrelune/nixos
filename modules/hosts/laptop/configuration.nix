@@ -31,12 +31,6 @@
     boot = {
       loader = {
         efi.canTouchEfiVariables = true;
-        grub = {
-          enable = false;
-          efiSupport = true;
-          device = "nodev";
-          useOSProber = true;
-        };
         systemd-boot = {
           enable = true;
           configurationLimit = 3;
@@ -137,6 +131,11 @@
 
     systemd.services.systemd-rfkill.enable = false;
     systemd.sockets.systemd-rfkill.enable = false;
+
+    virtualisation.podman = {
+      enable = true;
+      dockerCompat = true; 
+    };
 
     services.mullvad-vpn = {
       enable = true;

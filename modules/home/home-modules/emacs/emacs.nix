@@ -27,24 +27,19 @@
         evil
         evil-collection
         nerd-icons
-				vterm
-				autothemer
-				nix-mode
+        vterm
+        nix-mode
         rainbow-mode
         pdf-tools
-        emms
-        base16-theme
         yaml-mode
         powershell
         multi-vterm
         magit
         vterm-toggle
-        ghostel
-        evil-ghostel
         org
-        org-caldav
         org-autolist
         gruvbox-theme
+        nerd-icons-dired
       ];
     };
 
@@ -56,6 +51,10 @@
       emacs-init = {
         source = ./early-init.el;
         target = ".emacs.d/early-init.el";
+      };
+      eshell-alias = {
+        source = ./alias;
+        target = ".emacs.d/eshell/alias";
       };
     };
   };

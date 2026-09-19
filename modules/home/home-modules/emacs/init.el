@@ -5,8 +5,8 @@
 (global-set-key (kbd "C-x c") #'org-capture)
 
 ;; Font 
-(set-face-attribute 'default nil :family "Iosevka Nerd Font Mono" :height 110)
-(set-frame-font "Iosevka Nerd Font Mono 11.5" nil t)
+(set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
+(set-frame-font "Iosevka Nerd Font Propo 12" nil t)
 
 ;; qol customizations
 (global-display-line-numbers-mode 1)
@@ -78,6 +78,11 @@
   :custom
   (nerd-icons-color-icons nil))
 
+;; Nerd Icons Dired
+(use-package nerd-icons-dired
+  :hook (dired-mode . nerd-icons-dired-mode))
+(setq nerd-icons-font-family "Symbols Nerd Font Mono")
+
 ;; Rainbow Mode
 (use-package rainbow-mode
   :hook (after-change-major-mode . rainbow-mode))
@@ -96,14 +101,6 @@
   :config (add-to-list 'revert-without-query ".pdf"))
 (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
 (add-hook 'pdf-view-mode-hook #'pdf-view-roll-minor-mode)
-
-;; Emms
-(use-package emms
-  :config
-  (require 'emms-setup)
-  (emms-all)
-  (emms-default-players)
-  (setq emms-player-list '(emms-player-mpv)))
 
 ;; To make line numbers disappear in terminal mode
 (dolist (mode '(vterm-mode-hook
@@ -158,14 +155,3 @@
           "~/org/caldav-inbox.org"))
   :bind
   (("C-x a" . org-agenda)))
-
-;; Ghostel  
-(use-package ghostel
-  :bind
-  (("C-c t" . ghostel)))
-(use-package evil-ghostel
-  :after (ghostel evil)
-  :hook (ghostel-mode . evil-ghostel-mode))
-(use-package eglot
-  :hook
-  (python-mode . eglot-ensure))
