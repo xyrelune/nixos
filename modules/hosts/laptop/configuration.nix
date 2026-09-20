@@ -13,6 +13,7 @@
     imports = [
       self.nixosModules.laptopHardware
       self.nixosModules.niri
+      self.nixosModules.xfce
       self.nixosModules.ly
       self.nixosModules.pipewire
       self.nixosModules.yazi
@@ -47,6 +48,10 @@
     services.xserver.videoDrivers = [ "modesetting" ];
     hardware.enableRedistributableFirmware = true;
 
+    nix.settings.trusted-users = [
+      "root"
+      "kin"
+    ];
     boot.kernelPackages = pkgs.linuxPackages_zen;
 
     networking.hostName = "laptop";

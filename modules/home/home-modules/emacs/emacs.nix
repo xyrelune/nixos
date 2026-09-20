@@ -1,9 +1,12 @@
 {
+  self,
+  inputs,
   ...
 }: {
   flake.homeModules.emacs = {
     config,
     pkgs,
+    lib,
     ...
   }: { 
     services.emacs = {
@@ -21,11 +24,14 @@
     ];
     programs.emacs = {
       enable = true;
-      package = (pkgs.emacs-pgtk.override { withTreeSitter = true; });
+      package = (pkgs.emacs-gtk.override { withTreeSitter = true; });
 
       extraPackages = epkgs: with epkgs; [
         evil
         evil-collection
+        eat
+        emacs-application-framework
+        eaf-browser
         nerd-icons
         vterm
         nix-mode

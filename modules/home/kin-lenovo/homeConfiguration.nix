@@ -16,6 +16,7 @@
       self.homeModules.alacritty
       self.homeModules.gtk
       self.homeModules.fuzzel
+      self.homeModules.rofi
       self.homeModules.firefox
       self.homeModules.librewolf
       self.homeModules.helix

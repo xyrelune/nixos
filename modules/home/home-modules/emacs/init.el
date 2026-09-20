@@ -52,6 +52,8 @@
   :config
   (evil-collection-init))
 
+(use-package eat)
+
 ;; Org mode evil next line
 (with-eval-after-load 'org
   (evil-define-key 'normal org-mode-map

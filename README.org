@@ -179,6 +179,7 @@ The default hosts structure goes as follows
       imports = [
         self.nixosModules.laptopHardware
         self.nixosModules.niri
+        self.nixosModules.xfce
         self.nixosModules.ly
         self.nixosModules.pipewire
         self.nixosModules.yazi
@@ -213,6 +214,10 @@ The default hosts structure goes as follows
       services.xserver.videoDrivers = [ "modesetting" ];
       hardware.enableRedistributableFirmware = true;
 
+      nix.settings.trusted-users = [
+        "root"
+        "kin"
+      ];
       boot.kernelPackages = pkgs.linuxPackages_zen;
 
       networking.hostName = "laptop";
@@ -811,6 +816,26 @@ The default hosts structure goes as follows
           ];
         };
       };
+    };
+  }
+#+end_src
+** Desktop Environment
+*** xfce
+#+begin_src nix :tangle modules/features/de/xfce.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.xfce = {
+      services.xserver = {
+        enable = true;
+        desktopManager = {
+          xterm.enable = false;
+          xfce.enable = true;
+        };
+      };
+      services.displayManager.defaultSession = "xfce";
     };
   }
 #+end_src
@@ -3222,6 +3247,7 @@ The main peers would be:
         self.homeModules.alacritty
         self.homeModules.gtk
         self.homeModules.fuzzel
+        self.homeModules.rofi
         self.homeModules.firefox
         self.homeModules.librewolf
         self.homeModules.helix
@@ -3361,56 +3387,56 @@ The main peers would be:
           };
           colors = {
             primary = {
-              background = "#1a1b26";
-              foreground = "#c0caf5";
+              background = "#282828";
+              foreground = "#ebdbb2";
             };
-            
+          
             cursor = {
-              text = "#1a1b26";
-              cursor = "#c0caf5";
+              text = "#282828";
+              cursor = "#ebdbb2";
             };
-            
+          
             vi_mode_cursor = {
-              text = "#1a1b26";
-              cursor = "#c0caf5";
+              text = "#282828";
+              cursor = "#ebdbb2";
             };
-            
+          
             selection = {
-              text = "#c0caf5";
-              background = "#283457";
+              text = "#ebdbb2";
+              background = "#504945";
             };
-            
+          
             normal = {
-              black = "#15161e";
-              red = "#f7768e";
-              green = "#9ece6a";
-              yellow = "#e0af68";
-              blue = "#7aa2f7";
-              magenta = "#bb9af7";
-              cyan = "#7dcfff";
-              white = "#a9b1d6";
+              black = "#282828";
+              red = "#cc241d";
+              green = "#98971a";
+              yellow = "#d79921";
+              blue = "#458588";
+              magenta = "#b16286";
+              cyan = "#689d6a";
+              white = "#a89984";
             };
-            
+          
             bright = {
-              black = "#414868";
-              red = "#f7768e";
-              green = "#9ece6a";
-              yellow = "#e0af68";
-              blue = "#7aa2f7";
-              magenta = "#bb9af7";
-              cyan = "#7dcfff";
-              white = "#c0caf5";
+              black = "#928374";
+              red = "#fb4934";
+              green = "#b8bb26";
+              yellow = "#fabd2f";
+              blue = "#83a598";
+              magenta = "#d3869b";
+              cyan = "#8ec07c";
+              white = "#ebdbb2";
             };
-            
+          
             hints = {
               start = {
-                foreground = "#a9b1d6";
-                background = "#1a1b26";
+                foreground = "#282828";
+                background = "#fabd2f";
               };
-              
+          
               end = {
-                foreground = "#414868";
-                background = "#1a1b26";
+                foreground = "#928374";
+                background = "#282828";
               };
             };
           };
@@ -3659,6 +3685,33 @@ Fuzzel launcher with clipboard history and password manager.
             border           = "665c54ff";
           };
         };
+      };
+    };
+  }
+#+end_src
+*** Rofi
+#+begin_src nix :tangle modules/home/home-modules/rofi.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.homeModules.rofi = {
+      pkgs,
+      ...
+    }: {
+      programs.rofi = {
+        enable = true;
+        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi;
+      };
+    };
+    perSystem = {
+      pkgs,
+      ...
+    }: {
+      packages.myRofi = inputs.wrapper-modules.wrappers.rofi.wrap {
+        inherit pkgs;
+        theme = "gruvbox-dark";
       };
     };
   }
@@ -4087,13 +4140,21 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
 #+end_src
 * Emacs configuration
 ** Emacs Managed by nix
+For installing node packages use the following commands for setting the prefix
+#+begin_src bash :tangle no
+  npm config set prefix "${HOME}/.cache/npm/global"
+  mkdir -p "${HOME}/.cache/npm/global"
+#+end_src
 #+begin_src nix :tangle modules/home/home-modules/emacs/emacs.nix
   {
+    self,
+    inputs,
     ...
   }: {
     flake.homeModules.emacs = {
       config,
       pkgs,
+      lib,
       ...
     }: { 
       services.emacs = {
@@ -4111,11 +4172,14 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
       ];
       programs.emacs = {
         enable = true;
-        package = (pkgs.emacs-pgtk.override { withTreeSitter = true; });
+        package = (pkgs.emacs-gtk.override { withTreeSitter = true; });
 
         extraPackages = epkgs: with epkgs; [
           evil
           evil-collection
+          eat
+          emacs-application-framework
+          eaf-browser
           nerd-icons
           vterm
           nix-mode
@@ -4230,6 +4294,8 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
     :config
     (evil-collection-init))
 
+  (use-package eat)
+  
   ;; Org mode evil next line
   (with-eval-after-load 'org
     (evil-define-key 'normal org-mode-map
