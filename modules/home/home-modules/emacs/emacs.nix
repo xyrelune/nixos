@@ -14,7 +14,7 @@
       package = config.programs.emacs.finalPackage;
       client.enable = true;
       defaultEditor = true;
-      startWithUserSession = true;
+      startWithUserSession = false;
     };
     home.packages = with pkgs; [
       nixd
@@ -24,14 +24,12 @@
     ];
     programs.emacs = {
       enable = true;
-      package = (pkgs.emacs-gtk.override { withTreeSitter = true; });
+      package = (pkgs.emacs-pgtk.override { withTreeSitter = true; });
 
       extraPackages = epkgs: with epkgs; [
         evil
         evil-collection
         eat
-        emacs-application-framework
-        eaf-browser
         nerd-icons
         vterm
         nix-mode

@@ -179,7 +179,6 @@ The default hosts structure goes as follows
       imports = [
         self.nixosModules.laptopHardware
         self.nixosModules.niri
-        self.nixosModules.xfce
         self.nixosModules.ly
         self.nixosModules.pipewire
         self.nixosModules.yazi
@@ -271,13 +270,10 @@ The default hosts structure goes as follows
           #mullvad
           #mullvad-vpn
 
-          #inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
+          inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
         ];
         variables = {
           EDITOR = "emacsclient -c";};
-        sessionVariables = {
-          NIXOS_OZONE_WL = "1";
-        };
       };
 
       hardware = {
@@ -714,10 +710,10 @@ The default hosts structure goes as follows
           ];
           binds = {
             "Mod+Return".spawn-sh = "foot";
-            "Mod+D".spawn-sh = "fuzzel";
+            "Mod+D".spawn-sh = "rofi -show drun";
             "Mod+B".spawn-sh = "helium";
             "Mod+U".spawn-sh = "emacsclient -c";
-            "Mod+P".spawn-sh = "Spotify";
+            "Mod+P".spawn-sh = "spotify";
 
             "Mod+F".maximize-column = _: {};
             "Mod+Shift+F".fullscreen-window = _: {};
@@ -3295,18 +3291,13 @@ The main peers would be:
           vlc
           onlyoffice-desktopeditors
           teams-for-linux
-          spotify
           stirling-pdf-desktop
+          spotify
 
           inputs.sidra.packages.${pkgs.stdenv.hostPlatform.system}.default
           inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
           zulu25
         ];
-        sessionVariables = {
-          GTK_DEBUG = "portals";
-          GTK_USE_PORTAL = 1;
-          QT_QPA_PLATFORM = "wayland";
-        };
       };
       sops = {
         defaultSopsFile = "${secretspath}/secrets/server.yaml";
@@ -3851,46 +3842,32 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
           mainBar = {
             layer = "top";
             position = "top";
-            height = 20;
-            spacing = 5;
-            modules-left = ["niri/workspaces" "mpris" ];
+            height = 25;
+            spacing = 15;
+            modules-left = ["niri/workspaces" ];
             modules-center = [];
-            modules-right = ["tray" "custom/seperator" "cpu" "custom/seperator" "memory" "custom/seperator" "battery" "custom/seperator" "clock#date" "custom/seperator" "clock#time"];
+            modules-right = ["tray" "custom/seperator" "cpu" "memory" "battery"  "clock#date" "clock#time"];
             "cpu" = {
               interval = 10;
-              format = "󰻠 {usage}%";
+              format = "Cpu:{usage}%";
             };
             "memory" = {
               interval = 30;
-              format = "󰍛 {}%";
+              format = "Ram:{}%";
             };
             "battery" = {
-              format = "󰁹 {capacity}%";
+              format = "Bat:{capacity}%";
             };
             "clock#date" = {
-              format = "󰃭 {:%d/%m(%a)}";
+              format = "{:%a %d/%m}";
             };
             "clock#time" = {
-              format = "󰅐 {:%I:%M %p} ";
+              format = "{:%I:%M %p} ";
               interval = 1;
             };
             "custom/seperator" = {
               format = "|";
               tooltip = false;
-            };
-            "mpris" = {
-              format = "{player_icon} {title}";
-              format-paused = "{status_icon} {title}";
-              player-icons =  {
-                default = "";
-                spotify = "";
-                firefox = "󰈹";
-                chromium = "";
-              };
-              status-icons = {
-                paused =  "";
-              };
-              interval = 1;
             };
             "tray" = {
               spacing = 5;
@@ -4162,7 +4139,7 @@ For installing node packages use the following commands for setting the prefix
         package = config.programs.emacs.finalPackage;
         client.enable = true;
         defaultEditor = true;
-        startWithUserSession = true;
+        startWithUserSession = false;
       };
       home.packages = with pkgs; [
         nixd
@@ -4172,14 +4149,12 @@ For installing node packages use the following commands for setting the prefix
       ];
       programs.emacs = {
         enable = true;
-        package = (pkgs.emacs-gtk.override { withTreeSitter = true; });
+        package = (pkgs.emacs-pgtk.override { withTreeSitter = true; });
 
         extraPackages = epkgs: with epkgs; [
           evil
           evil-collection
           eat
-          emacs-application-framework
-          eaf-browser
           nerd-icons
           vterm
           nix-mode

@@ -13,7 +13,6 @@
     imports = [
       self.nixosModules.laptopHardware
       self.nixosModules.niri
-      self.nixosModules.xfce
       self.nixosModules.ly
       self.nixosModules.pipewire
       self.nixosModules.yazi
@@ -105,13 +104,10 @@
         #mullvad
         #mullvad-vpn
 
-        #inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
+        inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
       ];
       variables = {
         EDITOR = "emacsclient -c";};
-      sessionVariables = {
-        NIXOS_OZONE_WL = "1";
-      };
     };
 
     hardware = {

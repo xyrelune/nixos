@@ -131,10 +131,10 @@
         ];
         binds = {
           "Mod+Return".spawn-sh = "foot";
-          "Mod+D".spawn-sh = "fuzzel";
+          "Mod+D".spawn-sh = "rofi -show drun";
           "Mod+B".spawn-sh = "helium";
           "Mod+U".spawn-sh = "emacsclient -c";
-          "Mod+P".spawn-sh = "Spotify";
+          "Mod+P".spawn-sh = "spotify";
 
           "Mod+F".maximize-column = _: {};
           "Mod+Shift+F".fullscreen-window = _: {};

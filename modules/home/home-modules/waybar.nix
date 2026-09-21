@@ -10,46 +10,32 @@
         mainBar = {
           layer = "top";
           position = "top";
-          height = 20;
-          spacing = 5;
-          modules-left = ["niri/workspaces" "mpris" ];
+          height = 25;
+          spacing = 15;
+          modules-left = ["niri/workspaces" ];
           modules-center = [];
-          modules-right = ["tray" "custom/seperator" "cpu" "custom/seperator" "memory" "custom/seperator" "battery" "custom/seperator" "clock#date" "custom/seperator" "clock#time"];
+          modules-right = ["tray" "custom/seperator" "cpu" "memory" "battery"  "clock#date" "clock#time"];
           "cpu" = {
             interval = 10;
-            format = "󰻠 {usage}%";
+            format = "Cpu:{usage}%";
           };
           "memory" = {
             interval = 30;
-            format = "󰍛 {}%";
+            format = "Ram:{}%";
           };
           "battery" = {
-            format = "󰁹 {capacity}%";
+            format = "Bat:{capacity}%";
           };
           "clock#date" = {
-            format = "󰃭 {:%d/%m(%a)}";
+            format = "{:%a %d/%m}";
           };
           "clock#time" = {
-            format = "󰅐 {:%I:%M %p} ";
+            format = "{:%I:%M %p} ";
             interval = 1;
           };
           "custom/seperator" = {
             format = "|";
             tooltip = false;
-          };
-          "mpris" = {
-            format = "{player_icon} {title}";
-            format-paused = "{status_icon} {title}";
-            player-icons =  {
-              default = "";
-              spotify = "";
-              firefox = "󰈹";
-              chromium = "";
-            };
-            status-icons = {
-              paused =  "";
-            };
-            interval = 1;
           };
           "tray" = {
             spacing = 5;

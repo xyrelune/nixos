@@ -64,18 +64,13 @@
         vlc
         onlyoffice-desktopeditors
         teams-for-linux
-        spotify
         stirling-pdf-desktop
+        spotify
 
         inputs.sidra.packages.${pkgs.stdenv.hostPlatform.system}.default
         inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
         zulu25
       ];
-      sessionVariables = {
-        GTK_DEBUG = "portals";
-        GTK_USE_PORTAL = 1;
-        QT_QPA_PLATFORM = "wayland";
-      };
     };
     sops = {
       defaultSopsFile = "${secretspath}/secrets/server.yaml";
