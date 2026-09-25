@@ -52,6 +52,13 @@
   :config
   (evil-collection-init))
 
+(use-package bash-completion
+  :config
+  (bash-completion-setup))
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (add-hook 'completion-at-point-functions
+                      'bash-completion-capf-nonexclusive nil t)))
 (use-package eat)
 
 ;; Org mode evil next line

@@ -22,6 +22,7 @@
         lt = "${lib.getExe pkgs.lsd} --tree";
       };
       enableLsColors = true;
+      completion.package = pkgs.bash-completion;
     };
   };
 }

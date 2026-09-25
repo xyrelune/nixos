@@ -15,6 +15,7 @@
         pkgs.nerd-fonts.symbols-only
         pkgs.noto-fonts
         pkgs.roboto
+        pkgs.inter
         self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -31,8 +32,8 @@
           lcdfilter = "default";
         };
         defaultFonts = {
-          serif = ["Roboto"];
-          sansSerif = ["Roboto"];
+          serif = ["Inter"];
+          sansSerif = ["Inter"];
           monospace = ["Iosevka Nerd Font Mono"];
         };
       };
@@ -44,7 +45,7 @@
   }: {
     gtk = {
       font = {
-        name = "Roboto";
+        name = "Inter";
         size = 12;
       };
     };

@@ -635,7 +635,7 @@ The default hosts structure goes as follows
             "eDP-1" = {
               # off = _: {};
               mode = "1920x1200@60.003";
-              scale = 1;
+              scale = 1.25;
               #position = _: {
               #  props = {
               #    x = 0;
@@ -711,7 +711,7 @@ The default hosts structure goes as follows
           binds = {
             "Mod+Return".spawn-sh = "foot";
             "Mod+D".spawn-sh = "rofi -show drun";
-            "Mod+B".spawn-sh = "helium";
+            "Mod+B".spawn-sh = "firefox";
             "Mod+U".spawn-sh = "emacsclient -c";
             "Mod+P".spawn-sh = "spotify";
 
@@ -862,6 +862,7 @@ The default hosts structure goes as follows
           lt = "${lib.getExe pkgs.lsd} --tree";
         };
         enableLsColors = true;
+        completion.package = pkgs.bash-completion;
       };
     };
   }
@@ -1424,6 +1425,7 @@ The default hosts structure goes as follows
           pkgs.nerd-fonts.symbols-only
           pkgs.noto-fonts
           pkgs.roboto
+          pkgs.inter
           self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -1440,8 +1442,8 @@ The default hosts structure goes as follows
             lcdfilter = "default";
           };
           defaultFonts = {
-            serif = ["Roboto"];
-            sansSerif = ["Roboto"];
+            serif = ["Inter"];
+            sansSerif = ["Inter"];
             monospace = ["Iosevka Nerd Font Mono"];
           };
         };
@@ -1453,7 +1455,7 @@ The default hosts structure goes as follows
     }: {
       gtk = {
         font = {
-          name = "Roboto";
+          name = "Inter";
           size = 12;
         };
       };
@@ -3806,21 +3808,21 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
           width = 300;
           height = 110;
           padding = "0,15,20";
-          background-color = "#1a1b26";
-          text-color = "#c0caf5";
-          border-color = "#7aa2f7";
-          progress-color = "#414868";
+          background-color = "#282828";
+          text-color = "#ebdbb2";
+          border-color = "#458588";
+          progress-color = "#504945";
           
           "urgency=low" = {
-            border-color = "#565f89";
+            border-color = "#665c54";
           };
           
           "urgency=normal" = {
-            border-color = "#7aa2f7";
+            border-color = "#d79921";
           };
           
           "urgency=high" = {
-            border-color = "#f7768e";
+            border-color = "#cc241d";
             default-timeout = 0;
           };
         };
@@ -4139,7 +4141,7 @@ For installing node packages use the following commands for setting the prefix
         package = config.programs.emacs.finalPackage;
         client.enable = true;
         defaultEditor = true;
-        startWithUserSession = false;
+        startWithUserSession = true;
       };
       home.packages = with pkgs; [
         nixd
@@ -4169,6 +4171,7 @@ For installing node packages use the following commands for setting the prefix
           org-autolist
           gruvbox-theme
           nerd-icons-dired
+          bash-completion
         ];
       };
 
@@ -4269,8 +4272,15 @@ For installing node packages use the following commands for setting the prefix
     :config
     (evil-collection-init))
 
+  (use-package bash-completion
+    :config
+    (bash-completion-setup))
+  (add-hook 'eshell-mode-hook
+            (lambda ()
+              (add-hook 'completion-at-point-functions
+                        'bash-completion-capf-nonexclusive nil t)))
   (use-package eat)
-  
+
   ;; Org mode evil next line
   (with-eval-after-load 'org
     (evil-define-key 'normal org-mode-map

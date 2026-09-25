@@ -14,7 +14,7 @@
       package = config.programs.emacs.finalPackage;
       client.enable = true;
       defaultEditor = true;
-      startWithUserSession = false;
+      startWithUserSession = true;
     };
     home.packages = with pkgs; [
       nixd
@@ -44,6 +44,7 @@
         org-autolist
         gruvbox-theme
         nerd-icons-dired
+        bash-completion
       ];
     };
 
