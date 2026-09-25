@@ -130,7 +130,7 @@
           }
         ];
         binds = {
-          "Mod+Return".spawn-sh = "foot";
+          "Mod+Return".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
           "Mod+D".spawn-sh = "rofi -show drun";
           "Mod+B".spawn-sh = "firefox";
           "Mod+U".spawn-sh = "emacsclient -c";

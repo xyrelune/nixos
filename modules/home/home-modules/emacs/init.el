@@ -44,14 +44,20 @@
 ;;(use-package base16-theme
 ;;  :config
 ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
-(load-theme 'gruvbox-dark-soft t)
+;; (load-theme 'gruvbox-dark-soft t)
 
-;; Mood Line
-(use-package mood-line
-  ;;:init
-  ;;(setq mood-line-format mood-line-format-default-extended)
+;; Doom Themes
+(use-package doom-themes
+  :custom
+  (doom-themes-enable-bold t)
+  (doom-themes-enable-italic t)
   :config
-  (mood-line-mode))
+  (load-theme 'doom-gruvbox t))
+
+;; Doom Moodline
+(use-package doom-modeline
+  :config
+  (doom-modeline-mode 1))
 
 ;; Evil Mode
 (use-package evil

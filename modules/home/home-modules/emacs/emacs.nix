@@ -21,6 +21,7 @@
       python314
       pyright
       texliveFull
+      lsd
     ];
     programs.emacs = {
       enable = true;
@@ -45,7 +46,8 @@
         gruvbox-theme
         nerd-icons-dired
         bash-completion
-        mood-line
+        doom-modeline
+        doom-themes
       ];
     };
 

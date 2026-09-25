@@ -1,2 +1,7 @@
 alias nrs sudo nixos-rebuild switch --flake ~/nixos#${hostname}
 alias hms home-manager switch --flake ~/nixos#${whoami}-${hostname}
+alias server_rebuild nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password
+alias l lsd -l
+alias la lsd -a
+alias lla lsd -la
+alias lt lsd --tree

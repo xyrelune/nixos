@@ -709,7 +709,7 @@ The default hosts structure goes as follows
             }
           ];
           binds = {
-            "Mod+Return".spawn-sh = "foot";
+            "Mod+Return".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
             "Mod+D".spawn-sh = "rofi -show drun";
             "Mod+B".spawn-sh = "firefox";
             "Mod+U".spawn-sh = "emacsclient -c";
@@ -4148,6 +4148,7 @@ For installing node packages use the following commands for setting the prefix
         python314
         pyright
         texliveFull
+        lsd
       ];
       programs.emacs = {
         enable = true;
@@ -4172,7 +4173,8 @@ For installing node packages use the following commands for setting the prefix
           gruvbox-theme
           nerd-icons-dired
           bash-completion
-          mood-line
+          doom-modeline
+          doom-themes
         ];
       };
 
@@ -4197,6 +4199,11 @@ For installing node packages use the following commands for setting the prefix
 #+begin_src emacs-lisp :tangle modules/home/home-modules/emacs/alias
   alias nrs sudo nixos-rebuild switch --flake ~/nixos#${hostname}
   alias hms home-manager switch --flake ~/nixos#${whoami}-${hostname}
+  alias server_rebuild nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password
+  alias l lsd -l
+  alias la lsd -a
+  alias lla lsd -la
+  alias lt lsd --tree
 #+end_src
 ** early-init.el
 #+begin_src emacs-lisp :tangle modules/home/home-modules/emacs/early-init.el
@@ -4265,12 +4272,20 @@ For installing node packages use the following commands for setting the prefix
   ;;(use-package base16-theme
   ;;  :config
   ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
-  (load-theme 'gruvbox-dark-soft t)
+  ;; (load-theme 'gruvbox-dark-soft t)
 
-  ;; Mood Line
-  (use-package mood-line
+  ;; Doom Themes
+  (use-package doom-themes
+    :custom
+    (doom-themes-enable-bold t)
+    (doom-themes-enable-italic t)
     :config
-    (mood-line-mode))
+    (load-theme 'doom-gruvbox t))
+
+  ;; Doom Moodline
+  (use-package doom-modeline
+    :config
+    (doom-modeline-mode 1))
 
   ;; Evil Mode
   (use-package evil
