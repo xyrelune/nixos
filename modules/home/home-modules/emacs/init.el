@@ -3,10 +3,16 @@
 ;; Keybinds
 (global-set-key (kbd "C-x a") #'org-agenda)
 (global-set-key (kbd "C-x c") #'org-capture)
+(global-set-key (kbd "C-x e") #'my/eshell)
+
+;; Custom
+(defun my/eshell ()
+  (interactive)
+  (eshell t))
 
 ;; Font 
-(set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
-(set-frame-font "Iosevka Nerd Font Propo 12" nil t)
+(set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 110)
+(set-frame-font "Iosevka Nerd Font Propo 11" nil t)
 
 ;; qol customizations
 (global-display-line-numbers-mode 1)
@@ -38,7 +44,14 @@
 ;;(use-package base16-theme
 ;;  :config
 ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
-(load-theme 'gruvbox-dark-medium t)
+(load-theme 'gruvbox-dark-soft t)
+
+;; Mood Line
+(use-package mood-line
+  ;;:init
+  ;;(setq mood-line-format mood-line-format-default-extended)
+  :config
+  (mood-line-mode))
 
 ;; Evil Mode
 (use-package evil

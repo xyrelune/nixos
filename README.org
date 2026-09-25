@@ -893,7 +893,7 @@ The default hosts structure goes as follows
           inherit pkgs;
           settings = {
             main = {
-              font = "Iosevka Nerd Font Mono:size=12";
+              font = "Iosevka Nerd Font Mono:size=11";
             };
             colors-dark = {
               alpha = "1";
@@ -1456,7 +1456,7 @@ The default hosts structure goes as follows
       gtk = {
         font = {
           name = "Inter";
-          size = 12;
+          size = 11;
         };
       };
     };
@@ -4172,6 +4172,7 @@ For installing node packages use the following commands for setting the prefix
           gruvbox-theme
           nerd-icons-dired
           bash-completion
+          mood-line
         ];
       };
 
@@ -4223,10 +4224,16 @@ For installing node packages use the following commands for setting the prefix
   ;; Keybinds
   (global-set-key (kbd "C-x a") #'org-agenda)
   (global-set-key (kbd "C-x c") #'org-capture)
+  (global-set-key (kbd "C-x e") #'my/eshell)
+
+  ;; Custom
+  (defun my/eshell ()
+    (interactive)
+    (eshell t))
 
   ;; Font 
-  (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
-  (set-frame-font "Iosevka Nerd Font Propo 12" nil t)
+  (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 110)
+  (set-frame-font "Iosevka Nerd Font Propo 11" nil t)
 
   ;; qol customizations
   (global-display-line-numbers-mode 1)
@@ -4258,7 +4265,12 @@ For installing node packages use the following commands for setting the prefix
   ;;(use-package base16-theme
   ;;  :config
   ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
-  (load-theme 'gruvbox-dark-medium t)
+  (load-theme 'gruvbox-dark-soft t)
+
+  ;; Mood Line
+  (use-package mood-line
+    :config
+    (mood-line-mode))
 
   ;; Evil Mode
   (use-package evil

@@ -46,7 +46,7 @@
     gtk = {
       font = {
         name = "Inter";
-        size = 12;
+        size = 11;
       };
     };
   };

@@ -45,6 +45,7 @@
         gruvbox-theme
         nerd-icons-dired
         bash-completion
+        mood-line
       ];
     };
 
