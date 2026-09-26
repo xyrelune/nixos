@@ -3,7 +3,7 @@
   inputs,
   ...
 }: { 
-  fake.nixosModules.searxng = {config, pkgs, ...}: 
+  flake.nixosModules.searxng = {config, pkgs, ...}: 
   let 
     unstable = import inputs.nixpkgs {
       system = pkgs.stdenv.hostPlatform.system;

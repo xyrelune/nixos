@@ -2855,7 +2855,7 @@ https://discourse.nixos.org/t/jellyfin-cuda-nixos-unable-to-transcode/79830/5
     inputs,
     ...
   }: { 
-    fake.nixosModules.searxng = {config, pkgs, ...}: 
+    flake.nixosModules.searxng = {config, pkgs, ...}: 
     let 
       unstable = import inputs.nixpkgs {
         system = pkgs.stdenv.hostPlatform.system;
