@@ -2,12 +2,13 @@
   self,
   inputs,
   ...
-}: let
-  unstable = import inputs.nixpkgs {
-    system = pkgs.stdenv.hostPlatform.system;
-  };
 in {
-  flake.nixosModules.searxng = {config, ...}: {
+  flake.nixosModules.searxng = {config, pkgs, ...}: 
+  let {
+    unstable = import inputs.nixpkgs {
+      system = pkgs.stdenv.hostPlatform.system;
+    };
+  in {
     sops.secrets = {
       "searxng/secret_key" = {};
     };
