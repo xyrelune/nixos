@@ -4,7 +4,7 @@
   ...
 in {
   flake.nixosModules.searxng = {config, pkgs, ...}: 
-  let {
+  let 
     unstable = import inputs.nixpkgs {
       system = pkgs.stdenv.hostPlatform.system;
     };
