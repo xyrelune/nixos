@@ -2,7 +2,11 @@
   self,
   inputs,
   ...
-}: {
+}: let
+  unstable = import inputs.nixpkgs {
+    system = pkgs.stdenv.hostPlatform.system;
+  };
+in {
   flake.nixosModules.searxng = {config, ...}: {
     sops.secrets = {
       "searxng/secret_key" = {};
@@ -26,6 +30,7 @@
       };
       domain = "search.server.org";
       configureNginx = true;
+      package = unstable.searxng;
     };
   };
 }

@@ -2854,7 +2854,11 @@ https://discourse.nixos.org/t/jellyfin-cuda-nixos-unable-to-transcode/79830/5
     self,
     inputs,
     ...
-  }: {
+  }: let
+    unstable = import inputs.nixpkgs {
+      system = pkgs.stdenv.hostPlatform.system;
+    };
+  in {
     flake.nixosModules.searxng = {config, ...}: {
       sops.secrets = {
         "searxng/secret_key" = {};
@@ -2878,6 +2882,7 @@ https://discourse.nixos.org/t/jellyfin-cuda-nixos-unable-to-transcode/79830/5
         };
         domain = "search.server.org";
         configureNginx = true;
+        package = unstable.searxng;
       };
     };
   }
