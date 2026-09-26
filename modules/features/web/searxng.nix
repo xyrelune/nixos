@@ -2,7 +2,7 @@
   self,
   inputs,
   ...
-in {
+}: { 
   flake.nixosModules.searxng = {config, pkgs, ...}: 
   let 
     unstable = import inputs.nixpkgs {
