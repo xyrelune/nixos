@@ -14,7 +14,7 @@
     };
 
     services.searx = {
-      enable = true;
+      enable = false;
       settings = {
         server = {
           port = 8080;

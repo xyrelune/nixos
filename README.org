@@ -334,7 +334,6 @@ The default hosts structure goes as follows
         self.nixosModules.vim
         self.nixosModules.nvf
         self.nixosModules.tmux
-        self.nixosModules.searxng
         self.nixosModules.nginx
         self.nixosModules.qbittorrent
         self.nixosModules.vaultwarden
@@ -2866,7 +2865,7 @@ https://discourse.nixos.org/t/jellyfin-cuda-nixos-unable-to-transcode/79830/5
       };
 
       services.searx = {
-        enable = true;
+        enable = false;
         settings = {
           server = {
             port = 8080;

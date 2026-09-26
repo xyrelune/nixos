@@ -16,7 +16,6 @@
       self.nixosModules.vim
       self.nixosModules.nvf
       self.nixosModules.tmux
-      self.nixosModules.searxng
       self.nixosModules.nginx
       self.nixosModules.qbittorrent
       self.nixosModules.vaultwarden
