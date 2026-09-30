@@ -12,7 +12,6 @@
       user = "media";
       group = "media";
       plugins = with pkgs.navidromePlugins; [
-        discord-rich-presence
         apple-music
       ];
       settings = {
