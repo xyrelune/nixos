@@ -145,7 +145,7 @@ The default hosts structure goes as follows
     inputs,
     ...
   }: {
-    flake.nixosConfigurations.server = inputs.nixpkgs-stable.lib.nixosSystem {
+    flake.nixosConfigurations.server = inputs.nixpkgs.lib.nixosSystem {
       modules = [
         self.nixosModules.serverConfiguration
         ({pkgs, ...}: {
@@ -335,6 +335,7 @@ The default hosts structure goes as follows
         self.nixosModules.nvf
         self.nixosModules.tmux
         self.nixosModules.nginx
+        self.nixosModules.searxng
         self.nixosModules.qbittorrent
         self.nixosModules.vaultwarden
         self.nixosModules.miniflux
@@ -351,7 +352,6 @@ The default hosts structure goes as follows
         self.nixosModules.rclone
         self.nixosModules.radicale
         self.nixosModules.navidrome
-        self.nixosModules.ollama
 
         inputs.sops-nix.nixosModules.sops
       ];
@@ -641,7 +641,7 @@ The default hosts structure goes as follows
             "eDP-2" = {
               #off = _: {};
               mode = "1920x1080@165.000";
-              scale = 1;
+              scale = 1.25;
               position = _: {
                 props = {
                   x = 0;
@@ -704,7 +704,8 @@ The default hosts structure goes as follows
             }
           ];
           binds = {
-            "Mod+Return".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
+            "Mod+Return".spawn-sh = ''emacsclient -c --eval "(vterm t)"'';
+            "Mod+T".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
             "Mod+D".spawn-sh = "rofi -show drun";
             "Mod+B".spawn-sh = "firefox";
             "Mod+U".spawn-sh = "emacsclient -c";
@@ -795,7 +796,6 @@ The default hosts structure goes as follows
             "Mod+F6".spawn-sh = "${lib.getExe pkgs.brightnessctl} -c backlight s 10%+";
             "Mod+F5".spawn-sh = "${lib.getExe pkgs.brightnessctl} -c backlight s 10%-";
 
-            "Mod+T".spawn-sh = ''notify-send "Current Time" "$(date +"%I:%M %p")"'';
             "Mod+Shift+P".spawn-sh = "niri msg action power-off-monitors";
             "Mod+e".spawn-sh = ''${lib.getExe pkgs.cliphist} list | ${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.myFuzzel} --dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe' pkgs.wl-clipboard "wl-copy"}'';
             "Mod+Shift+I".spawn-sh = "rofi-rbw --clear-after 30";
@@ -888,7 +888,7 @@ The default hosts structure goes as follows
           inherit pkgs;
           settings = {
             main = {
-              font = "Iosevka Nerd Font Mono:size=11";
+              font = "Iosevka Nerd Font Mono:size=12";
             };
             colors-dark = {
               alpha = "1";
@@ -1437,8 +1437,8 @@ The default hosts structure goes as follows
             lcdfilter = "default";
           };
           defaultFonts = {
-            serif = ["Inter"];
-            sansSerif = ["Inter"];
+            serif = ["Iosevka Nerd Font"];
+            sansSerif = ["Iosevka Nerd Font"];
             monospace = ["Iosevka Nerd Font Mono"];
           };
         };
@@ -1450,8 +1450,8 @@ The default hosts structure goes as follows
     }: {
       gtk = {
         font = {
-          name = "Inter";
-          size = 11;
+          name = "Iosevka Nerd Font";
+          size = 12;
         };
       };
     };
@@ -2854,18 +2854,13 @@ https://discourse.nixos.org/t/jellyfin-cuda-nixos-unable-to-transcode/79830/5
     inputs,
     ...
   }: { 
-    flake.nixosModules.searxng = {config, pkgs, ...}: 
-    let 
-      unstable = import inputs.nixpkgs {
-        system = pkgs.stdenv.hostPlatform.system;
-      };
-    in {
+    flake.nixosModules.searxng = {config, pkgs, ...}: {
       sops.secrets = {
         "searxng/secret_key" = {};
       };
 
       services.searx = {
-        enable = false;
+        enable = true;
         settings = {
           server = {
             port = 8080;
@@ -2882,7 +2877,6 @@ https://discourse.nixos.org/t/jellyfin-cuda-nixos-unable-to-transcode/79830/5
         };
         domain = "search.server.org";
         configureNginx = true;
-        package = unstable.searxng;
       };
     };
   }
@@ -4136,7 +4130,14 @@ For installing node packages use the following commands for setting the prefix
       pkgs,
       lib,
       ...
-    }: { 
+    }: let  
+      jellyfin-emms-mpv = pkgs.fetchFromGitHub {
+        owner = "emacs-os";
+        repo = "jellyfin-emms-mpv.el";
+        rev = "main";
+        hash = "sha256-ExO6/PcK0NfHqXnlRyTFSE48LES8SZ9JOFfzazIvuek=";
+      };
+    in {
       services.emacs = {
         enable = true;
         package = config.programs.emacs.finalPackage;
@@ -4159,6 +4160,7 @@ For installing node packages use the following commands for setting the prefix
           evil
           evil-collection
           eat
+          emms
           nerd-icons
           vterm
           nix-mode
@@ -4173,6 +4175,7 @@ For installing node packages use the following commands for setting the prefix
           org-autolist
           gruvbox-theme
           nerd-icons-dired
+          eshell-vterm
           bash-completion
           doom-modeline
           doom-themes
@@ -4191,6 +4194,10 @@ For installing node packages use the following commands for setting the prefix
         eshell-alias = {
           source = ./alias;
           target = ".emacs.d/eshell/alias";
+        };
+        ".emacs.d/jellyfin-emms-mpv" = {
+          source = jellyfin-emms-mpv;
+          recursive = true;
         };
       };
     };
@@ -4240,8 +4247,8 @@ For installing node packages use the following commands for setting the prefix
     (eshell t))
 
   ;; Font 
-  (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 110)
-  (set-frame-font "Iosevka Nerd Font Propo 11" nil t)
+  (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
+  (set-frame-font "Iosevka Nerd Font Propo 12" nil t)
 
   ;; qol customizations
   (global-display-line-numbers-mode 1)
@@ -4274,6 +4281,11 @@ For installing node packages use the following commands for setting the prefix
   ;;  :config
   ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
   ;; (load-theme 'gruvbox-dark-soft t)
+
+  ;; EMMS
+  (use-package emms
+    :config
+    (require 'emms-info))
 
   ;; Doom Themes
   (use-package doom-themes
@@ -4308,6 +4320,13 @@ For installing node packages use the following commands for setting the prefix
               (add-hook 'completion-at-point-functions
                         'bash-completion-capf-nonexclusive nil t)))
   (use-package eat)
+
+  ;; Eshell Vterm
+  (use-package eshell-vterm
+    :after eshell
+    :config
+    (eshell-vterm-mode))
+  (defalias 'eshell/v 'eshell-exec-visual)
 
   ;; Org mode evil next line
   (with-eval-after-load 'org

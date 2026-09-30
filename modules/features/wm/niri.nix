@@ -67,7 +67,7 @@
           "eDP-2" = {
             #off = _: {};
             mode = "1920x1080@165.000";
-            scale = 1;
+            scale = 1.25;
             position = _: {
               props = {
                 x = 0;
@@ -130,7 +130,8 @@
           }
         ];
         binds = {
-          "Mod+Return".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
+          "Mod+Return".spawn-sh = ''emacsclient -c --eval "(vterm t)"'';
+          "Mod+T".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
           "Mod+D".spawn-sh = "rofi -show drun";
           "Mod+B".spawn-sh = "firefox";
           "Mod+U".spawn-sh = "emacsclient -c";
@@ -221,7 +222,6 @@
           "Mod+F6".spawn-sh = "${lib.getExe pkgs.brightnessctl} -c backlight s 10%+";
           "Mod+F5".spawn-sh = "${lib.getExe pkgs.brightnessctl} -c backlight s 10%-";
 
-          "Mod+T".spawn-sh = ''notify-send "Current Time" "$(date +"%I:%M %p")"'';
           "Mod+Shift+P".spawn-sh = "niri msg action power-off-monitors";
           "Mod+e".spawn-sh = ''${lib.getExe pkgs.cliphist} list | ${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.myFuzzel} --dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe' pkgs.wl-clipboard "wl-copy"}'';
           "Mod+Shift+I".spawn-sh = "rofi-rbw --clear-after 30";

@@ -17,6 +17,7 @@
       self.nixosModules.nvf
       self.nixosModules.tmux
       self.nixosModules.nginx
+      self.nixosModules.searxng
       self.nixosModules.qbittorrent
       self.nixosModules.vaultwarden
       self.nixosModules.miniflux
@@ -33,7 +34,6 @@
       self.nixosModules.rclone
       self.nixosModules.radicale
       self.nixosModules.navidrome
-      self.nixosModules.ollama
 
       inputs.sops-nix.nixosModules.sops
     ];

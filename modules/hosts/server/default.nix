@@ -4,7 +4,7 @@
   inputs,
   ...
 }: {
-  flake.nixosConfigurations.server = inputs.nixpkgs-stable.lib.nixosSystem {
+  flake.nixosConfigurations.server = inputs.nixpkgs.lib.nixosSystem {
     modules = [
       self.nixosModules.serverConfiguration
       ({pkgs, ...}: {

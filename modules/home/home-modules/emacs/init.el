@@ -11,8 +11,8 @@
   (eshell t))
 
 ;; Font 
-(set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 110)
-(set-frame-font "Iosevka Nerd Font Propo 11" nil t)
+(set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
+(set-frame-font "Iosevka Nerd Font Propo 12" nil t)
 
 ;; qol customizations
 (global-display-line-numbers-mode 1)
@@ -45,6 +45,11 @@
 ;;  :config
 ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
 ;; (load-theme 'gruvbox-dark-soft t)
+
+;; EMMS
+(use-package emms
+  :config
+  (require 'emms-info))
 
 ;; Doom Themes
 (use-package doom-themes
@@ -79,6 +84,13 @@
             (add-hook 'completion-at-point-functions
                       'bash-completion-capf-nonexclusive nil t)))
 (use-package eat)
+
+;; Eshell Vterm
+(use-package eshell-vterm
+  :after eshell
+  :config
+  (eshell-vterm-mode))
+(defalias 'eshell/v 'eshell-exec-visual)
 
 ;; Org mode evil next line
 (with-eval-after-load 'org

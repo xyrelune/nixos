@@ -32,8 +32,8 @@
           lcdfilter = "default";
         };
         defaultFonts = {
-          serif = ["Inter"];
-          sansSerif = ["Inter"];
+          serif = ["Iosevka Nerd Font"];
+          sansSerif = ["Iosevka Nerd Font"];
           monospace = ["Iosevka Nerd Font Mono"];
         };
       };
@@ -45,8 +45,8 @@
   }: {
     gtk = {
       font = {
-        name = "Inter";
-        size = 11;
+        name = "Iosevka Nerd Font";
+        size = 12;
       };
     };
   };

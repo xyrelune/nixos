@@ -8,7 +8,14 @@
     pkgs,
     lib,
     ...
-  }: { 
+  }: let  
+    jellyfin-emms-mpv = pkgs.fetchFromGitHub {
+      owner = "emacs-os";
+      repo = "jellyfin-emms-mpv.el";
+      rev = "main";
+      hash = "sha256-ExO6/PcK0NfHqXnlRyTFSE48LES8SZ9JOFfzazIvuek=";
+    };
+  in {
     services.emacs = {
       enable = true;
       package = config.programs.emacs.finalPackage;
@@ -31,6 +38,7 @@
         evil
         evil-collection
         eat
+        emms
         nerd-icons
         vterm
         nix-mode
@@ -45,6 +53,7 @@
         org-autolist
         gruvbox-theme
         nerd-icons-dired
+        eshell-vterm
         bash-completion
         doom-modeline
         doom-themes
@@ -63,6 +72,10 @@
       eshell-alias = {
         source = ./alias;
         target = ".emacs.d/eshell/alias";
+      };
+      ".emacs.d/jellyfin-emms-mpv" = {
+        source = jellyfin-emms-mpv;
+        recursive = true;
       };
     };
   };
