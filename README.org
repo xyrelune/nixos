@@ -304,6 +304,10 @@ The default hosts structure goes as follows
         enable = true;
       };
       
+      services.udev.extraRules = ''
+        # Samsung VID
+        SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", MODE="0660", GROUP="plugdev", TAG+="uaccess"
+      '';
       swapDevices = [
         { 
           device = "/var/lib/swapfile";
@@ -3061,6 +3065,11 @@ The main peers would be:
                 publicKey = "r8ADjGqPjA35Istaxd8cm+1hcq2spc0QREvVuGdO2Fw=";
                 allowedIPs = [ "10.0.0.4/32" ];
               }
+              {
+                name = "tabs9";
+                publicKey = "iUs3fgqIBR10MCn9QhZ2FlFl5ir8z7ZUteCg10Kmph0=";
+                allowedIPs = [ "10.0.0.5/32" ];
+              }
             ];
           };
         };
@@ -3118,9 +3127,10 @@ The main peers would be:
         enable = true;
         user = "media";
         group = "media";
-        plugins = with pkgs.navidromePlugins; [
-          apple-music
-        ];
+        #plugins = with pkgs.navidromePlugins; [
+        #  discord-rich-presence
+        #  apple-music
+        #];
         settings = {
           MusicFolder = "/mnt/downloads/personal-music";
           Plugins = {

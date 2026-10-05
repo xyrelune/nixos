@@ -11,9 +11,10 @@
       enable = true;
       user = "media";
       group = "media";
-      plugins = with pkgs.navidromePlugins; [
-        apple-music
-      ];
+      #plugins = with pkgs.navidromePlugins; [
+      #  discord-rich-presence
+      #  apple-music
+      #];
       settings = {
         MusicFolder = "/mnt/downloads/personal-music";
         Plugins = {

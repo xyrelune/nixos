@@ -142,6 +142,10 @@
       enable = true;
     };
     
+    services.udev.extraRules = ''
+      # Samsung VID
+      SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", MODE="0660", GROUP="plugdev", TAG+="uaccess"
+    '';
     swapDevices = [
       { 
         device = "/var/lib/swapfile";

@@ -51,6 +51,11 @@
               publicKey = "r8ADjGqPjA35Istaxd8cm+1hcq2spc0QREvVuGdO2Fw=";
               allowedIPs = [ "10.0.0.4/32" ];
             }
+            {
+              name = "tabs9";
+              publicKey = "iUs3fgqIBR10MCn9QhZ2FlFl5ir8z7ZUteCg10Kmph0=";
+              allowedIPs = [ "10.0.0.5/32" ];
+            }
           ];
         };
       };
