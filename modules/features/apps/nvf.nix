@@ -113,7 +113,7 @@
             statusline = {
               lualine = {
                 enable = true;
-                icons.enable = true;
+                setupOpts.options.icons_enabled = true;
               };
             };
             tabline = {

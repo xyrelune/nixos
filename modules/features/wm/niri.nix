@@ -229,7 +229,7 @@
         };
         spawn-sh-at-startup = [
           "${lib.getExe pkgs.swaybg} -i ${wallspath}/flowers.jpg"
-          "${self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar}"
+          "${self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar}/bin/waybar"
         ];
       };
     };

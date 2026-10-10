@@ -806,7 +806,7 @@ The default hosts structure goes as follows
           };
           spawn-sh-at-startup = [
             "${lib.getExe pkgs.swaybg} -i ${wallspath}/flowers.jpg"
-            "${self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar}"
+            "${self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar}/bin/waybar"
           ];
         };
       };
@@ -927,175 +927,6 @@ The default hosts structure goes as follows
         };
       };
     }
-#+end_src
-*** NVF
-#+begin_src nix :tangle modules/features/apps/nvf.nix 
-  { 
-    self,
-    inputs, 
-    ... 
-  }: {
-    flake.nixosModules.nvf = { 
-      pkgs,
-      ... 
-    }: {
-      environment.systemPackages = [
-        self.packages.${pkgs.stdenv.hostPlatform.system}.myNvf
-      ];
-    };
-    perSystem = {
-      pkgs,
-      ...
-    }: {
-      packages.myNvf = (inputs.nvf.lib.neovimConfiguration {
-        inherit pkgs;
-        modules = [
-          {
-            vim = {
-              viAlias = false;
-              vimAlias = false;
-
-              globals = {
-                mapLeader = " ";
-              };
-
-              keymaps = [
-                {
-                  key = "<leader>n";
-                  mode = "n";
-                  silent = true;
-                  action = ":Neotree toggle current reveal_force_cwd<cr>";
-                }
-                {
-                  key = "<leader>ff";
-                  mode = "n";
-                  action = "<cmd>Telescope find_files<CR>";
-                  desc = "Telescope find_files";
-                }
-              ];
-
-              opts = {
-                wrap = true;
-                number = true;
-                relativenumber = true;
-                cursorline = true;
-                scrolloff = 10;
-                sidescrolloff = 8;
-
-                tabstop = 2;
-                shiftwidth = 2;
-                softtabstop = 2;
-                expandtab = true;
-                smartindent = true;
-                autoindent = true;
-
-                ignorecase = true;
-                smartcase = true;
-                incsearch = true;
-                hlsearch = true;
-
-                termguicolors = true;
-                showmatch = true;
-                matchtime = 2;
-                cmdheight = 1;
-                completeopt = "menuone,noinsert,noselect";
-
-                backup = false;
-                writebackup = false;
-                swapfile = false;
-                updatetime = 300;
-                autoread =  true;
-                autowrite = true;
-
-                hidden = true;
-                errorbells = false;
-                backspace = "indent,eol,start";
-                autochdir = false;
-                selection = "exclusive";
-                mouse = "a";
-                encoding = "UTF-8";
-              };
-              clipboard = {
-                enable = true;
-                providers.wl-copy.enable = true;
-                registers = "unnamedplus";
-              };
-              languages = {
-                nix = {
-                  enable = true;
-                  lsp = {
-                    enable = true;
-                    servers = [
-                      "nixd"
-                    ];
-                  };
-                  treesitter.enable = true;
-                };
-              };
-              treesitter = {
-                enable = true;
-                indent.excludes = [ "nix" ];
-                grammars = with pkgs; [
-                  tree-sitter-grammars.tree-sitter-elisp
-                ];
-              };
-              telescope = {
-                enable = true;
-              };
-              statusline = {
-                lualine = {
-                  enable = true;
-                  icons.enable = true;
-                };
-              };
-              tabline = {
-                nvimBufferline = {
-                  enable = false;
-                };
-              };
-              filetree = {
-                neo-tree = {
-                  enable = true;
-                  setupOpts = {
-                    filesystem = {
-                      hijack_netrw_behavior = "disabled";
-                    };
-                  };
-                };
-              };
-              terminal = {
-                toggleterm = {
-                  enable = true;
-                };
-              };
-              extraPlugins = with pkgs.vimPlugins; {
-                orgmode = {
-                  package = orgmode;
-                  setup = ''
-                    require('orgmode').setup({
-                      mappings = {
-                        global = {
-                          org_babel_tangle = true,
-                        },
-                      }
-                    })   
-                    vim.lsp.enable('org')
-                  '';
-                };
-                gruvbox = {
-                  package = gruvbox-nvim;
-                  setup = ''
-                    vim.cmd("colorscheme gruvbox")
-                  '';
-                };
-              };
-            };
-          }
-        ];
-      })
-      .neovim;
-    };
-  }
 #+end_src
 *** Tmux
 #+begin_src nix :tangle modules/features/apps/tmux.nix 
@@ -1291,6 +1122,175 @@ The default hosts structure goes as follows
     };
   }
 #+end_src
+*** NVF
+#+begin_src nix :tangle modules/features/apps/nvf.nix 
+  { 
+    self,
+    inputs, 
+    ... 
+  }: {
+    flake.nixosModules.nvf = { 
+      pkgs,
+      ... 
+    }: {
+      environment.systemPackages = [
+        self.packages.${pkgs.stdenv.hostPlatform.system}.myNvf
+      ];
+    };
+    perSystem = {
+      pkgs,
+      ...
+    }: {
+      packages.myNvf = (inputs.nvf.lib.neovimConfiguration {
+        inherit pkgs;
+        modules = [
+          {
+            vim = {
+              viAlias = false;
+              vimAlias = false;
+
+              globals = {
+                mapLeader = " ";
+              };
+
+              keymaps = [
+                {
+                  key = "<leader>n";
+                  mode = "n";
+                  silent = true;
+                  action = ":Neotree toggle current reveal_force_cwd<cr>";
+                }
+                {
+                  key = "<leader>ff";
+                  mode = "n";
+                  action = "<cmd>Telescope find_files<CR>";
+                  desc = "Telescope find_files";
+                }
+              ];
+
+              opts = {
+                wrap = true;
+                number = true;
+                relativenumber = true;
+                cursorline = true;
+                scrolloff = 10;
+                sidescrolloff = 8;
+
+                tabstop = 2;
+                shiftwidth = 2;
+                softtabstop = 2;
+                expandtab = true;
+                smartindent = true;
+                autoindent = true;
+
+                ignorecase = true;
+                smartcase = true;
+                incsearch = true;
+                hlsearch = true;
+
+                termguicolors = true;
+                showmatch = true;
+                matchtime = 2;
+                cmdheight = 1;
+                completeopt = "menuone,noinsert,noselect";
+
+                backup = false;
+                writebackup = false;
+                swapfile = false;
+                updatetime = 300;
+                autoread =  true;
+                autowrite = true;
+
+                hidden = true;
+                errorbells = false;
+                backspace = "indent,eol,start";
+                autochdir = false;
+                selection = "exclusive";
+                mouse = "a";
+                encoding = "UTF-8";
+              };
+              clipboard = {
+                enable = true;
+                providers.wl-copy.enable = true;
+                registers = "unnamedplus";
+              };
+              languages = {
+                nix = {
+                  enable = true;
+                  lsp = {
+                    enable = true;
+                    servers = [
+                      "nixd"
+                    ];
+                  };
+                  treesitter.enable = true;
+                };
+              };
+              treesitter = {
+                enable = true;
+                indent.excludes = [ "nix" ];
+                grammars = with pkgs; [
+                  tree-sitter-grammars.tree-sitter-elisp
+                ];
+              };
+              telescope = {
+                enable = true;
+              };
+              statusline = {
+                lualine = {
+                  enable = true;
+                  setupOpts.options.icons_enabled = true;
+                };
+              };
+              tabline = {
+                nvimBufferline = {
+                  enable = false;
+                };
+              };
+              filetree = {
+                neo-tree = {
+                  enable = true;
+                  setupOpts = {
+                    filesystem = {
+                      hijack_netrw_behavior = "disabled";
+                    };
+                  };
+                };
+              };
+              terminal = {
+                toggleterm = {
+                  enable = true;
+                };
+              };
+              extraPlugins = with pkgs.vimPlugins; {
+                orgmode = {
+                  package = orgmode;
+                  setup = ''
+                    require('orgmode').setup({
+                      mappings = {
+                        global = {
+                          org_babel_tangle = true,
+                        },
+                      }
+                    })   
+                    vim.lsp.enable('org')
+                  '';
+                };
+                gruvbox = {
+                  package = gruvbox-nvim;
+                  setup = ''
+                    vim.cmd("colorscheme gruvbox")
+                  '';
+                };
+              };
+            };
+          }
+        ];
+      })
+      .neovim;
+    };
+  }
+#+end_src
 *** Emacs
 #+begin_src nix :tangle modules/features/apps/emacs.nix
   {
@@ -1333,24 +1333,6 @@ The default hosts structure goes as follows
           (global-set-key (kbd "C-x a") #'org-agenda)
           (global-set-key (kbd "C-x c") #'org-capture)
           (global-set-key (kbd "C-x e") #'my/eshell)
-
-          ;; Custom
-          (defun my/eshell ()
-            (interactive)
-            (eshell t))
-
-          ;; Eshell Aliases
-          (setq eshell-aliases-file
-             (expand-file-name "eshell/alias" user-emacs-directory))
-          (make-directory (file-name-directory eshell-aliases-file) t)
-          (with-temp-file eshell-aliases-file
-             (insert "alias nrs sudo nixos-rebuild switch --flake ~/nixos#''${hostname}\n"
-                     "alias hms home-manager switch --flake ~/nixos#''${whoami}-''${hostname}\n"
-                     "alias server_rebuild nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password\n"
-                     "alias l lsd -l\n"
-                     "alias la lsd -a\n"
-                     "alias lla lsd -la\n"
-                     "alias lt lsd --tree\n"))
 
           ;; Font 
           (set-face-attribute 'default nil :family "UbuntuMono Nerd Font Propo" :height 120)
@@ -1427,12 +1409,34 @@ The default hosts structure goes as follows
                                 'bash-completion-capf-nonexclusive nil t)))
           (use-package eat)
 
+          ;; Eshell
+          (use-package eshell
+            :hook (eshell-mode . (lambda ()
+                                   (setenv "TERM" "xterm-256color"))))
           ;; Eshell Vterm
           (use-package eshell-vterm
             :after eshell
             :config
             (eshell-vterm-mode))
           (defalias 'eshell/v 'eshell-exec-visual)
+
+          ;; Multiple Eshell
+          (defun my/eshell ()
+            (interactive)
+            (eshell t))
+
+          ;; Eshell Aliases
+          (setq eshell-aliases-file
+             (expand-file-name "eshell/alias" user-emacs-directory))
+          (make-directory (file-name-directory eshell-aliases-file) t)
+          (with-temp-file eshell-aliases-file
+             (insert "alias nrs sudo nixos-rebuild switch --flake ~/nixos#''${hostname}\n"
+                     "alias hms home-manager switch --flake ~/nixos#''${whoami}-''${hostname}\n"
+                     "alias server_rebuild nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password\n"
+                     "alias l lsd -l\n"
+                     "alias la lsd -a\n"
+                     "alias lla lsd -la\n"
+                     "alias lt lsd --tree\n"))
 
           ;; Org mode evil next line
           (with-eval-after-load 'org
@@ -1541,8 +1545,8 @@ The default hosts structure goes as follows
         emacsPackages = epkgs: with epkgs; [
           evil
           evil-collection
-  	  eat
-  	  emms
+  	      eat
+  	      emms
           nerd-icons
           vterm
           nix-mode

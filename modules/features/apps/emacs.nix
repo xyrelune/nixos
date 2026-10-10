@@ -39,24 +39,6 @@
         (global-set-key (kbd "C-x c") #'org-capture)
         (global-set-key (kbd "C-x e") #'my/eshell)
 
-        ;; Custom
-        (defun my/eshell ()
-          (interactive)
-          (eshell t))
-
-        ;; Eshell Aliases
-        (setq eshell-aliases-file
-           (expand-file-name "eshell/alias" user-emacs-directory))
-        (make-directory (file-name-directory eshell-aliases-file) t)
-        (with-temp-file eshell-aliases-file
-           (insert "alias nrs sudo nixos-rebuild switch --flake ~/nixos#''${hostname}\n"
-                   "alias hms home-manager switch --flake ~/nixos#''${whoami}-''${hostname}\n"
-                   "alias server_rebuild nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password\n"
-                   "alias l lsd -l\n"
-                   "alias la lsd -a\n"
-                   "alias lla lsd -la\n"
-                   "alias lt lsd --tree\n"))
-
         ;; Font 
         (set-face-attribute 'default nil :family "UbuntuMono Nerd Font Propo" :height 120)
         (set-frame-font "UbuntuMono Nerd Font Propo 12" nil t)
@@ -132,12 +114,34 @@
                               'bash-completion-capf-nonexclusive nil t)))
         (use-package eat)
 
+        ;; Eshell
+        (use-package eshell
+          :hook (eshell-mode . (lambda ()
+                                 (setenv "TERM" "xterm-256color"))))
         ;; Eshell Vterm
         (use-package eshell-vterm
           :after eshell
           :config
           (eshell-vterm-mode))
         (defalias 'eshell/v 'eshell-exec-visual)
+
+        ;; Multiple Eshell
+        (defun my/eshell ()
+          (interactive)
+          (eshell t))
+
+        ;; Eshell Aliases
+        (setq eshell-aliases-file
+           (expand-file-name "eshell/alias" user-emacs-directory))
+        (make-directory (file-name-directory eshell-aliases-file) t)
+        (with-temp-file eshell-aliases-file
+           (insert "alias nrs sudo nixos-rebuild switch --flake ~/nixos#''${hostname}\n"
+                   "alias hms home-manager switch --flake ~/nixos#''${whoami}-''${hostname}\n"
+                   "alias server_rebuild nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password\n"
+                   "alias l lsd -l\n"
+                   "alias la lsd -a\n"
+                   "alias lla lsd -la\n"
+                   "alias lt lsd --tree\n"))
 
         ;; Org mode evil next line
         (with-eval-after-load 'org
@@ -246,8 +250,8 @@
       emacsPackages = epkgs: with epkgs; [
         evil
         evil-collection
-	  eat
-	  emms
+	      eat
+	      emms
         nerd-icons
         vterm
         nix-mode
