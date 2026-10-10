@@ -32,7 +32,7 @@
       self.nixosModules.jellyfin
       self.nixosModules.copyparty
       self.nixosModules.rclone
-      #self.nixosModules.radicale
+      self.nixosModules.radicale
       self.nixosModules.navidrome
 
       inputs.sops-nix.nixosModules.sops
