@@ -186,7 +186,7 @@ The default hosts structure goes as follows
         self.nixosModules.localCA
         self.nixosModules.customFonts
         self.nixosModules.wg-quick
-
+        self.nixosModules.emacs
         inputs.sops-nix.nixosModules.sops
       ];
 
@@ -275,8 +275,6 @@ The default hosts structure goes as follows
 
           inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
         ];
-        variables = {
-          EDITOR = "emacsclient -c";};
       };
 
       hardware = {
@@ -635,7 +633,7 @@ The default hosts structure goes as follows
             "eDP-1" = {
               # off = _: {};
               mode = "1920x1200@60.003";
-              scale = 1.25;
+              scale = 1;
               #position = _: {
               #  props = {
               #    x = 0;
@@ -711,8 +709,8 @@ The default hosts structure goes as follows
           binds = {
             "Mod+Return".spawn-sh = "foot";
             "Mod+T".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
-            "Mod+D".spawn-sh = "rofi -show drun";
-            "Mod+B".spawn-sh = "firefox";
+            "Mod+D".spawn-sh = "${self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi}/bin/rofi -show drun";
+            "Mod+B".spawn-sh = "helium";
             "Mod+U".spawn-sh = "emacsclient -c";
             "Mod+P".spawn-sh = "spotify";
 
@@ -808,7 +806,7 @@ The default hosts structure goes as follows
           };
           spawn-sh-at-startup = [
             "${lib.getExe pkgs.swaybg} -i ${wallspath}/flowers.jpg"
-            "waybar"
+            "${self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar}"
           ];
         };
       };
@@ -1289,6 +1287,442 @@ The default hosts structure goes as follows
           gvfs = gvfs;
           smart-enter = smart-enter;
         };
+      };
+    };
+  }
+#+end_src
+*** Emacs
+#+begin_src nix :tangle modules/features/apps/emacs.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.emacs = {
+      pkgs,
+      lib,
+      ...
+    }: {
+      services.emacs = {
+        enable = true;
+        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myEmacs;
+        install = true;
+        defaultEditor = true;
+        startWithGraphical = true;
+      };
+      users.users.kin.packages = with pkgs; [
+        nixd
+        python314
+        pyright
+        texliveFull
+        lsd
+      ];
+    };
+    perSystem = {
+      pkgs,
+      lib,
+      ...
+    }: {
+      packages.myEmacs = inputs.wrapper-modules.wrappers.emacs.wrap {
+        inherit pkgs;
+        userDirectory = "~/.emacs.d";
+        configFile = ''
+          ;;; init.el --- Emacs configuration -*- lexical-binding: t; -*-
+
+          ;; Keybinds
+          (global-set-key (kbd "C-x a") #'org-agenda)
+          (global-set-key (kbd "C-x c") #'org-capture)
+          (global-set-key (kbd "C-x e") #'my/eshell)
+
+          ;; Custom
+          (defun my/eshell ()
+            (interactive)
+            (eshell t))
+
+          ;; Eshell Aliases
+          (setq eshell-aliases-file
+             (expand-file-name "eshell/alias" user-emacs-directory))
+          (make-directory (file-name-directory eshell-aliases-file) t)
+          (with-temp-file eshell-aliases-file
+             (insert "alias nrs sudo nixos-rebuild switch --flake ~/nixos#''${hostname}\n"
+                     "alias hms home-manager switch --flake ~/nixos#''${whoami}-''${hostname}\n"
+                     "alias server_rebuild nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password\n"
+                     "alias l lsd -l\n"
+                     "alias la lsd -a\n"
+                     "alias lla lsd -la\n"
+                     "alias lt lsd --tree\n"))
+
+          ;; Font 
+          (set-face-attribute 'default nil :family "UbuntuMono Nerd Font Propo" :height 120)
+          (set-frame-font "UbuntuMono Nerd Font Propo 12" nil t)
+
+          ;; qol customizations
+          (global-display-line-numbers-mode 1)
+          (setq display-line-numbers-type 'relative)
+          (global-hl-line-mode 0)
+          (global-visual-line-mode 1)
+          (column-number-mode 1)
+          (show-paren-mode 1)
+          (setq create-lockfiles nil)
+          (setq make-backup-files nil)
+          (setq auto-save-default nil)
+          (electric-indent-mode 1)
+          (add-hook 'org-mode-hook #'org-indent-mode)
+
+          ;; Transparency 
+          ;; (add-to-list 'default-frame-alist '(alpha-background . 60))
+
+          ;; Custom Fonts for org mode
+          ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
+          ;;(custom-theme-set-faces
+          ;; 'user
+          ;; '(variable-pitch ((t (:family "Noto Sans" :height 110))))
+          ;; '(fixed-pitch ((t (:family "JetBrainsMono Nerd Font Mono" :height 110))))
+          ;; '(org-table ((t (:inherit fixed-pitch))))
+          ;; '(org-code ((t (:inherit fixed-pitch))))
+          ;; '(org-block ((t (:inherit fixed-pitch)))))
+
+          ;; Base16 Theme
+          ;;(use-package base16-theme
+          ;;  :config
+          ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
+          ;; (load-theme 'gruvbox-dark-soft t)
+
+          ;; EMMS
+          (use-package emms
+            :config
+            (require 'emms-info))
+
+          ;; Doom Themes
+          (use-package doom-themes
+            :custom
+            (doom-themes-enable-bold t)
+            (doom-themes-enable-italic t)
+            :config
+            (load-theme 'doom-gruvbox t))
+
+          ;; Doom Moodline
+          (use-package doom-modeline
+            :config
+            (doom-modeline-mode 1))
+
+          ;; Evil Mode
+          (use-package evil
+            :init
+            (setq evil-want-C-u-scroll t)
+            (setq evil-want-keybinding nil)
+            :config
+            (evil-mode 1))
+          (use-package evil-collection
+            :after evil
+            :config
+            (evil-collection-init))
+
+          (use-package bash-completion
+            :config
+            (bash-completion-setup))
+          (add-hook 'eshell-mode-hook
+                    (lambda ()
+                      (add-hook 'completion-at-point-functions
+                                'bash-completion-capf-nonexclusive nil t)))
+          (use-package eat)
+
+          ;; Eshell Vterm
+          (use-package eshell-vterm
+            :after eshell
+            :config
+            (eshell-vterm-mode))
+          (defalias 'eshell/v 'eshell-exec-visual)
+
+          ;; Org mode evil next line
+          (with-eval-after-load 'org
+            (evil-define-key 'normal org-mode-map
+              (kbd "gj") #'evil-next-visual-line
+              (kbd "gk") #'evil-previous-visual-line))
+
+          ;; org-autolist
+          (use-package org-autolist
+            :hook (org-mode . org-autolist-mode))
+
+          ;; Magit
+          (use-package magit)
+
+          ;; Nix Mode for syntax highlighting
+          (use-package nix-mode
+          	:mode "\\.nix\\'")
+
+          ;; Yaml Major Mode
+          (use-package yaml-mode
+            :mode "\\.yml\\'")
+
+          ;; Nerd Icons
+          (use-package nerd-icons
+            :custom
+            (nerd-icons-color-icons nil))
+
+          ;; Nerd Icons Dired
+          (use-package nerd-icons-dired
+            :hook (dired-mode . nerd-icons-dired-mode))
+          (setq nerd-icons-font-family "Symbols Nerd Font Mono")
+
+          ;; Rainbow Mode
+          (use-package rainbow-mode
+            :hook (after-change-major-mode . rainbow-mode))
+
+          ;; Pdf-tools
+          (use-package pdf-tools
+            :defer t
+            :mode "\\.pdf\\'"
+            :commands (pdf-loader-install)
+            :bind (:map pdf-view-mode-map
+                        ("j" . pdf-view-next-line-or-next-page)
+                        ("k" . pdf-view-previous-line-or-previous-page)
+                        ("C-=" . pdf-view-enlarge)
+                        ("C--" . pdf-view-shrink))
+            :init (pdf-loader-install)
+            :config (add-to-list 'revert-without-query ".pdf"))
+          (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
+          (add-hook 'pdf-view-mode-hook #'pdf-view-roll-minor-mode)
+
+          ;; To make line numbers disappear in terminal mode
+          (dolist (mode '(vterm-mode-hook
+                          ghostel-mode-hook))
+            (add-hook mode (lambda() (display-line-numbers-mode 0))))
+
+          ;; Multi-Vterm
+          (use-package multi-vterm
+            :bind (("C-x t" . multi-vterm))
+                  (("C-x [" . multi-vterm-prev))
+                  (("C-x ]" . multi-vterm-next))
+            :config
+            (add-hook 'vterm-mode-hook
+          		(lambda ()
+          		(setq-local evil-insert-state-cursor 'box)
+          		(evil-insert-state)))
+          (define-key vterm-mode-map [return]                      #'vterm-send-return)
+
+          (setq vterm-keymap-exceptions nil)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-c")      #'vterm--self-insert)
+          (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
+          (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
+          (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
+          (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
+          (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
+          (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
+          (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
+          (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
+
+          ;; org-agenda
+          (use-package org
+            :init
+            (setq org-directory "~/org")
+            (setq org-agenda-files
+                  '("~/org/agenda.org"
+                    "~/org/caldav-inbox.org"))
+            :bind
+            (("C-x a" . org-agenda)))
+        '';
+        emacsPackages = epkgs: with epkgs; [
+          evil
+          evil-collection
+  	  eat
+  	  emms
+          nerd-icons
+          vterm
+          nix-mode
+          rainbow-mode
+          pdf-tools
+          yaml-mode
+          powershell
+          multi-vterm
+          magit
+          vterm-toggle
+          org
+          org-autolist
+          gruvbox-theme
+          nerd-icons-dired
+          eshell-vterm
+          bash-completion
+          doom-modeline
+          doom-themes
+        ];
+        earlyConfigFile = ''
+          ;;; early-init.el --- Early emacs configuration -*- lexical-binding: t; -*-
+
+          (set-language-environment "UTF-8")
+
+          (setq inhibit-startup-message 1)
+          (setq-default
+           default-frame-alist
+           '((bottom-divider-width . 1)
+             (horizontal-scroll-bars . nil)
+             (menu-bar-lines . 0)
+             (tool-bar-lines . 0)
+             (set-fringe-mode 10)
+             (vertical-scroll-bars . nil))
+           tab-width 2 
+           indent-tabs-mode nil
+          )
+       '';
+      };
+    };
+  }
+      
+#+end_src
+*** Waybar
+#+begin_src nix :tangle modules/features/apps/waybar.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.waybar = {
+      pkgs,
+      lib,
+      ...
+    }: {
+      programs.waybar = {
+        enable = true;
+        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar;
+      };
+    };
+    perSystem = {
+      pkgs,
+      lib,
+      ...
+    }: {
+      packages.myWaybar = inputs.wrapper-modules.wrappers.waybar.wrap {
+        inherit pkgs;
+        settings = {
+          layer = "top";
+          position = "top";
+          height = 25;
+          spacing = 15;
+          modules-left = ["niri/workspaces" ];
+          modules-center = [];
+          modules-right = ["tray" "custom/seperator" "cpu" "memory" "battery"  "clock#date" "clock#time"];
+          "cpu" = {
+            interval = 10;
+            format = "Cpu:{usage}%";
+          };
+          "memory" = {
+            interval = 30;
+            format = "Ram:{}%";
+          };
+          "battery" = {
+            format = "Bat:{capacity}%";
+          };
+          "clock#date" = {
+            format = "{:%a %d/%m}";
+          };
+          "clock#time" = {
+            format = "{:%I:%M %p} ";
+            interval = 1;
+          };
+          "custom/seperator" = {
+            format = "|";
+            tooltip = false;
+          };
+          "tray" = {
+            spacing = 5;
+          };
+        };
+        "style.css".content = ''
+          #waybar {
+              font-family: 'UbuntuMono Nerd Font Propo';
+              font-size: 16px;
+              font-weight: normal;
+              background-color: rgba(40, 40, 40, 1);
+          }
+          
+          #cpu {
+              color: #d79921;
+          }
+          
+          #memory {
+              color: #98971a;
+          }
+          
+          #battery {
+              color: #d65d0e;
+          }
+          
+          #clock.date {
+              color: #fe8019;
+          }
+          
+          #clock.time {
+              color: #fb4934;
+          }
+          
+          #window {
+              color: #928374;
+          }
+          
+          #workspaces button {
+              all: initial;
+              color: #928374;
+              padding: 0 8px;
+              margin: 0;
+          }
+          
+          #workspaces button.active {
+              color: #83a598;
+          }
+          
+          #workspaces button:hover {
+              color: #ebdbb2;
+          }
+          
+          #custom-seperator {
+              color: #665c54;
+              padding: 0;
+          }
+        '';
+      };
+    };
+  }
+
+#+end_src
+*** Rofi
+#+begin_src nix :tangle modules/features/apps/rofi.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.homeModules.rofi = {
+      pkgs,
+      ...
+    }: {
+      programs.rofi = {
+        enable = true;
+        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi;
+      };
+    };
+    perSystem = {
+      pkgs,
+      ...
+    }: {
+      packages.myRofi = inputs.wrapper-modules.wrappers.rofi.wrap {
+        inherit pkgs;
+        theme = "gruvbox-dark";
       };
     };
   }
@@ -2849,6 +3283,16 @@ https://discourse.nixos.org/t/jellyfin-cuda-nixos-unable-to-transcode/79830/5
               e2d = true;
             };
           };
+          "/nsfw" = {
+            path = "/mnt/external-hdd/downloads/nsfw";
+            access = {
+              r = [ "kin" ];
+            };
+            flags = {
+              scan = 60;
+              e2d = true;
+            };
+          };
         };
       };
     };
@@ -3251,15 +3695,15 @@ The main peers would be:
         self.homeModules.mako
         self.homeModules.alacritty
         self.homeModules.gtk
-        self.homeModules.fuzzel
-        self.homeModules.rofi
+        #self.homeModules.fuzzel
+        #self.homeModules.rofi
         self.homeModules.firefox
         self.homeModules.librewolf
         self.homeModules.helix
         self.homeModules.chromium
         self.homeModules.gtk-fonts
-        self.homeModules.emacs
-        self.homeModules.waybar
+        #self.homeModules.emacs
+        #self.homeModules.waybar
         self.homeModules.easyeffects
         #self.homeModules.rmpc
         #self.homeModules.mpd
@@ -3690,33 +4134,6 @@ Fuzzel launcher with clipboard history and password manager.
     };
   }
 #+end_src
-*** Rofi
-#+begin_src nix :tangle modules/home/home-modules/rofi.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.rofi = {
-      pkgs,
-      ...
-    }: {
-      programs.rofi = {
-        enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi;
-      };
-    };
-    perSystem = {
-      pkgs,
-      ...
-    }: {
-      packages.myRofi = inputs.wrapper-modules.wrappers.rofi.wrap {
-        inherit pkgs;
-        theme = "gruvbox-dark";
-      };
-    };
-  }
-#+end_src
 *** GTK
 Check the theme repo for the appropriate name to give in <name> attribute of the gtk theme.
 One can use nwg-look to check the various names for the available variants, even for the icons.
@@ -3834,108 +4251,6 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
             default-timeout = 0;
           };
         };
-      };
-    };
-  }
-#+end_src
-*** Waybar
-#+begin_src nix :tangle modules/home/home-modules/waybar.nix
-  {
-    ...
-  }: {
-    flake.homeModules.waybar = {
-      ...
-    }: {
-      programs.waybar = {
-        enable = true;
-        settings = {
-          mainBar = {
-            layer = "top";
-            position = "top";
-            height = 25;
-            spacing = 15;
-            modules-left = ["niri/workspaces" ];
-            modules-center = [];
-            modules-right = ["tray" "custom/seperator" "cpu" "memory" "battery"  "clock#date" "clock#time"];
-            "cpu" = {
-              interval = 10;
-              format = "Cpu:{usage}%";
-            };
-            "memory" = {
-              interval = 30;
-              format = "Ram:{}%";
-            };
-            "battery" = {
-              format = "Bat:{capacity}%";
-            };
-            "clock#date" = {
-              format = "{:%a %d/%m}";
-            };
-            "clock#time" = {
-              format = "{:%I:%M %p} ";
-              interval = 1;
-            };
-            "custom/seperator" = {
-              format = "|";
-              tooltip = false;
-            };
-            "tray" = {
-              spacing = 5;
-            };
-          };
-        };
-        style = "
-          #waybar {
-              font-family: 'Iosevka Nerd Font Propo';
-              font-size: 16px;
-              font-weight: normal;
-              background-color: rgba(40, 40, 40, 1);
-          }
-          
-          #cpu {
-              color: #d79921;
-          }
-          
-          #memory {
-              color: #98971a;
-          }
-          
-          #battery {
-              color: #d65d0e;
-          }
-          
-          #clock.date {
-              color: #fe8019;
-          }
-          
-          #clock.time {
-              color: #fb4934;
-          }
-          
-          #window {
-              color: #928374;
-          }
-          
-          #workspaces button {
-              all: initial;
-              color: #928374;
-              padding: 0 8px;
-              margin: 0;
-          }
-          
-          #workspaces button.active {
-              color: #83a598;
-          }
-          
-          #workspaces button:hover {
-              color: #ebdbb2;
-          }
-          
-          #custom-seperator {
-              color: #665c54;
-              padding: 0;
-          }
-        ";
       };
     };
   }
@@ -4124,324 +4439,4 @@ For icons specifically add hyphens after each word, for example "Gruvbox Plus Da
       };
     };
   }
-#+end_src
-* Emacs configuration
-** Emacs Managed by nix
-For installing node packages use the following commands for setting the prefix
-#+begin_src bash :tangle no
-  npm config set prefix "${HOME}/.cache/npm/global"
-  mkdir -p "${HOME}/.cache/npm/global"
-#+end_src
-#+begin_src nix :tangle modules/home/home-modules/emacs/emacs.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.emacs = {
-      config,
-      pkgs,
-      lib,
-      ...
-    }: let  
-      jellyfin-emms-mpv = pkgs.fetchFromGitHub {
-        owner = "emacs-os";
-        repo = "jellyfin-emms-mpv.el";
-        rev = "main";
-        hash = "sha256-ExO6/PcK0NfHqXnlRyTFSE48LES8SZ9JOFfzazIvuek=";
-      };
-    in {
-      services.emacs = {
-        enable = true;
-        package = config.programs.emacs.finalPackage;
-        client.enable = true;
-        defaultEditor = true;
-        startWithUserSession = true;
-      };
-      home.packages = with pkgs; [
-        nixd
-        python314
-        pyright
-        texliveFull
-        lsd
-      ];
-      programs.emacs = {
-        enable = true;
-        package = (pkgs.emacs-pgtk.override { withTreeSitter = true; });
-
-        extraPackages = epkgs: with epkgs; [
-          evil
-          evil-collection
-          eat
-          emms
-          nerd-icons
-          vterm
-          nix-mode
-          rainbow-mode
-          pdf-tools
-          yaml-mode
-          powershell
-          multi-vterm
-          magit
-          vterm-toggle
-          org
-          org-autolist
-          gruvbox-theme
-          nerd-icons-dired
-          eshell-vterm
-          bash-completion
-          doom-modeline
-          doom-themes
-        ];
-      };
-
-      home.file = {
-        emacs = {
-          source = ./init.el;
-          target = ".emacs.d/init.el";
-        };
-        emacs-init = {
-          source = ./early-init.el;
-          target = ".emacs.d/early-init.el";
-        };
-        eshell-alias = {
-          source = ./alias;
-          target = ".emacs.d/eshell/alias";
-        };
-        ".emacs.d/jellyfin-emms-mpv" = {
-          source = jellyfin-emms-mpv;
-          recursive = true;
-        };
-      };
-    };
-  }
-#+end_src
-** alias
-#+begin_src emacs-lisp :tangle modules/home/home-modules/emacs/alias
-  alias nrs sudo nixos-rebuild switch --flake ~/nixos#${hostname}
-  alias hms home-manager switch --flake ~/nixos#${whoami}-${hostname}
-  alias server_rebuild nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password
-  alias l lsd -l
-  alias la lsd -a
-  alias lla lsd -la
-  alias lt lsd --tree
-#+end_src
-** early-init.el
-#+begin_src emacs-lisp :tangle modules/home/home-modules/emacs/early-init.el
-  ;;; early-init.el --- Early emacs configuration -*- lexical-binding: t; -*-
-
-  (set-language-environment "UTF-8")
-
-  (setq inhibit-startup-message 1)
-  (setq-default
-   default-frame-alist
-   '((bottom-divider-width . 1)
-     (horizontal-scroll-bars . nil)
-     (menu-bar-lines . 0)
-     (tool-bar-lines . 0)
-     (set-fringe-mode 10)
-     (vertical-scroll-bars . nil))
-   tab-width 2 
-   indent-tabs-mode nil
-  )
-#+end_src
-** init.el
-#+begin_src emacs-lisp :tangle modules/home/home-modules/emacs/init.el
-  ;;; init.el --- Emacs configuration -*- lexical-binding: t; -*-
-
-  ;; Keybinds
-  (global-set-key (kbd "C-x a") #'org-agenda)
-  (global-set-key (kbd "C-x c") #'org-capture)
-  (global-set-key (kbd "C-x e") #'my/eshell)
-
-  ;; Custom
-  (defun my/eshell ()
-    (interactive)
-    (eshell t))
-
-  ;; Font 
-  (set-face-attribute 'default nil :family "UbuntuMono Nerd Font Propo" :height 120)
-  (set-frame-font "UbuntuMono Nerd Font Propo 12" nil t)
-
-  ;; qol customizations
-  (global-display-line-numbers-mode 1)
-  (setq display-line-numbers-type 'relative)
-  (global-hl-line-mode 0)
-  (global-visual-line-mode 1)
-  (column-number-mode 1)
-  (show-paren-mode 1)
-  (setq create-lockfiles nil)
-  (setq make-backup-files nil)
-  (setq auto-save-default nil)
-  (electric-indent-mode 1)
-  (add-hook 'org-mode-hook #'org-indent-mode)
-
-  ;; Transparency 
-  ;; (add-to-list 'default-frame-alist '(alpha-background . 60))
-
-  ;; Custom Fonts for org mode
-  ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
-  ;;(custom-theme-set-faces
-  ;; 'user
-  ;; '(variable-pitch ((t (:family "Noto Sans" :height 110))))
-  ;; '(fixed-pitch ((t (:family "JetBrainsMono Nerd Font Mono" :height 110))))
-  ;; '(org-table ((t (:inherit fixed-pitch))))
-  ;; '(org-code ((t (:inherit fixed-pitch))))
-  ;; '(org-block ((t (:inherit fixed-pitch)))))
-
-  ;; Base16 Theme
-  ;;(use-package base16-theme
-  ;;  :config
-  ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
-  ;; (load-theme 'gruvbox-dark-soft t)
-
-  ;; EMMS
-  (use-package emms
-    :config
-    (require 'emms-info))
-
-  ;; Doom Themes
-  (use-package doom-themes
-    :custom
-    (doom-themes-enable-bold t)
-    (doom-themes-enable-italic t)
-    :config
-    (load-theme 'doom-gruvbox t))
-
-  ;; Doom Moodline
-  (use-package doom-modeline
-    :config
-    (doom-modeline-mode 1))
-
-  ;; Evil Mode
-  (use-package evil
-    :init
-    (setq evil-want-C-u-scroll t)
-    (setq evil-want-keybinding nil)
-    :config
-    (evil-mode 1))
-  (use-package evil-collection
-    :after evil
-    :config
-    (evil-collection-init))
-
-  (use-package bash-completion
-    :config
-    (bash-completion-setup))
-  (add-hook 'eshell-mode-hook
-            (lambda ()
-              (add-hook 'completion-at-point-functions
-                        'bash-completion-capf-nonexclusive nil t)))
-  (use-package eat)
-
-  ;; Eshell Vterm
-  (use-package eshell-vterm
-    :after eshell
-    :config
-    (eshell-vterm-mode))
-  (defalias 'eshell/v 'eshell-exec-visual)
-
-  ;; Org mode evil next line
-  (with-eval-after-load 'org
-    (evil-define-key 'normal org-mode-map
-      (kbd "gj") #'evil-next-visual-line
-      (kbd "gk") #'evil-previous-visual-line))
-
-  ;; org-autolist
-  (use-package org-autolist
-    :hook (org-mode . org-autolist-mode))
-
-  ;; Magit
-  (use-package magit)
-
-  ;; Nix Mode for syntax highlighting
-  (use-package nix-mode
-  	:mode "\\.nix\\'")
-
-  ;; Yaml Major Mode
-  (use-package yaml-mode
-    :mode "\\.yml\\'")
-
-  ;; Nerd Icons
-  (use-package nerd-icons
-    :custom
-    (nerd-icons-color-icons nil))
-
-  ;; Nerd Icons Dired
-  (use-package nerd-icons-dired
-    :hook (dired-mode . nerd-icons-dired-mode))
-  (setq nerd-icons-font-family "Symbols Nerd Font Mono")
-
-  ;; Rainbow Mode
-  (use-package rainbow-mode
-    :hook (after-change-major-mode . rainbow-mode))
-
-  ;; Pdf-tools
-  (use-package pdf-tools
-    :defer t
-    :mode "\\.pdf\\'"
-    :commands (pdf-loader-install)
-    :bind (:map pdf-view-mode-map
-                ("j" . pdf-view-next-line-or-next-page)
-                ("k" . pdf-view-previous-line-or-previous-page)
-                ("C-=" . pdf-view-enlarge)
-                ("C--" . pdf-view-shrink))
-    :init (pdf-loader-install)
-    :config (add-to-list 'revert-without-query ".pdf"))
-  (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
-  (add-hook 'pdf-view-mode-hook #'pdf-view-roll-minor-mode)
-
-  ;; To make line numbers disappear in terminal mode
-  (dolist (mode '(vterm-mode-hook
-                  ghostel-mode-hook))
-    (add-hook mode (lambda() (display-line-numbers-mode 0))))
-
-  ;; Multi-Vterm
-  (use-package multi-vterm
-    :bind (("C-x t" . multi-vterm))
-          (("C-x [" . multi-vterm-prev))
-          (("C-x ]" . multi-vterm-next))
-    :config
-    (add-hook 'vterm-mode-hook
-  		(lambda ()
-  		(setq-local evil-insert-state-cursor 'box)
-  		(evil-insert-state)))
-  (define-key vterm-mode-map [return]                      #'vterm-send-return)
-
-  (setq vterm-keymap-exceptions nil)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-c")      #'vterm--self-insert)
-  (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
-  (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-  (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
-  (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
-  (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
-  (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
-  (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
-  (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
-
-  ;; org-agenda
-  (use-package org
-    :init
-    (setq org-directory "~/org")
-    (setq org-agenda-files
-          '("~/org/agenda.org"
-            "~/org/caldav-inbox.org"))
-    :bind
-    (("C-x a" . org-agenda)))
 #+end_src

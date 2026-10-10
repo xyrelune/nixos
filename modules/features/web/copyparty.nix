@@ -46,6 +46,16 @@
             e2d = true;
           };
         };
+        "/nsfw" = {
+          path = "/mnt/external-hdd/downloads/nsfw";
+          access = {
+            r = [ "kin" ];
+          };
+          flags = {
+            scan = 60;
+            e2d = true;
+          };
+        };
       };
     };
   };

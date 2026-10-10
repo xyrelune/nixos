@@ -24,7 +24,7 @@
       self.nixosModules.localCA
       self.nixosModules.customFonts
       self.nixosModules.wg-quick
-
+      self.nixosModules.emacs
       inputs.sops-nix.nixosModules.sops
     ];
 
@@ -113,8 +113,6 @@
 
         inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
       ];
-      variables = {
-        EDITOR = "emacsclient -c";};
     };
 
     hardware = {

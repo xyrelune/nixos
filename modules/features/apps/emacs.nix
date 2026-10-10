@@ -1,0 +1,290 @@
+{
+  self,
+  inputs,
+  ...
+}: {
+  flake.nixosModules.emacs = {
+    pkgs,
+    lib,
+    ...
+  }: {
+    services.emacs = {
+      enable = true;
+      package = self.packages.${pkgs.stdenv.hostPlatform.system}.myEmacs;
+      install = true;
+      defaultEditor = true;
+      startWithGraphical = true;
+    };
+    users.users.kin.packages = with pkgs; [
+      nixd
+      python314
+      pyright
+      texliveFull
+      lsd
+    ];
+  };
+  perSystem = {
+    pkgs,
+    lib,
+    ...
+  }: {
+    packages.myEmacs = inputs.wrapper-modules.wrappers.emacs.wrap {
+      inherit pkgs;
+      userDirectory = "~/.emacs.d";
+      configFile = ''
+        ;;; init.el --- Emacs configuration -*- lexical-binding: t; -*-
+
+        ;; Keybinds
+        (global-set-key (kbd "C-x a") #'org-agenda)
+        (global-set-key (kbd "C-x c") #'org-capture)
+        (global-set-key (kbd "C-x e") #'my/eshell)
+
+        ;; Custom
+        (defun my/eshell ()
+          (interactive)
+          (eshell t))
+
+        ;; Eshell Aliases
+        (setq eshell-aliases-file
+           (expand-file-name "eshell/alias" user-emacs-directory))
+        (make-directory (file-name-directory eshell-aliases-file) t)
+        (with-temp-file eshell-aliases-file
+           (insert "alias nrs sudo nixos-rebuild switch --flake ~/nixos#''${hostname}\n"
+                   "alias hms home-manager switch --flake ~/nixos#''${whoami}-''${hostname}\n"
+                   "alias server_rebuild nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password\n"
+                   "alias l lsd -l\n"
+                   "alias la lsd -a\n"
+                   "alias lla lsd -la\n"
+                   "alias lt lsd --tree\n"))
+
+        ;; Font 
+        (set-face-attribute 'default nil :family "UbuntuMono Nerd Font Propo" :height 120)
+        (set-frame-font "UbuntuMono Nerd Font Propo 12" nil t)
+
+        ;; qol customizations
+        (global-display-line-numbers-mode 1)
+        (setq display-line-numbers-type 'relative)
+        (global-hl-line-mode 0)
+        (global-visual-line-mode 1)
+        (column-number-mode 1)
+        (show-paren-mode 1)
+        (setq create-lockfiles nil)
+        (setq make-backup-files nil)
+        (setq auto-save-default nil)
+        (electric-indent-mode 1)
+        (add-hook 'org-mode-hook #'org-indent-mode)
+
+        ;; Transparency 
+        ;; (add-to-list 'default-frame-alist '(alpha-background . 60))
+
+        ;; Custom Fonts for org mode
+        ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
+        ;;(custom-theme-set-faces
+        ;; 'user
+        ;; '(variable-pitch ((t (:family "Noto Sans" :height 110))))
+        ;; '(fixed-pitch ((t (:family "JetBrainsMono Nerd Font Mono" :height 110))))
+        ;; '(org-table ((t (:inherit fixed-pitch))))
+        ;; '(org-code ((t (:inherit fixed-pitch))))
+        ;; '(org-block ((t (:inherit fixed-pitch)))))
+
+        ;; Base16 Theme
+        ;;(use-package base16-theme
+        ;;  :config
+        ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
+        ;; (load-theme 'gruvbox-dark-soft t)
+
+        ;; EMMS
+        (use-package emms
+          :config
+          (require 'emms-info))
+
+        ;; Doom Themes
+        (use-package doom-themes
+          :custom
+          (doom-themes-enable-bold t)
+          (doom-themes-enable-italic t)
+          :config
+          (load-theme 'doom-gruvbox t))
+
+        ;; Doom Moodline
+        (use-package doom-modeline
+          :config
+          (doom-modeline-mode 1))
+
+        ;; Evil Mode
+        (use-package evil
+          :init
+          (setq evil-want-C-u-scroll t)
+          (setq evil-want-keybinding nil)
+          :config
+          (evil-mode 1))
+        (use-package evil-collection
+          :after evil
+          :config
+          (evil-collection-init))
+
+        (use-package bash-completion
+          :config
+          (bash-completion-setup))
+        (add-hook 'eshell-mode-hook
+                  (lambda ()
+                    (add-hook 'completion-at-point-functions
+                              'bash-completion-capf-nonexclusive nil t)))
+        (use-package eat)
+
+        ;; Eshell Vterm
+        (use-package eshell-vterm
+          :after eshell
+          :config
+          (eshell-vterm-mode))
+        (defalias 'eshell/v 'eshell-exec-visual)
+
+        ;; Org mode evil next line
+        (with-eval-after-load 'org
+          (evil-define-key 'normal org-mode-map
+            (kbd "gj") #'evil-next-visual-line
+            (kbd "gk") #'evil-previous-visual-line))
+
+        ;; org-autolist
+        (use-package org-autolist
+          :hook (org-mode . org-autolist-mode))
+
+        ;; Magit
+        (use-package magit)
+
+        ;; Nix Mode for syntax highlighting
+        (use-package nix-mode
+        	:mode "\\.nix\\'")
+
+        ;; Yaml Major Mode
+        (use-package yaml-mode
+          :mode "\\.yml\\'")
+
+        ;; Nerd Icons
+        (use-package nerd-icons
+          :custom
+          (nerd-icons-color-icons nil))
+
+        ;; Nerd Icons Dired
+        (use-package nerd-icons-dired
+          :hook (dired-mode . nerd-icons-dired-mode))
+        (setq nerd-icons-font-family "Symbols Nerd Font Mono")
+
+        ;; Rainbow Mode
+        (use-package rainbow-mode
+          :hook (after-change-major-mode . rainbow-mode))
+
+        ;; Pdf-tools
+        (use-package pdf-tools
+          :defer t
+          :mode "\\.pdf\\'"
+          :commands (pdf-loader-install)
+          :bind (:map pdf-view-mode-map
+                      ("j" . pdf-view-next-line-or-next-page)
+                      ("k" . pdf-view-previous-line-or-previous-page)
+                      ("C-=" . pdf-view-enlarge)
+                      ("C--" . pdf-view-shrink))
+          :init (pdf-loader-install)
+          :config (add-to-list 'revert-without-query ".pdf"))
+        (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
+        (add-hook 'pdf-view-mode-hook #'pdf-view-roll-minor-mode)
+
+        ;; To make line numbers disappear in terminal mode
+        (dolist (mode '(vterm-mode-hook
+                        ghostel-mode-hook))
+          (add-hook mode (lambda() (display-line-numbers-mode 0))))
+
+        ;; Multi-Vterm
+        (use-package multi-vterm
+          :bind (("C-x t" . multi-vterm))
+                (("C-x [" . multi-vterm-prev))
+                (("C-x ]" . multi-vterm-next))
+          :config
+          (add-hook 'vterm-mode-hook
+        		(lambda ()
+        		(setq-local evil-insert-state-cursor 'box)
+        		(evil-insert-state)))
+        (define-key vterm-mode-map [return]                      #'vterm-send-return)
+
+        (setq vterm-keymap-exceptions nil)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-c")      #'vterm--self-insert)
+        (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
+        (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
+        (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
+        (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
+        (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
+        (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
+        (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
+        (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
+
+        ;; org-agenda
+        (use-package org
+          :init
+          (setq org-directory "~/org")
+          (setq org-agenda-files
+                '("~/org/agenda.org"
+                  "~/org/caldav-inbox.org"))
+          :bind
+          (("C-x a" . org-agenda)))
+      '';
+      emacsPackages = epkgs: with epkgs; [
+        evil
+        evil-collection
+	  eat
+	  emms
+        nerd-icons
+        vterm
+        nix-mode
+        rainbow-mode
+        pdf-tools
+        yaml-mode
+        powershell
+        multi-vterm
+        magit
+        vterm-toggle
+        org
+        org-autolist
+        gruvbox-theme
+        nerd-icons-dired
+        eshell-vterm
+        bash-completion
+        doom-modeline
+        doom-themes
+      ];
+      earlyConfigFile = ''
+        ;;; early-init.el --- Early emacs configuration -*- lexical-binding: t; -*-
+
+        (set-language-environment "UTF-8")
+
+        (setq inhibit-startup-message 1)
+        (setq-default
+         default-frame-alist
+         '((bottom-divider-width . 1)
+           (horizontal-scroll-bars . nil)
+           (menu-bar-lines . 0)
+           (tool-bar-lines . 0)
+           (set-fringe-mode 10)
+           (vertical-scroll-bars . nil))
+         tab-width 2 
+         indent-tabs-mode nil
+        )
+     '';
+    };
+  };
+}

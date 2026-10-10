@@ -15,15 +15,15 @@
       self.homeModules.mako
       self.homeModules.alacritty
       self.homeModules.gtk
-      self.homeModules.fuzzel
-      self.homeModules.rofi
+      #self.homeModules.fuzzel
+      #self.homeModules.rofi
       self.homeModules.firefox
       self.homeModules.librewolf
       self.homeModules.helix
       self.homeModules.chromium
       self.homeModules.gtk-fonts
-      self.homeModules.emacs
-      self.homeModules.waybar
+      #self.homeModules.emacs
+      #self.homeModules.waybar
       self.homeModules.easyeffects
       #self.homeModules.rmpc
       #self.homeModules.mpd

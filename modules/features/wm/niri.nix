@@ -56,7 +56,7 @@
           "eDP-1" = {
             # off = _: {};
             mode = "1920x1200@60.003";
-            scale = 1.25;
+            scale = 1;
             #position = _: {
             #  props = {
             #    x = 0;
@@ -132,8 +132,8 @@
         binds = {
           "Mod+Return".spawn-sh = "foot";
           "Mod+T".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
-          "Mod+D".spawn-sh = "rofi -show drun";
-          "Mod+B".spawn-sh = "firefox";
+          "Mod+D".spawn-sh = "${self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi}/bin/rofi -show drun";
+          "Mod+B".spawn-sh = "helium";
           "Mod+U".spawn-sh = "emacsclient -c";
           "Mod+P".spawn-sh = "spotify";
 
@@ -229,7 +229,7 @@
         };
         spawn-sh-at-startup = [
           "${lib.getExe pkgs.swaybg} -i ${wallspath}/flowers.jpg"
-          "waybar"
+          "${self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar}"
         ];
       };
     };
