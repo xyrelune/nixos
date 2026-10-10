@@ -16,6 +16,8 @@
         pkgs.noto-fonts
         pkgs.roboto
         pkgs.inter
+        pkgs.ubuntu-sans
+        pkgs.nerd-fonts.ubuntu-mono
         self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -32,9 +34,9 @@
           lcdfilter = "default";
         };
         defaultFonts = {
-          serif = ["Iosevka Nerd Font"];
-          sansSerif = ["Iosevka Nerd Font"];
-          monospace = ["Iosevka Nerd Font Mono"];
+          serif = ["Ubuntu Sans"];
+          sansSerif = ["Ubuntu Sans"];
+          monospace = ["UbuntuMono Nerd Font Mono"];
         };
       };
     };
@@ -45,7 +47,7 @@
   }: {
     gtk = {
       font = {
-        name = "Iosevka Nerd Font";
+        name = "Ubuntu Sans";
         size = 12;
       };
     };

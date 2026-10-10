@@ -697,10 +697,10 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1787374757,
-        "narHash": "sha256-/l3LdJNHAJfpEDQDiZdUsvV+GoTW/WzU8+SzdKPpWCk=",
+        "lastModified": 1791615163,
+        "narHash": "sha256-rNvHSvDzDO3Er8mDwalJpLfvXEkj2/9z5YhHznf6R34=",
         "ref": "main",
-        "rev": "9fafabdf7ad3b9ad0d7213909f88483863159282",
+        "rev": "fcea6b4d1e3d9e620dc8b64985de5e13076251ae",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/xyrelune/nix-secrets"

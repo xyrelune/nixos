@@ -48,7 +48,7 @@
             }
             {
               name = "lenovo";
-              publicKey = "r8ADjGqPjA35Istaxd8cm+1hcq2spc0QREvVuGdO2Fw=";
+              publicKey = "zQ8bdvnJNFdQ8FcbQoNnA8MxL4BL0aGubdzcuoYLuyE=";
               allowedIPs = [ "10.0.0.4/32" ];
             }
             {

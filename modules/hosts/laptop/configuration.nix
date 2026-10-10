@@ -23,7 +23,7 @@
       self.nixosModules.bash
       self.nixosModules.localCA
       self.nixosModules.customFonts
-      self.nixosModules.wg-quick
+      #self.nixosModules.wg-quick
 
       inputs.sops-nix.nixosModules.sops
     ];
@@ -34,6 +34,13 @@
         systemd-boot = {
           enable = true;
           configurationLimit = 3;
+          edk2-uefi-shell.enable = true;
+          windows = {
+            "Win10" = {
+              title = "Windows 10 IoT Entl LTSC";
+              efiDeviceHandle = "HD0b";
+            };
+          };
         };
       };
     };
@@ -146,12 +153,6 @@
       # Samsung VID
       SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", MODE="0660", GROUP="plugdev", TAG+="uaccess"
     '';
-    swapDevices = [
-      { 
-        device = "/var/lib/swapfile";
-        size = 64 * 1024;
-      }
-    ];
     system.stateVersion = "25.11";
   };
 }

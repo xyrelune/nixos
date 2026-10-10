@@ -196,6 +196,13 @@ The default hosts structure goes as follows
           systemd-boot = {
             enable = true;
             configurationLimit = 3;
+            edk2-uefi-shell.enable = true;
+            windows = {
+              "Win10" = {
+                title = "Windows 10 IoT Entl LTSC";
+                efiDeviceHandle = "HD0b";
+              };
+            };
           };
         };
       };
@@ -308,12 +315,6 @@ The default hosts structure goes as follows
         # Samsung VID
         SUBSYSTEM=="usb", ATTR{idVendor}=="04e8", MODE="0660", GROUP="plugdev", TAG+="uaccess"
       '';
-      swapDevices = [
-        { 
-          device = "/var/lib/swapfile";
-          size = 64 * 1024;
-        }
-      ];
       system.stateVersion = "25.11";
     };
   }
@@ -509,19 +510,19 @@ The default hosts structure goes as follows
       boot.extraModulePackages = [];
 
       fileSystems."/" = {
-        device = "/dev/disk/by-uuid/63be889f-1491-47be-bc6c-820884e007b9";
+        device = "/dev/disk/by-label/nixos";
         fsType = "ext4";
       };
 
       fileSystems."/boot" = {
-        device = "/dev/disk/by-uuid/6728-D654";
+        device = "/dev/disk/by-label/BOOT";
         fsType = "vfat";
         options = ["fmask=0022" "dmask=0022"];
       };
 
-      #swapDevices = [
-      #  {device = "/dev/disk/by-uuid/7f2a8bf2-2460-4446-bdec-327811c5be57";}
-      #];  
+      swapDevices = [
+        {device = "/dev/disk/by-label/swap";}
+      ];  
 
       nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
       hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
@@ -708,7 +709,7 @@ The default hosts structure goes as follows
             }
           ];
           binds = {
-            "Mod+Return".spawn-sh = ''emacsclient -c --eval "(vterm t)"'';
+            "Mod+Return".spawn-sh = "foot";
             "Mod+T".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
             "Mod+D".spawn-sh = "rofi -show drun";
             "Mod+B".spawn-sh = "firefox";
@@ -892,7 +893,7 @@ The default hosts structure goes as follows
           inherit pkgs;
           settings = {
             main = {
-              font = "Iosevka Nerd Font Mono:size=12";
+              font = "UbuntuMono Nerd Font Mono:size=12";
             };
             colors-dark = {
               alpha = "1";
@@ -1425,6 +1426,8 @@ The default hosts structure goes as follows
           pkgs.noto-fonts
           pkgs.roboto
           pkgs.inter
+          pkgs.ubuntu-sans
+          pkgs.nerd-fonts.ubuntu-mono
           self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -1441,9 +1444,9 @@ The default hosts structure goes as follows
             lcdfilter = "default";
           };
           defaultFonts = {
-            serif = ["Iosevka Nerd Font"];
-            sansSerif = ["Iosevka Nerd Font"];
-            monospace = ["Iosevka Nerd Font Mono"];
+            serif = ["Ubuntu Sans"];
+            sansSerif = ["Ubuntu Sans"];
+            monospace = ["UbuntuMono Nerd Font Mono"];
           };
         };
       };
@@ -1454,7 +1457,7 @@ The default hosts structure goes as follows
     }: {
       gtk = {
         font = {
-          name = "Iosevka Nerd Font";
+          name = "Ubuntu Sans";
           size = 12;
         };
       };
@@ -3062,7 +3065,7 @@ The main peers would be:
               }
               {
                 name = "lenovo";
-                publicKey = "r8ADjGqPjA35Istaxd8cm+1hcq2spc0QREvVuGdO2Fw=";
+                publicKey = "zQ8bdvnJNFdQ8FcbQoNnA8MxL4BL0aGubdzcuoYLuyE=";
                 allowedIPs = [ "10.0.0.4/32" ];
               }
               {
@@ -3605,6 +3608,7 @@ The main peers would be:
                 stylus
                 foxyproxy-standard
                 web-scrobbler
+                bitwarden
               ];
             };
             settings = {
@@ -4256,8 +4260,8 @@ For installing node packages use the following commands for setting the prefix
     (eshell t))
 
   ;; Font 
-  (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
-  (set-frame-font "Iosevka Nerd Font Propo 12" nil t)
+  (set-face-attribute 'default nil :family "UbuntuMono Nerd Font Propo" :height 120)
+  (set-frame-font "UbuntuMono Nerd Font Propo 12" nil t)
 
   ;; qol customizations
   (global-display-line-numbers-mode 1)

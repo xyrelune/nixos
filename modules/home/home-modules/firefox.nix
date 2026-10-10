@@ -90,6 +90,7 @@
               stylus
               foxyproxy-standard
               web-scrobbler
+              bitwarden
             ];
           };
           settings = {
