@@ -23,7 +23,7 @@
       self.nixosModules.bash
       self.nixosModules.localCA
       self.nixosModules.customFonts
-      #self.nixosModules.wg-quick
+      self.nixosModules.wg-quick
 
       inputs.sops-nix.nixosModules.sops
     ];
