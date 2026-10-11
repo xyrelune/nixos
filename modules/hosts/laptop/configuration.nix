@@ -25,6 +25,8 @@
       self.nixosModules.customFonts
       self.nixosModules.wg-quick
       self.nixosModules.emacs
+      self.nixosModules.home
+
       inputs.sops-nix.nixosModules.sops
     ];
 
@@ -83,7 +85,41 @@
         unzip
         zip
         sops
+        swappy
+        libreoffice
+        fastfetch
+        qbittorrent-nox
+        mpv
+        helium
+        btop
+        lutris
+        android-tools
+        protonup-qt
+        tree
+        htop
+        p7zip
+        blanket
+        nwg-look
+        lsd
+        via
+        streamrip
+        tidal-hifi
+        jellyfin-mpv-shim
+        bitwarden-cli
+        bitwarden-desktop
+        hydra-check
+        thunar
+        zathura
+        speedtest-cli
+        vlc
+        onlyoffice-desktopeditors
+        teams-for-linux
+        stirling-pdf-desktop
+        spotify
 
+        inputs.sidra.packages.${pkgs.stdenv.hostPlatform.system}.default
+        inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
+        zulu25
       ];
     };
 

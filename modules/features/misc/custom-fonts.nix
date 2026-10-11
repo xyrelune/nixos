@@ -34,21 +34,10 @@
           lcdfilter = "default";
         };
         defaultFonts = {
-          serif = ["Ubuntu Sans"];
-          sansSerif = ["Ubuntu Sans"];
-          monospace = ["UbuntuMono Nerd Font Mono"];
+          serif = ["Inter"];
+          sansSerif = ["Inter"];
+          monospace = ["Iosevka Nerd Font Mono"];
         };
-      };
-    };
-  };
-  flake.homeModules.gtk-fonts = {
-    pkgs,
-    ...
-  }: {
-    gtk = {
-      font = {
-        name = "Ubuntu Sans";
-        size = 12;
       };
     };
   };

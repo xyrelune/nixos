@@ -3,15 +3,6 @@
   inputs,
   ...
 }: {
-  flake.homeModules.mako = {
-    pkgs,
-    ...
-  }: {
-    services.mako = {
-      enable = true;
-      package = self.packages.${pkgs.stdenv.hostPlatform.system}.myMako;
-    };
-  };
   perSystem = {
     pkgs,
     ...

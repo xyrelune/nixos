@@ -40,8 +40,8 @@
         (global-set-key (kbd "C-x e") #'my/eshell)
 
         ;; Font 
-        (set-face-attribute 'default nil :family "UbuntuMono Nerd Font Propo" :height 120)
-        (set-frame-font "UbuntuMono Nerd Font Propo 12" nil t)
+        (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
+        (set-frame-font "Iosevka Nerd Font Propo 120" nil t)
 
         ;; qol customizations
         (global-display-line-numbers-mode 1)

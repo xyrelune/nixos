@@ -223,13 +223,13 @@
           "Mod+F5".spawn-sh = "${lib.getExe pkgs.brightnessctl} -c backlight s 10%-";
 
           "Mod+Shift+P".spawn-sh = "niri msg action power-off-monitors";
-          "Mod+e".spawn-sh = ''${lib.getExe pkgs.cliphist} list | ${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.myFuzzel} --dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe' pkgs.wl-clipboard "wl-copy"}'';
           "Mod+Shift+I".spawn-sh = "rofi-rbw --clear-after 30";
           "Mod+Shift+T".spawn-sh = "rofi-rbw --action type --target totp --clear-after 30"; 
         };
         spawn-sh-at-startup = [
           "${lib.getExe pkgs.swaybg} -i ${wallspath}/flowers.jpg"
           "${self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar}/bin/waybar"
+          "${self.packages.${pkgs.stdenv.hostPlatform.system}.myMako}/bin/mako"
         ];
       };
     };

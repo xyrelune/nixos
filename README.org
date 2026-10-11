@@ -129,9 +129,13 @@ The default hosts structure goes as follows
       modules = [
         self.nixosModules.laptopConfiguration
         ({pkgs, ...}: {
-          nixpkgs.config.allowUnfree = true;
-          nixpkgs.overlays = [
-          ];
+          nixpkgs = {
+            config.allowUnfree = true;
+            overlays = [
+              inputs.helium.overlays.default
+              inputs.emacs-overlay.overlays.default
+            ];
+          };
         })
       ];
     };
@@ -187,6 +191,8 @@ The default hosts structure goes as follows
         self.nixosModules.customFonts
         self.nixosModules.wg-quick
         self.nixosModules.emacs
+        self.nixosModules.home
+
         inputs.sops-nix.nixosModules.sops
       ];
 
@@ -245,7 +251,41 @@ The default hosts structure goes as follows
           unzip
           zip
           sops
+          swappy
+          libreoffice
+          fastfetch
+          qbittorrent-nox
+          mpv
+          helium
+          btop
+          lutris
+          android-tools
+          protonup-qt
+          tree
+          htop
+          p7zip
+          blanket
+          nwg-look
+          lsd
+          via
+          streamrip
+          tidal-hifi
+          jellyfin-mpv-shim
+          bitwarden-cli
+          bitwarden-desktop
+          hydra-check
+          thunar
+          zathura
+          speedtest-cli
+          vlc
+          onlyoffice-desktopeditors
+          teams-for-linux
+          stirling-pdf-desktop
+          spotify
 
+          inputs.sidra.packages.${pkgs.stdenv.hostPlatform.system}.default
+          inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
+          zulu25
         ];
       };
 
@@ -800,13 +840,13 @@ The default hosts structure goes as follows
             "Mod+F5".spawn-sh = "${lib.getExe pkgs.brightnessctl} -c backlight s 10%-";
 
             "Mod+Shift+P".spawn-sh = "niri msg action power-off-monitors";
-            "Mod+e".spawn-sh = ''${lib.getExe pkgs.cliphist} list | ${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.myFuzzel} --dmenu | ${lib.getExe pkgs.cliphist} decode | ${lib.getExe' pkgs.wl-clipboard "wl-copy"}'';
             "Mod+Shift+I".spawn-sh = "rofi-rbw --clear-after 30";
             "Mod+Shift+T".spawn-sh = "rofi-rbw --action type --target totp --clear-after 30"; 
           };
           spawn-sh-at-startup = [
             "${lib.getExe pkgs.swaybg} -i ${wallspath}/flowers.jpg"
             "${self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar}/bin/waybar"
+            "${self.packages.${pkgs.stdenv.hostPlatform.system}.myMako}/bin/mako"
           ];
         };
       };
@@ -891,7 +931,7 @@ The default hosts structure goes as follows
           inherit pkgs;
           settings = {
             main = {
-              font = "UbuntuMono Nerd Font Mono:size=12";
+              font = "Iosevka Nerd Font Mono:size=12";
             };
             colors-dark = {
               alpha = "1";
@@ -1335,8 +1375,8 @@ The default hosts structure goes as follows
           (global-set-key (kbd "C-x e") #'my/eshell)
 
           ;; Font 
-          (set-face-attribute 'default nil :family "UbuntuMono Nerd Font Propo" :height 120)
-          (set-frame-font "UbuntuMono Nerd Font Propo 12" nil t)
+          (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
+          (set-frame-font "Iosevka Nerd Font Propo 120" nil t)
 
           ;; qol customizations
           (global-display-line-numbers-mode 1)
@@ -1649,7 +1689,7 @@ The default hosts structure goes as follows
         };
         "style.css".content = ''
           #waybar {
-              font-family: 'UbuntuMono Nerd Font Propo';
+              font-family: 'Iosevka Nerd Font Propo';
               font-size: 16px;
               font-weight: normal;
               background-color: rgba(40, 40, 40, 1);
@@ -1727,6 +1767,50 @@ The default hosts structure goes as follows
       packages.myRofi = inputs.wrapper-modules.wrappers.rofi.wrap {
         inherit pkgs;
         theme = "gruvbox-dark";
+      };
+    };
+  }
+#+end_src
+*** Mako
+#+begin_src nix :tangle modules/features/apps/mako.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    perSystem = {
+      pkgs,
+      ...
+    }: {
+      packages.myMako = inputs.wrapper-modules.wrappers.mako.wrap {
+        inherit pkgs;
+        settings = {
+          sort = "-time";
+          font = "JetBrainsMono Nerd Font Mono";
+          layer = "overlay";
+          anchor = "top-right";
+          default-timeout = 5000;
+          width = 300;
+          height = 110;
+          padding = "0,15,20";
+          background-color = "#282828";
+          text-color = "#ebdbb2";
+          border-color = "#458588";
+          progress-color = "#504945";
+          
+          "urgency=low" = {
+            border-color = "#665c54";
+          };
+          
+          "urgency=normal" = {
+            border-color = "#d79921";
+          };
+          
+          "urgency=high" = {
+            border-color = "#cc241d";
+            default-timeout = 0;
+          };
+        };
       };
     };
   }
@@ -1882,21 +1966,10 @@ The default hosts structure goes as follows
             lcdfilter = "default";
           };
           defaultFonts = {
-            serif = ["Ubuntu Sans"];
-            sansSerif = ["Ubuntu Sans"];
-            monospace = ["UbuntuMono Nerd Font Mono"];
+            serif = ["Inter"];
+            sansSerif = ["Inter"];
+            monospace = ["Iosevka Nerd Font Mono"];
           };
-        };
-      };
-    };
-    flake.homeModules.gtk-fonts = {
-      pkgs,
-      ...
-    }: {
-      gtk = {
-        font = {
-          name = "Ubuntu Sans";
-          size = 12;
         };
       };
     };
@@ -2539,6 +2612,70 @@ This uses a config generated for wireguard servers running at my home.
       };
     };
   }
+#+end_src
+*** Home
+#+begin_src nix :tangle modules/features/misc/home.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.home = {
+      pkgs,
+      ...
+    }: {
+      imports = [
+        inputs.home-manager.nixosModules.home-manager
+      ];
+
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        backupFileExtension = "backup";
+
+        users.kin = {
+         home = {
+           username = "kin";
+           homeDirectory = "/home/kin/";
+           stateVersion = "25.11";
+         };
+         gtk = {
+           enable = true;
+           gtk4.theme = null;
+           theme = {
+             name = "Gruvbox-Dark";
+             package = pkgs.gruvbox-gtk-theme; 
+           };
+           iconTheme = {
+             package = pkgs.gruvbox-plus-icons;
+             name = "Gruvbox-Plus-Dark";
+           };
+           font = {
+             name = "Inter";
+             size = 12;
+           };
+         };
+         qt = {
+           enable = true;
+           platformTheme.name = "gtk3";
+         };            
+         dconf = {
+           enable = true;
+           settings = {
+             "org/gnome/desktop/interface".color-scheme = "prefer-dark";
+           };
+         };
+         home.pointerCursor = {
+           enable = true;
+           gtk.enable = true;
+           name = "Bibata-Modern-Classic";
+           package = pkgs.bibata-cursors;
+         };
+       };
+     };
+   };
+ }
+      
 #+end_src
 ** Web
 *** Komga
@@ -3626,819 +3763,6 @@ The main peers would be:
             OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
             WEBUI_AUTH = "False";
           };
-        };
-      };
-    };
-  }
-#+end_src
-* Home
-- For setting default applications with ~xdg-mime~, run the following command
-  example for pdfs
-#+begin_src bash :tangle no
-  xdg-mime default helium.desktop application/pdf
-#+end_src
-- For getting the .desktop names for run the following commands
-#+begin_src bash :tangle no
-  find /run/current-system/sw/share/applications -name '*.desktop'
-  find ~/.nix-profile/share/applications -name '*.desktop'
-#+end_src
-- For setting default web browser use the following
-#+begin_src bash :tangle no
-  xdg-settings set default-web-browser helium.desktop
-#+end_src
-** Home Users
-*** Laptop
-**** kin
-***** Default
-#+begin_src nix :tangle modules/home/kin-lenovo/home.nix 
-  {
-    withSystem,
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeConfigurations.kin-laptop = inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = import inputs.nixpkgs {
-        system = "x86_64-linux";
-        overlays = [
-          inputs.nur.overlays.default
-          inputs.helium.overlays.default
-          inputs.emacs-overlay.overlays.default
-        ];
-      };
-      modules = [
-        self.homeModules.kinConfiguration
-        ({pkgs, ...}: {
-          nixpkgs.config = {
-            allowUnfree = true;
-            permittedInsecurePackages = [
-              "electron-39.8.10"
-            ];
-          };
-        })
-      ];
-    };
-  }
-#+end_src
-***** Configuration
-#+begin_src nix :tangle modules/home/kin-lenovo/homeConfiguration.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.kinConfiguration = {
-      config,
-      pkgs, 
-      ...
-    }: let
-      secretspath = builtins.toString inputs.secrets;
-    in {
-      imports = [
-        #self.homeModules.lock
-        self.homeModules.mako
-        self.homeModules.alacritty
-        self.homeModules.gtk
-        #self.homeModules.fuzzel
-        #self.homeModules.rofi
-        self.homeModules.firefox
-        self.homeModules.librewolf
-        self.homeModules.helix
-        self.homeModules.chromium
-        self.homeModules.gtk-fonts
-        #self.homeModules.emacs
-        #self.homeModules.waybar
-        self.homeModules.easyeffects
-        #self.homeModules.rmpc
-        #self.homeModules.mpd
-
-        inputs.sops-nix.homeManagerModules.sops
-      ];
-      home = {
-        username = "kin";
-        homeDirectory = "/home/kin";
-        stateVersion = "25.11";
-        packages = with pkgs; [
-          swappy
-          libreoffice
-          fastfetch
-          qbittorrent-nox
-          mpv
-          helium
-          btop
-          lutris
-          android-tools
-          protonup-qt
-          tree
-          htop
-          p7zip
-          blanket
-          nwg-look
-          lsd
-          via
-          streamrip
-          tidal-hifi
-          jellyfin-mpv-shim
-          bitwarden-cli
-          bitwarden-desktop
-          hydra-check
-          thunar
-          zathura
-          speedtest-cli
-          vlc
-          onlyoffice-desktopeditors
-          teams-for-linux
-          stirling-pdf-desktop
-          spotify
-
-          inputs.sidra.packages.${pkgs.stdenv.hostPlatform.system}.default
-          inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
-          zulu25
-        ];
-      };
-      sops = {
-        defaultSopsFile = "${secretspath}/secrets/server.yaml";
-        age = {
-          sshKeyPaths = ["/home/kin/.ssh/id_ed25519"];
-          keyFile = "/home/kin/.config/sops/age/keys.txt";
-          generateKey = true;
-        };
-      };
-    };
-  }
-#+end_src
-** Home Modules
-*** Easyeffects
-#+begin_src nix :tangle modules/home/home-modules/easyeffects.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.easyeffects = {
-      services.easyeffects = {
-        enable = true;
-        preset = "my-preset";
-        extraPresets = {
-          my-preset = {
-            input = {
-              blocklist = [];
-              "rnnoise#0" = {
-                bypass = false;
-                enable-vad = false;
-                input-gain = 0.0;
-                model-name = "\\";
-                output-gain = 0.0;
-                release = 20.0;
-                use-standard-model = true;
-                vad-thres = 30.0;
-                wet = 0.0;
-              };
-              plugins_order = [
-                "rnnoise#0"
-              ];
-            };
-          };
-        };
-      };
-    };
-  }
-#+end_src
-*** Alacritty
-#+begin_src nix :tangle modules/home/home-modules/alacritty.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.alacritty = {
-      pkgs,
-      ...
-    }: {
-      programs.alacritty = {
-        enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myAlacritty;
-      };
-    };
-    perSystem = {
-      pkgs,
-      ...
-    }: {
-      packages.myAlacritty = inputs.wrapper-modules.wrappers.alacritty.wrap {
-        inherit pkgs;
-        settings = {
-          font = {
-            size = 12;
-          };
-          window = {
-            opacity = 1;
-          };
-          colors = {
-            primary = {
-              background = "#282828";
-              foreground = "#ebdbb2";
-            };
-          
-            cursor = {
-              text = "#282828";
-              cursor = "#ebdbb2";
-            };
-          
-            vi_mode_cursor = {
-              text = "#282828";
-              cursor = "#ebdbb2";
-            };
-          
-            selection = {
-              text = "#ebdbb2";
-              background = "#504945";
-            };
-          
-            normal = {
-              black = "#282828";
-              red = "#cc241d";
-              green = "#98971a";
-              yellow = "#d79921";
-              blue = "#458588";
-              magenta = "#b16286";
-              cyan = "#689d6a";
-              white = "#a89984";
-            };
-          
-            bright = {
-              black = "#928374";
-              red = "#fb4934";
-              green = "#b8bb26";
-              yellow = "#fabd2f";
-              blue = "#83a598";
-              magenta = "#d3869b";
-              cyan = "#8ec07c";
-              white = "#ebdbb2";
-            };
-          
-            hints = {
-              start = {
-                foreground = "#282828";
-                background = "#fabd2f";
-              };
-          
-              end = {
-                foreground = "#928374";
-                background = "#282828";
-              };
-            };
-          };
-        };
-      };
-    };
-  }
-#+end_src
-*** Chromium
-#+begin_src nix :tangle modules/home/home-modules/chromium.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.chromium = {
-      pkgs,
-      ...
-    }: {
-      programs.chromium = {
-        enable = true;
-        package = (pkgs.ungoogled-chromium.override {
-          enableWideVine = true;
-          commandLineArgs = [
-               "--enable-features=AcceleratedVideoEncoder,VaapiOnNvidiaGPUs,VaapiIgnoreDriverChecks,Vulkan,DefaultANGLEVulkan,VulkanFromANGLE"
-            "--enable-features=VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport"
-            "--enable-features=UseMultiPlaneFormatForHardwareVideo"
-            "--ignore-gpu-blocklist"
-            "--enable-zero-copy"
-          ];
-        });
-      };
-    };
-  }
-#+end_src
-*** Librewolf
-#+begin_src nix :tangle modules/home/home-modules/librewolf.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.librewolf = {
-      pkgs,
-      ...
-    }: {
-      programs.librewolf = {
-        enable = true;
-        profiles = {
-          standard = {
-            id = 0;
-            name = "standard";
-            isDefault = true;
-            settings = {
-              "webgl.disabled" = false;
-              "privacy.resistFingerprinting" = false;
-              "privacy.clearOnShutdown.history" = false;
-              "privacy.clearOnShutdown.cookies" = false;
-              "network.cookie.lifetimePolicy" = 0;
-            };
-            extensions = {
-              force = true;
-              packages = with pkgs.nur.repos.rycee.firefox-addons; [
-                ublock-origin
-                sponsorblock
-                violentmonkey
-                floccus
-                enhancer-for-youtube
-                stylus
-              ];
-            };
-          };
-        };
-      };
-    };
-  }
-#+end_src
-*** Firefox
-#+begin_src nix :tangle modules/home/home-modules/firefox.nix
-  {
-    ...
-  }: {
-    flake.homeModules.firefox = { 
-      config,
-      pkgs,
-      ...
-    }: {
-      programs.firefox = {
-        enable = true;
-        configPath = "${config.xdg.configHome}/mozilla/firefox";
-        policies = {
-          DNSOverHTTPS = {
-            Enabled = false;
-            ProviderURL = "https://freedns.controld.com/p0";
-            Locked = true;
-          };
-          DisableFirefoxStudies = true;
-          DisableFirefoxAccounts = true;
-          DisableTelemetry = true;
-          DisableFeedbackCommands = true;
-          DisableSetDesktopBackground = true;
-          ShowHomeButton = true;
-          FirefoxHome = {
-            SponsoredStories = false;
-            SponsoredTopSites = false;
-            SponsoredPocket = false;
-            Stories = false;
-            Search = true;
-            Shortcuts = false;
-            TopSites = false;
-            Highlights = false;
-            Pocket = false;
-            Snippets = false;
-            Locked = true;
-          };
-          EnableTrackingProtection = {
-            Value = true;
-            Locked = true;
-            Cryptomining = true;
-            Fingerprinting = true;
-          };
-          GenerativeAI = {
-            Enabled = false;
-          };
-          SearchEngines = {
-            Remove = [
-              "Bing"
-              "Perplexity"
-            ];
-            Default = "Google";
-            Add = [
-              {
-                Name = "SearXNG";
-                Description = "A privacy-respecting, hackable metasearch engine";
-                Alias = "sng";
-                Method = "POST";
-                URLTemplate = "https://search.peanutbutter.quest/search?q={searchTerms}";
-              }
-              {
-                Name = "Searchix";
-                Description = "NixOS Module/Option search";
-                Alias = "six";
-                Method = "POST";
-                URLTemplate = "https://searchix.ovh?query={searchTerms}";
-              }
-              {
-                Name = "4get";
-                Description = "4get is a proxy search engine that doesn't suck";
-                Alias = "4g";
-                Method = "POST";
-                URLTemplate = "https://4get.server.org/web?s={searchTerms}";
-              }
-            ];
-          };
-        };
-        profiles = {
-          standard = {
-            id = 0;
-            name = "standard";
-            isDefault = true;
-            extensions = {
-              force = true;
-              packages = with pkgs.nur.repos.rycee.firefox-addons; [
-                ublock-origin
-                sponsorblock
-                violentmonkey
-                floccus
-                enhancer-for-youtube
-                stylus
-                foxyproxy-standard
-                web-scrobbler
-                bitwarden
-              ];
-            };
-            settings = {
-              "signon.formlessCapture.enabled" = false;
-              "signon.privateBrowsingCapture.enabled" = false;
-              "network.auth.subresource-http-auth-allow" = 1;
-              "editor.truncate_user_pastes" = false;
-              "widget.use-xdg-desktop-portal.file-picker" = 1;
-              "ui.key.menuAccessKeyFocuses" = false;
-              "browser.sessionstore.resume_from_crash" = false;
-              "extensions.autoDisableScopes" = 0;
-            };
-          };
-        };
-      };
-    };
-  }
-        
-
-#+end_src
-*** Fuzzel
-Fuzzel launcher with clipboard history and password manager. 
-#+begin_src nix :tangle modules/home/home-modules/fuzzel.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.fuzzel = {
-      config,
-      pkgs,
-      ...
-    }: {
-      programs.fuzzel = {
-        enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myFuzzel;
-      };
-      services.cliphist = {
-        enable = true;
-      };
-      programs.rbw = {
-        enable = true;
-        settings = {
-          base_url = "https://vault.peanutbutter.quest";
-          email = "tiredhames@gmail.com";
-          lock_timeout = 300;
-          pinentry = pkgs.pinentry-qt;
-        };
-      };
-      home.packages = with pkgs; [
-        rofi-rbw
-        wtype 
-        wl-clipboard
-        pinentry-qt
-      ];
-    };
-    perSystem = {
-      pkgs,
-      ...
-    }: {
-      packages.myFuzzel = inputs.wrapper-modules.wrappers.fuzzel.wrap {
-        inherit pkgs;
-        settings = {
-          main = {
-            font = "Iosevka:size=11";
-            list-executables-in-path = "yes";
-          };
-          colors = {
-            background       = "282828ff";
-            text             = "ebdbb2ff";
-            match            = "fabd2fff";
-            selection        = "3c3836ff";
-            selection-match  = "fabd2fff";
-            selection-text   = "ebdbb2ff";
-            border           = "665c54ff";
-          };
-        };
-      };
-    };
-  }
-#+end_src
-*** GTK
-Check the theme repo for the appropriate name to give in <name> attribute of the gtk theme.
-One can use nwg-look to check the various names for the available variants, even for the icons.
-For icons specifically add hyphens after each word, for example "Gruvbox Plus Dark" need to be entered as "Gruvbox-Plus-Dark".
-#+begin_src nix :tangle modules/home/home-modules/gtk.nix
-  {
-    self,
-    ...
-  }: {
-    flake.homeModules.gtk = {
-      pkgs,
-      ...
-    }: {
-      gtk = {
-        enable = true;
-        gtk4.theme = null;
-        theme = {
-          name = "Gruvbox-Dark";
-          package = pkgs.gruvbox-gtk-theme; 
-        };
-        iconTheme = {
-          package = pkgs.gruvbox-plus-icons;
-          name = "Gruvbox-Plus-Dark";
-        };
-      };
-      qt = {
-        enable = true;
-        platformTheme.name = "gtk3";
-      };            
-      dconf = {
-        enable = true;
-        settings = {
-          "org/gnome/desktop/interface".color-scheme = "prefer-dark";
-        };
-      };
-      home.pointerCursor = {
-        enable = true;
-        gtk.enable = true;
-        name = "Bibata-Modern-Classic";
-        package = pkgs.bibata-cursors;
-      };
-    };
-  }
-#+end_src
-
-*** Helix
-#+begin_src nix :tangle modules/home/home-modules/helix.nix
-  { 
-    ...
-  }: {
-    flake.homeModules.helix = {
-      pkgs,
-      ...
-    }: {
-      programs.helix = {
-        enable = true;
-        package = pkgs.evil-helix;
-        settings = {
-          theme =  "tokyonight";
-        };
-        themes."transparent" = {
-          inherits = "kanagawa";
-          "ui.background" = {};
-        };
-      };
-    };
-  }
-#+end_src
-*** Mako
-#+begin_src nix :tangle modules/home/home-modules/mako.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.mako = {
-      pkgs,
-      ...
-    }: {
-      services.mako = {
-        enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myMako;
-      };
-    };
-    perSystem = {
-      pkgs,
-      ...
-    }: {
-      packages.myMako = inputs.wrapper-modules.wrappers.mako.wrap {
-        inherit pkgs;
-        settings = {
-          sort = "-time";
-          font = "JetBrainsMono Nerd Font Mono";
-          layer = "overlay";
-          anchor = "top-right";
-          default-timeout = 5000;
-          width = 300;
-          height = 110;
-          padding = "0,15,20";
-          background-color = "#282828";
-          text-color = "#ebdbb2";
-          border-color = "#458588";
-          progress-color = "#504945";
-          
-          "urgency=low" = {
-            border-color = "#665c54";
-          };
-          
-          "urgency=normal" = {
-            border-color = "#d79921";
-          };
-          
-          "urgency=high" = {
-            border-color = "#cc241d";
-            default-timeout = 0;
-          };
-        };
-      };
-    };
-  }
-#+end_src
-*** Lock
-#+begin_src nix :tangle modules/home/home-modules/lock.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.lock = {
-      pkgs,
-      ...
-    }: {
-      services.swayidle = 
-      let
-        lock = "${pkgs.swaylock}/bin/swaylock --daemonize";
-        display = status: "${pkgs.niri}/bin/niri msg action power-${status}-monitors";
-      in {
-        enable = true;
-        timeouts = [
-          {
-            timeout = 360;
-            command = lock;
-          }
-          {
-            timeout = 380;
-            command = display "off";
-            resumeCommand = display "on";
-          }
-          {
-            timeout = 400;
-            command = "${pkgs.systemd}/bin/systemctl suspend";
-          }
-        ];
-        events = {
-          "before-sleep" = (display "off") + "; " + lock;
-          "after-resume" = display "on";
-          "lock" = (display "off") + "; " + lock;
-          "unlock" = display "on";
-        };
-      };
-    };
-  }
-#+end_src
-*** MPD
-#+begin_src nix :tangle modules/home/home-modules/mpd.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.mpd = {
-      config,
-      lib,
-      ...
-    }: {
-
-      sops.secrets = {
-        "last.fm/password" = {};
-        "listenbrainz/token" = {};
-        "libre.fm/password" = {};
-      };
-      
-      services = {
-        mpd = {
-          enable = true;
-          network.port = 6600;
-          musicDirectory = "/home/kin/personal-music";
-          extraConfig = ''
-            audio_output {
-              type "pulse"
-              name "Pipewire"
-              mixer_type "hardware"
-              mixer_device "default"
-              mixer_control "PCM"
-              mixer_index "0"
-            }
-          '';
-        };
-        mpdris2 = {
-          enable = true;
-          notifications = true;
-        };
-        mpd-discord-rpc = {
-          enable = true;
-          settings = {
-            format = {
-              details = "$title";
-              state = "$artist";
-              small_image = "";
-            };
-            hosts = [
-              "127.0.0.1:6600"
-            ];
-          };
-        };
-        mpdscribble = {
-          enable = true;
-          endpoints = {
-            "last.fm" = {
-              username = "cementsediment";
-              passwordFile = config.sops.secrets."last.fm/password".path;
-            };
-            "listenbrainz" = {
-              username = "cementsediment";
-              passwordFile = config.sops.secrets."listenbrainz/token".path;
-            };
-            "libre.fm" = {
-              username = "cementsediment";
-              passwordFile = config.sops.secrets."libre.fm/password".path;
-            };
-          };
-        };
-      };
-    };
-  }
-#+end_src
-*** RMPC
-#+begin_src nix :tangle modules/home/home-modules/rmpc.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.homeModules.rmpc = {
-      programs.rmpc = {
-        enable = true;
-        config = ''
-          (
-            address: "127.0.0.1:6600",
-            password: None,
-            theme: None,
-            cache_dir: None,
-            on_song_change: None,
-            volume_step: 5,
-            scrolloff: 0,
-            wrap_navigation: false,
-            enable_mouse: true,
-            enable_config_hot_reload: true,
-            select_current_song_on_change: false,
-            browser_song_sort: [Disc, Track, Artist, Title],
-          )
-        '';
-      };
-    };
-  }
-#+end_src
-* Logic
-** homeModules
-#+begin_src nix :tangle modules/logic/homeModules.nix
-  {
-    lib,
-    moduleLocation,
-    flake-parts-lib,
-    ...
-  }: let
-    inherit
-      (lib)
-      mapAttrs
-      mkOption
-      types
-      ;
-    inherit
-      (flake-parts-lib)
-      mkSubmoduleOptions
-      ;
-  in {
-    options = {
-      flake = mkSubmoduleOptions {
-        homeModules = mkOption {
-          type = types.lazyAttrsOf types.deferredModule;
-          default = {};
-          apply = mapAttrs (k: v: {
-            _class = "homeManager";
-            _file = "${toString moduleLocation}#homeModules.${k}";
-            imports = [v];
-          });
-          description = ''
-            Home-Manager modules.
-
-            You may use this for reusable pieces of configuration, service modules, etc.
-          '';
         };
       };
     };
