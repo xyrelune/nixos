@@ -136,7 +136,6 @@
         (make-directory (file-name-directory eshell-aliases-file) t)
         (with-temp-file eshell-aliases-file
            (insert "alias nrs sudo nixos-rebuild switch --flake ~/nixos#''${hostname}\n"
-                   "alias hms home-manager switch --flake ~/nixos#''${whoami}-''${hostname}\n"
                    "alias server_rebuild nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password\n"
                    "alias l lsd -l\n"
                    "alias la lsd -a\n"
