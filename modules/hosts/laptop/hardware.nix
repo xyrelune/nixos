@@ -24,6 +24,12 @@
       fsType = "ext4";
     };
 
+    fileSystems."/mnt/Data" = {
+      device = "/dev/disk/by-label/Data";
+      fsType = "exfat";
+      options = [ "rw" "uid=1000" "gid=users" "umask=002" ];
+    };
+
     fileSystems."/boot" = {
       device = "/dev/disk/by-label/BOOT";
       fsType = "vfat";

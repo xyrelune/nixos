@@ -272,7 +272,6 @@ The default hosts structure goes as follows
           vlc
           onlyoffice-desktopeditors
           teams-for-linux
-          stirling-pdf-desktop
           spotify
 
           inputs.sidra.packages.${pkgs.stdenv.hostPlatform.system}.default
@@ -377,7 +376,7 @@ The default hosts structure goes as follows
         self.nixosModules.docker
         self.nixosModules.bash
         self.nixosModules.yazi
-        self.nixosModules.stirlingpdf
+        #self.nixosModules.stirlingpdf
         self.nixosModules.whatmp3
         self.nixosModules.linkwarden
         self.nixosModules.wireguard
@@ -481,8 +480,8 @@ The default hosts structure goes as follows
           -j TCPMSS --clamp-mss-to-pmtu";
         };
         interfaces = {
-          eno1 = {
-            mtu = 1250;
+          enp3s0 = {
+            #mtu = 1250;
             wakeOnLan.enable = true;
           };
         };
@@ -542,6 +541,12 @@ The default hosts structure goes as follows
       fileSystems."/" = {
         device = "/dev/disk/by-label/nixos";
         fsType = "ext4";
+      };
+
+      fileSystems."/mnt/Data" = {
+        device = "/dev/disk/by-label/Data";
+        fsType = "exfat";
+        options = [ "rw" "uid=1000" "gid=users" "umask=002" ];
       };
 
       fileSystems."/boot" = {
@@ -1467,7 +1472,9 @@ The default hosts structure goes as follows
                      "alias l lsd -l\n"
                      "alias la lsd -a\n"
                      "alias lla lsd -la\n"
-                     "alias lt lsd --tree\n"))
+                     "alias lt lsd --tree\n"
+                     "alias vpn53_start sudo systemctl start wg-quick-lenovo.service\n"
+                     "alias vpn53_stop sudo systemctl stop wg-quick-lenovo.service\n" ))
 
           ;; Org mode evil next line
           (with-eval-after-load 'org
@@ -1596,6 +1603,10 @@ The default hosts structure goes as follows
           bash-completion
           doom-modeline
           doom-themes
+          (treesit-grammars.with-grammars (grammars: with grammars; [
+            tree-sitter-cpp
+            tree-sitter-nix 
+          ]))
         ];
         earlyConfigFile = ''
           ;;; early-init.el --- Early emacs configuration -*- lexical-binding: t; -*-
@@ -1941,6 +1952,8 @@ The default hosts structure goes as follows
           pkgs.inter
           pkgs.ubuntu-sans
           pkgs.nerd-fonts.ubuntu-mono
+          pkgs.corefonts
+          pkgs.vista-fonts
           self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -2034,6 +2047,7 @@ The default hosts structure goes as follows
     }: {
       sops.secrets = {
         "vaultwarden-backup.env" = {};
+        "yamtrack.env" = {};
       };
       # Runtime
       virtualisation.podman = {
@@ -2231,6 +2245,75 @@ The default hosts structure goes as follows
           "podman-compose-services-root.target"
         ];
       };
+      virtualisation.oci-containers.containers."yamtrack" = {
+        image = "ghcr.io/fuzzygrim/yamtrack";
+        environmentFiles = [
+          config.sops.secrets."yamtrack.env".path
+        ];
+        volumes = [
+          "/home/kin/data/yamtrack/db:/yamtrack/db:rw"
+        ];
+        ports = [
+          "8000:8000/tcp"
+        ];
+        labels = {
+          "compose2nix.settings.sops.secrets" = "yamtrack.env";
+        };
+        dependsOn = [
+          "yamtrack-redis"
+        ];
+        log-driver = "journald";
+        extraOptions = [
+          "--network-alias=yamtrack"
+          "--network=services_default"
+        ];
+      };
+      systemd.services."podman-yamtrack" = {
+        serviceConfig = {
+          Restart = lib.mkOverride 90 "always";
+        };
+        after = [
+          "podman-network-services_default.service"
+        ];
+        requires = [
+          "podman-network-services_default.service"
+        ];
+        partOf = [
+          "podman-compose-services-root.target"
+        ];
+        wantedBy = [
+          "podman-compose-services-root.target"
+        ];
+      };
+      virtualisation.oci-containers.containers."yamtrack-redis" = {
+        image = "docker.io/library/redis:8-alpine";
+        volumes = [
+          "/home/kin/data/yamtrack/redis_data:/data:rw"
+        ];
+        log-driver = "journald";
+        extraOptions = [
+          "--network-alias=redis"
+          "--network=services_default"
+        ];
+      };
+      systemd.services."podman-yamtrack-redis" = {
+        serviceConfig = {
+          Restart = lib.mkOverride 90 "always";
+        };
+        after = [
+          "podman-network-services_default.service"
+        ];
+        requires = [
+          "podman-network-services_default.service"
+        ];
+        partOf = [
+          "podman-compose-services-root.target"
+        ];
+        wantedBy = [
+          "podman-compose-services-root.target"
+        ];
+      };
+
       # Networks
       systemd.services."podman-network-services_default" = {
           path = [ pkgs.podman ];

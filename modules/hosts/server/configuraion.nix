@@ -24,7 +24,7 @@
       self.nixosModules.docker
       self.nixosModules.bash
       self.nixosModules.yazi
-      self.nixosModules.stirlingpdf
+      #self.nixosModules.stirlingpdf
       self.nixosModules.whatmp3
       self.nixosModules.linkwarden
       self.nixosModules.wireguard
@@ -128,8 +128,8 @@
         -j TCPMSS --clamp-mss-to-pmtu";
       };
       interfaces = {
-        eno1 = {
-          mtu = 1250;
+        enp3s0 = {
+          #mtu = 1250;
           wakeOnLan.enable = true;
         };
       };

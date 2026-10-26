@@ -140,7 +140,9 @@
                    "alias l lsd -l\n"
                    "alias la lsd -a\n"
                    "alias lla lsd -la\n"
-                   "alias lt lsd --tree\n"))
+                   "alias lt lsd --tree\n"
+                   "alias vpn53_start sudo systemctl start wg-quick-lenovo.service\n"
+                   "alias vpn53_stop sudo systemctl stop wg-quick-lenovo.service\n" ))
 
         ;; Org mode evil next line
         (with-eval-after-load 'org
@@ -269,6 +271,10 @@
         bash-completion
         doom-modeline
         doom-themes
+        (treesit-grammars.with-grammars (grammars: with grammars; [
+          tree-sitter-cpp
+          tree-sitter-nix 
+        ]))
       ];
       earlyConfigFile = ''
         ;;; early-init.el --- Early emacs configuration -*- lexical-binding: t; -*-

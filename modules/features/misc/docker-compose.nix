@@ -11,6 +11,7 @@
   }: {
     sops.secrets = {
       "vaultwarden-backup.env" = {};
+      "yamtrack.env" = {};
     };
     # Runtime
     virtualisation.podman = {
@@ -208,6 +209,75 @@
         "podman-compose-services-root.target"
       ];
     };
+    virtualisation.oci-containers.containers."yamtrack" = {
+      image = "ghcr.io/fuzzygrim/yamtrack";
+      environmentFiles = [
+        config.sops.secrets."yamtrack.env".path
+      ];
+      volumes = [
+        "/home/kin/data/yamtrack/db:/yamtrack/db:rw"
+      ];
+      ports = [
+        "8000:8000/tcp"
+      ];
+      labels = {
+        "compose2nix.settings.sops.secrets" = "yamtrack.env";
+      };
+      dependsOn = [
+        "yamtrack-redis"
+      ];
+      log-driver = "journald";
+      extraOptions = [
+        "--network-alias=yamtrack"
+        "--network=services_default"
+      ];
+    };
+    systemd.services."podman-yamtrack" = {
+      serviceConfig = {
+        Restart = lib.mkOverride 90 "always";
+      };
+      after = [
+        "podman-network-services_default.service"
+      ];
+      requires = [
+        "podman-network-services_default.service"
+      ];
+      partOf = [
+        "podman-compose-services-root.target"
+      ];
+      wantedBy = [
+        "podman-compose-services-root.target"
+      ];
+    };
+    virtualisation.oci-containers.containers."yamtrack-redis" = {
+      image = "docker.io/library/redis:8-alpine";
+      volumes = [
+        "/home/kin/data/yamtrack/redis_data:/data:rw"
+      ];
+      log-driver = "journald";
+      extraOptions = [
+        "--network-alias=redis"
+        "--network=services_default"
+      ];
+    };
+    systemd.services."podman-yamtrack-redis" = {
+      serviceConfig = {
+        Restart = lib.mkOverride 90 "always";
+      };
+      after = [
+        "podman-network-services_default.service"
+      ];
+      requires = [
+        "podman-network-services_default.service"
+      ];
+      partOf = [
+        "podman-compose-services-root.target"
+      ];
+      wantedBy = [
+        "podman-compose-services-root.target"
+      ];
+    };
+
     # Networks
     systemd.services."podman-network-services_default" = {
         path = [ pkgs.podman ];

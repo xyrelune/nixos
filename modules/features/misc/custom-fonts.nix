@@ -18,6 +18,8 @@
         pkgs.inter
         pkgs.ubuntu-sans
         pkgs.nerd-fonts.ubuntu-mono
+        pkgs.corefonts
+        pkgs.vista-fonts
         self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.futura

@@ -114,7 +114,6 @@
         vlc
         onlyoffice-desktopeditors
         teams-for-linux
-        stirling-pdf-desktop
         spotify
 
         inputs.sidra.packages.${pkgs.stdenv.hostPlatform.system}.default
