@@ -343,22 +343,6 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1792210252,
-        "narHash": "sha256-Mh0PUaIv4nFY+8wAGonaEh8iBzwsmdNlwjVHmFg1Biw=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "09063bd1f2b36fd9fd793c36dfade7bd40a93dfc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_6": {
-      "locked": {
         "lastModified": 1792506237,
         "narHash": "sha256-Q/8KLB6jNfpaUN1HAedE/u/Et9feE/zYSsutBLKrCFk=",
         "owner": "NixOS",
@@ -373,7 +357,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_7": {
+    "nixpkgs_6": {
       "locked": {
         "lastModified": 1759281824,
         "narHash": "sha256-FIBE1qXv9TKvSNwst6FumyHwCRH3BlWDpfsnqRDCll0=",
@@ -464,7 +448,6 @@
         "nvf": "nvf",
         "prismlauncher": "prismlauncher",
         "secrets": "secrets",
-        "sidra": "sidra",
         "sops-nix": "sops-nix",
         "walls": "walls",
         "wrapper-modules": "wrapper-modules",
@@ -508,24 +491,6 @@
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/xyrelune/nix-secrets"
-      }
-    },
-    "sidra": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_5"
-      },
-      "locked": {
-        "lastModified": 1792884562,
-        "narHash": "sha256-Oo5fj3jEvziZ5PDSrhewJ2mMK2rCVfhSBMplogvG8RU=",
-        "owner": "wimpysworld",
-        "repo": "sidra",
-        "rev": "34e7eb680a02f43b64216f4ddfe97d6fc978a257",
-        "type": "github"
-      },
-      "original": {
-        "owner": "wimpysworld",
-        "repo": "sidra",
-        "type": "github"
       }
     },
     "sops-nix": {
@@ -616,7 +581,7 @@
     },
     "wrapper-modules": {
       "inputs": {
-        "nixpkgs": "nixpkgs_6"
+        "nixpkgs": "nixpkgs_5"
       },
       "locked": {
         "lastModified": 1793031520,
@@ -635,7 +600,7 @@
     "xwayland-satellite-unscaled": {
       "inputs": {
         "flake-utils": "flake-utils_2",
-        "nixpkgs": "nixpkgs_7",
+        "nixpkgs": "nixpkgs_6",
         "rust-overlay": "rust-overlay"
       },
       "locked": {

@@ -84,9 +84,6 @@ I also use flakes as a way to import my non-flake files and use it to import fil
         url = "github:nix-community/NUR";
         inputs.nixpkgs.follows = "nixpkgs";
       };
-      sidra = {
-        url = "github:wimpysworld/sidra";
-      };
     };
     outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
   }
@@ -274,7 +271,6 @@ The default hosts structure goes as follows
           teams-for-linux
           spotify
 
-          inputs.sidra.packages.${pkgs.stdenv.hostPlatform.system}.default
           inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
           zulu25
         ];
@@ -641,9 +637,17 @@ The default hosts structure goes as follows
           hotkey-overlay = {
             skip-at-startup = _: {};
           };
+          animations = {
+            slowdown = 0;
+          };
+          gestures = {
+            hot-corners = {
+              "off" = _: {};
+            };
+          };
           prefer-no-csd = _: {};
           input = {
-            mod-key = "Alt";
+            mod-key = "Super";
             keyboard = {
               xkb.layout = "us";
             };
@@ -2152,6 +2156,7 @@ The default hosts structure goes as follows
           "/home/kin/data/deluge/config:/config:rw"
           "/mnt/external-hdd/downloads:/downloads:rw"
           "/mnt/manga:/manga:rw"
+          "/mnt/downloads/flac-music:/flac-music:rw"
         ];
         ports = [
           "8112:8112/tcp"

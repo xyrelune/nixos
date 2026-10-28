@@ -116,7 +116,6 @@
         teams-for-linux
         spotify
 
-        inputs.sidra.packages.${pkgs.stdenv.hostPlatform.system}.default
         inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
         zulu25
       ];

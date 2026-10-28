@@ -116,6 +116,7 @@
         "/home/kin/data/deluge/config:/config:rw"
         "/mnt/external-hdd/downloads:/downloads:rw"
         "/mnt/manga:/manga:rw"
+        "/mnt/downloads/flac-music:/flac-music:rw"
       ];
       ports = [
         "8112:8112/tcp"

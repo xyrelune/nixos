@@ -27,9 +27,17 @@
         hotkey-overlay = {
           skip-at-startup = _: {};
         };
+        animations = {
+          slowdown = 0;
+        };
+        gestures = {
+          hot-corners = {
+            "off" = _: {};
+          };
+        };
         prefer-no-csd = _: {};
         input = {
-          mod-key = "Alt";
+          mod-key = "Super";
           keyboard = {
             xkb.layout = "us";
           };
