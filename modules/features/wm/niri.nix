@@ -28,7 +28,7 @@
           skip-at-startup = _: {};
         };
         animations = {
-          slowdown = 0;
+          slowdown = 0.5;
         };
         gestures = {
           hot-corners = {
@@ -138,7 +138,7 @@
           }
         ];
         binds = {
-          "Mod+Return".spawn-sh = "foot";
+          "Mod+Return".spawn-sh = "alacritty";
           "Mod+T".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
           "Mod+D".spawn-sh = "${self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi}/bin/rofi -show drun";
           "Mod+B".spawn-sh = "helium";

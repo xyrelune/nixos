@@ -4,6 +4,9 @@
   ...
 }: {
   perSystem = {
+    pkgs,
+    ...
+  }: {
     packages.myAlacritty = inputs.wrapper-modules.wrappers.alacritty.wrap {
       inherit pkgs;
       settings = {
@@ -21,7 +24,7 @@
    
         cursor = {
           style = {
-            shape = "Block";
+            shape = "Beam";
             blinking = "On";
           };
           blink_interval = 600;

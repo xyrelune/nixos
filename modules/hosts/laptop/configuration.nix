@@ -115,10 +115,16 @@
         onlyoffice-desktopeditors
         teams-for-linux
         spotify
+        ghostty
+        zulu25
 
         inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
-        zulu25
+        inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.myAlacritty
       ];
+    };
+
+    environment.sessionVariables = {
+      TERM = "xterm-256color";
     };
 
     sops = {

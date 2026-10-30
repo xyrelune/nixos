@@ -270,10 +270,16 @@ The default hosts structure goes as follows
           onlyoffice-desktopeditors
           teams-for-linux
           spotify
+          ghostty
+          zulu25
 
           inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
-          zulu25
+          inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.myAlacritty
         ];
+      };
+
+      environment.sessionVariables = {
+        TERM = "xterm-256color";
       };
 
       sops = {
@@ -638,7 +644,7 @@ The default hosts structure goes as follows
             skip-at-startup = _: {};
           };
           animations = {
-            slowdown = 0;
+            slowdown = 0.5;
           };
           gestures = {
             hot-corners = {
@@ -748,7 +754,7 @@ The default hosts structure goes as follows
             }
           ];
           binds = {
-            "Mod+Return".spawn-sh = "foot";
+            "Mod+Return".spawn-sh = "alacritty";
             "Mod+T".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
             "Mod+D".spawn-sh = "${self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi}/bin/rofi -show drun";
             "Mod+B".spawn-sh = "helium";
@@ -905,6 +911,10 @@ The default hosts structure goes as follows
       };
     };
   }
+#+end_src
+~/.bashrc file generated using emacs tangle.
+#+begin_src bash :tangle ~/.bashrc
+  export TERM=xterm-256color
 #+end_src
 *** Foot
 #+begin_src nix :tangle modules/features/apps/foot.nix 
@@ -1821,6 +1831,97 @@ The default hosts structure goes as follows
     };
   }
 #+end_src
+*** Alacritty 
+#+begin_src nix :tangle  modules/features/apps/alacritty.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    perSystem = {
+      pkgs,
+      ...
+    }: {
+      packages.myAlacritty = inputs.wrapper-modules.wrappers.alacritty.wrap {
+        inherit pkgs;
+        settings = {
+          font = {
+            size = 12.0;
+            normal = {
+              family = "Iosevka Nerd Font";
+              style = "Regular";
+            };
+            bold = {
+              family = "Iosevka Nerd Font";
+              style = "Bold";
+            };
+          };
+     
+          cursor = {
+            style = {
+              shape = "Beam";
+              blinking = "On";
+            };
+            blink_interval = 600;
+          };
+     
+          scrolling.history = 10000;
+     
+          colors = {
+            primary = {
+              background = "#282828";
+              foreground = "#ebdbb2";
+              bright_foreground = "#fbf1c7";
+            };
+     
+            cursor = {
+              text = "CellBackground";
+              cursor = "#fabd2f";
+            };
+     
+            selection = {
+              text = "CellBackground";
+              background = "#665c54";
+            };
+     
+            normal = {
+              black = "#282828";
+              red = "#cc241d";
+              green = "#98971a";
+              yellow = "#d79921";
+              blue = "#458588";
+              magenta = "#b16286";
+              cyan = "#689d6a";
+              white = "#a89984";
+            };
+     
+            bright = {
+              black = "#928374";
+              red = "#fb4934";
+              green = "#b8bb26";
+              yellow = "#fabd2f";
+              blue = "#83a598";
+              magenta = "#d3869b";
+              cyan = "#8ec07c";
+              white = "#ebdbb2";
+            };
+     
+            dim = {
+              black = "#32302f";
+              red = "#9d0006";
+              green = "#79740e";
+              yellow = "#b57614";
+              blue = "#076678";
+              magenta = "#8f3f71";
+              cyan = "#427b58";
+              white = "#928374";
+            };
+          };
+        };
+      };
+    };
+  }
+#+end_src
 ** Audio
 *** Pipewire
 #+begin_src nix :tangle modules/features/audio/pipewire.nix 
@@ -2694,67 +2795,70 @@ This uses a config generated for wireguard servers running at my home.
 #+end_src
 *** Home
 #+begin_src nix :tangle modules/features/misc/home.nix
-  {
-    self,
-    inputs,
-    ...
-  }: {
-    flake.nixosModules.home = {
-      pkgs,
-      ...
-    }: {
-      imports = [
-        inputs.home-manager.nixosModules.home-manager
-      ];
+   {
+     self,
+     inputs,
+     ...
+   }: {
+     flake.nixosModules.home = {
+       pkgs,
+       ...
+     }: {
+       imports = [
+         inputs.home-manager.nixosModules.home-manager
+       ];
 
-      home-manager = {
-        useGlobalPkgs = true;
-        useUserPackages = true;
-        backupFileExtension = "backup";
+       home-manager = {
+         useGlobalPkgs = true;
+         useUserPackages = true;
+         backupFileExtension = "backup";
 
-        users.kin = {
-         home = {
-           username = "kin";
-           homeDirectory = "/home/kin/";
-           stateVersion = "25.11";
-         };
-         gtk = {
-           enable = true;
-           gtk4.theme = null;
-           theme = {
-             name = "Gruvbox-Dark";
-             package = pkgs.gruvbox-gtk-theme; 
-           };
-           iconTheme = {
-             package = pkgs.gruvbox-plus-icons;
-             name = "Gruvbox-Plus-Dark";
-           };
-           font = {
-             name = "Inter";
-             size = 12;
-           };
-         };
-         qt = {
-           enable = true;
-           platformTheme.name = "gtk3";
-         };            
-         dconf = {
-           enable = true;
-           settings = {
-             "org/gnome/desktop/interface".color-scheme = "prefer-dark";
-           };
-         };
-         home.pointerCursor = {
-           enable = true;
-           gtk.enable = true;
-           name = "Bibata-Modern-Classic";
-           package = pkgs.bibata-cursors;
-         };
-       };
-     };
-   };
- }
-      
+         users.kin = {
+          home = {
+            username = "kin";
+            homeDirectory = "/home/kin/";
+            stateVersion = "25.11";
+            sessionVariables = {
+              TERM = "xterm-256color";
+            };
+          };
+          gtk = {
+            enable = true;
+            gtk4.theme = null;
+            theme = {
+              name = "Gruvbox-Dark";
+              package = pkgs.gruvbox-gtk-theme; 
+            };
+            iconTheme = {
+              package = pkgs.gruvbox-plus-icons;
+              name = "Gruvbox-Plus-Dark";
+            };
+            font = {
+              name = "Inter";
+              size = 12;
+            };
+          };
+          qt = {
+            enable = true;
+            platformTheme.name = "gtk3";
+          };            
+          dconf = {
+            enable = true;
+            settings = {
+              "org/gnome/desktop/interface".color-scheme = "prefer-dark";
+            };
+          };
+          home.pointerCursor = {
+            enable = true;
+            gtk.enable = true;
+            name = "Bibata-Modern-Classic";
+            package = pkgs.bibata-cursors;
+          };
+        };
+      };
+    };
+  }
+       
 #+end_src
 ** Web
 *** Komga

@@ -21,6 +21,9 @@
           username = "kin";
           homeDirectory = "/home/kin/";
           stateVersion = "25.11";
+          sessionVariables = {
+            TERM = "xterm-256color";
+          };
         };
         gtk = {
           enable = true;
