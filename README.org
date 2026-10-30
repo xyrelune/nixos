@@ -1859,7 +1859,7 @@ The default hosts structure goes as follows
      
           cursor = {
             style = {
-              shape = "Beam";
+              shape = "Block";
               blinking = "On";
             };
             blink_interval = 600;
@@ -3852,7 +3852,7 @@ The main peers would be:
 #+begin_src nix :tangle modules/features/web/radicale.nix 
   {
     self,
-    input,
+    inputs,
     ...
   }: {
     flake.nixosModules.radicale = {
@@ -3887,7 +3887,7 @@ The main peers would be:
 #+begin_src nix :tangle modules/features/web/navidrome.nix
   {
     self,
-    input,
+    inputs,
     ...
   }: {
     flake.nixosModules.navidrome = {
@@ -3947,6 +3947,23 @@ The main peers would be:
             WEBUI_AUTH = "False";
           };
         };
+      };
+    };
+  }
+#+end_src
+*** TheLounge
+#+begin_src nix :tangle modules/features/web/thelounge.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.thelounge = {
+      pkgs,
+      ...
+    }: {
+      services.thelounge = {
+        enable = true;
       };
     };
   }

@@ -1,6 +1,6 @@
 {
   self,
-  input,
+  inputs,
   ...
 }: {
   flake.nixosModules.navidrome = {

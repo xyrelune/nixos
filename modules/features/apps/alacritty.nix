@@ -24,7 +24,7 @@
    
         cursor = {
           style = {
-            shape = "Beam";
+            shape = "Block";
             blinking = "On";
           };
           blink_interval = 600;
