@@ -1009,6 +1009,7 @@ The default hosts structure goes as follows
     };
   }
 #+end_src
+**** Tmux Config
 #+name: tmux-config
 #+begin_src conf :tangle no
   set -g default-terminal "tmux-256color"
@@ -1088,7 +1089,7 @@ The default hosts structure goes as follows
     };
   }
 #+end_src
-The vimrc file. 
+**** Vimrc 
 #+name: vimrc
 #+begin_src vim :tangle no
   set number
