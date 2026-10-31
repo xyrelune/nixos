@@ -122,6 +122,15 @@
             proxyWebsockets = true;
           };
         };
+        "irc.server.org" = {
+          forceSSL = true;
+          sslCertificate = "/etc/ssl/local/server.org.pem";
+          sslCertificateKey = "/etc/ssl/local/server.org-key.pem";
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:9000";
+            proxyWebsockets = true;
+          };
+        };
         "jf.peanutbutter.quest" = {
           forceSSL = true;
           enableACME = true;

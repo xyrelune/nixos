@@ -34,6 +34,7 @@
       self.nixosModules.rclone
       self.nixosModules.radicale
       self.nixosModules.navidrome
+      self.nixosModules.thelounge 
 
       inputs.sops-nix.nixosModules.sops
     ];

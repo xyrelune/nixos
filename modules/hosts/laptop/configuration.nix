@@ -151,7 +151,6 @@
         #mullvad
         #mullvad-vpn
 
-        inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
       ];
     };
 

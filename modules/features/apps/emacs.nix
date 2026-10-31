@@ -30,19 +30,38 @@
   }: {
     packages.myEmacs = inputs.wrapper-modules.wrappers.emacs.wrap {
       inherit pkgs;
+      package = pkgs.emacs-pgtk;
       userDirectory = "~/.emacs.d";
+      earlyConfigFile = ''
+        ;;; early-init.el --- Early emacs configuration -*- lexical-binding: t; -*-
+        
+        (set-language-environment "UTF-8")
+        
+        (setq inhibit-startup-message 1)
+        (setq-default
+         default-frame-alist
+         '((bottom-divider-width . 1)
+           (horizontal-scroll-bars . nil)
+           (menu-bar-lines . 0)
+           (tool-bar-lines . 0)
+           (set-fringe-mode 10)
+           (vertical-scroll-bars . nil))
+         tab-width 2 
+         indent-tabs-mode nil
+        )        
+      '';
       configFile = ''
         ;;; init.el --- Emacs configuration -*- lexical-binding: t; -*-
-
+        
         ;; Keybinds
         (global-set-key (kbd "C-x a") #'org-agenda)
         (global-set-key (kbd "C-x c") #'org-capture)
         (global-set-key (kbd "C-x e") #'my/eshell)
-
+        
         ;; Font 
         (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
         (set-frame-font "Iosevka Nerd Font Propo 120" nil t)
-
+        
         ;; qol customizations
         (global-display-line-numbers-mode 1)
         (setq display-line-numbers-type 'relative)
@@ -55,10 +74,10 @@
         (setq auto-save-default nil)
         (electric-indent-mode 1)
         (add-hook 'org-mode-hook #'org-indent-mode)
-
+        
         ;; Transparency 
         ;; (add-to-list 'default-frame-alist '(alpha-background . 60))
-
+        
         ;; Custom Fonts for org mode
         ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
         ;;(custom-theme-set-faces
@@ -68,18 +87,23 @@
         ;; '(org-table ((t (:inherit fixed-pitch))))
         ;; '(org-code ((t (:inherit fixed-pitch))))
         ;; '(org-block ((t (:inherit fixed-pitch)))))
-
+        
         ;; Base16 Theme
         ;;(use-package base16-theme
         ;;  :config
         ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
         ;; (load-theme 'gruvbox-dark-soft t)
-
+        
+        ;; Sops
+        (use-package sops
+          :init
+          (global-sops-mode 1))
+        
         ;; EMMS
         (use-package emms
           :config
           (require 'emms-info))
-
+        
         ;; Doom Themes
         (use-package doom-themes
           :custom
@@ -87,12 +111,12 @@
           (doom-themes-enable-italic t)
           :config
           (load-theme 'doom-gruvbox t))
-
+        
         ;; Doom Moodline
         (use-package doom-modeline
           :config
           (doom-modeline-mode 1))
-
+        
         ;; Evil Mode
         (use-package evil
           :init
@@ -104,7 +128,7 @@
           :after evil
           :config
           (evil-collection-init))
-
+        
         (use-package bash-completion
           :config
           (bash-completion-setup))
@@ -113,7 +137,7 @@
                     (add-hook 'completion-at-point-functions
                               'bash-completion-capf-nonexclusive nil t)))
         (use-package eat)
-
+        
         ;; Eshell
         (use-package eshell
           :hook (eshell-mode . (lambda ()
@@ -124,12 +148,12 @@
           :config
           (eshell-vterm-mode))
         (defalias 'eshell/v 'eshell-exec-visual)
-
+        
         ;; Multiple Eshell
         (defun my/eshell ()
           (interactive)
           (eshell t))
-
+        
         ;; Eshell Aliases
         (setq eshell-aliases-file
            (expand-file-name "eshell/alias" user-emacs-directory))
@@ -143,42 +167,42 @@
                    "alias lt lsd --tree\n"
                    "alias vpn53_start sudo systemctl start wg-quick-lenovo.service\n"
                    "alias vpn53_stop sudo systemctl stop wg-quick-lenovo.service\n" ))
-
+        
         ;; Org mode evil next line
         (with-eval-after-load 'org
           (evil-define-key 'normal org-mode-map
             (kbd "gj") #'evil-next-visual-line
             (kbd "gk") #'evil-previous-visual-line))
-
+        
         ;; org-autolist
         (use-package org-autolist
           :hook (org-mode . org-autolist-mode))
-
+        
         ;; Magit
         (use-package magit)
-
+        
         ;; Nix Mode for syntax highlighting
         (use-package nix-mode
         	:mode "\\.nix\\'")
-
+        
         ;; Yaml Major Mode
         (use-package yaml-mode
           :mode "\\.yml\\'")
-
+        
         ;; Nerd Icons
         (use-package nerd-icons
           :custom
           (nerd-icons-color-icons nil))
-
+        
         ;; Nerd Icons Dired
         (use-package nerd-icons-dired
           :hook (dired-mode . nerd-icons-dired-mode))
         (setq nerd-icons-font-family "Symbols Nerd Font Mono")
-
+        
         ;; Rainbow Mode
         (use-package rainbow-mode
           :hook (after-change-major-mode . rainbow-mode))
-
+        
         ;; Pdf-tools
         (use-package pdf-tools
           :defer t
@@ -193,12 +217,12 @@
           :config (add-to-list 'revert-without-query ".pdf"))
         (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
         (add-hook 'pdf-view-mode-hook #'pdf-view-roll-minor-mode)
-
+        
         ;; To make line numbers disappear in terminal mode
         (dolist (mode '(vterm-mode-hook
                         ghostel-mode-hook))
           (add-hook mode (lambda() (display-line-numbers-mode 0))))
-
+        
         ;; Multi-Vterm
         (use-package multi-vterm
           :bind (("C-x t" . multi-vterm))
@@ -210,7 +234,7 @@
         		(setq-local evil-insert-state-cursor 'box)
         		(evil-insert-state)))
         (define-key vterm-mode-map [return]                      #'vterm-send-return)
-
+        
         (setq vterm-keymap-exceptions nil)
         (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
         (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
@@ -237,7 +261,7 @@
         (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
         (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
         (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
-
+        
         ;; org-agenda
         (use-package org
           :init
@@ -275,25 +299,8 @@
           tree-sitter-cpp
           tree-sitter-nix 
         ]))
+        sops
       ];
-      earlyConfigFile = ''
-        ;;; early-init.el --- Early emacs configuration -*- lexical-binding: t; -*-
-
-        (set-language-environment "UTF-8")
-
-        (setq inhibit-startup-message 1)
-        (setq-default
-         default-frame-alist
-         '((bottom-divider-width . 1)
-           (horizontal-scroll-bars . nil)
-           (menu-bar-lines . 0)
-           (tool-bar-lines . 0)
-           (set-fringe-mode 10)
-           (vertical-scroll-bars . nil))
-         tab-width 2 
-         indent-tabs-mode nil
-        )
-     '';
     };
   };
 }
