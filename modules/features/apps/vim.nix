@@ -75,15 +75,15 @@
         set clipboard=unnamedplus
         set modifiable
         set encoding=utf-8
-
+        
         let mapleader = " " 
         nnoremap <leader>cd :Ex<CR>
         nnoremap <leader>ff :Files<CR>
         nnoremap <leader>fo :History<CR>
         nnoremap <leader>fb :Buffers<CR>
-
+        
         nnoremap <leader>fg :Rg<Space>
-
+        
         set laststatus=2
         set background=dark
       '';

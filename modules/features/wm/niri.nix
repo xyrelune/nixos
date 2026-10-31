@@ -139,7 +139,6 @@
         ];
         binds = {
           "Mod+Return".spawn-sh = "alacritty";
-          "Mod+T".spawn-sh = ''emacsclient -c --eval "(eshell t)"'';
           "Mod+D".spawn-sh = "${self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi}/bin/rofi -show drun";
           "Mod+B".spawn-sh = "helium";
           "Mod+U".spawn-sh = "emacsclient -c";
@@ -222,7 +221,6 @@
           "Mod+M".spawn-sh = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
           "XF86MonBrightnessUp".spawn-sh = "${lib.getExe pkgs.brightnessctl} -c backlight s 10%+";
           "XF86MonBrightnessDown".spawn-sh = "${lib.getExe pkgs.brightnessctl} -c backlight s 10%-";
-
 
           "Mod+F2".spawn-sh = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           "Mod+F3".spawn-sh = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-";
