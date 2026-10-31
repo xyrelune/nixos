@@ -1431,6 +1431,7 @@ The default hosts structure goes as follows
 #+end_src
 - The below blocks are referenced above and they get added to where they belong while getting tangled.
 - The header args ~:noweb yes~ makes the cross referencing possible (usage of << >>).
+**** early-init.el
 #+name: emacs-early-init-el
 #+begin_src emacs-lisp :tangle no
   ;;; early-init.el --- Early emacs configuration -*- lexical-binding: t; -*-
@@ -1450,6 +1451,7 @@ The default hosts structure goes as follows
    indent-tabs-mode nil
   )
 #+end_src
+**** init.el
 #+name: emacs-init-el
 #+begin_src emacs-lisp :tangle no
   ;;; init.el --- Emacs configuration -*- lexical-binding: t; -*-
