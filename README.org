@@ -181,7 +181,8 @@ The default hosts structure goes as follows
         self.nixosModules.wg-quick
         self.nixosModules.emacs
         self.nixosModules.home
-
+        self.nixosModules.fish
+        
         inputs.sops-nix.nixosModules.sops
       ];
 
@@ -310,7 +311,8 @@ The default hosts structure goes as follows
           git
           #mullvad
           #mullvad-vpn
-
+          
+          inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
         ];
       };
 
@@ -685,7 +687,7 @@ The default hosts structure goes as follows
             "eDP-1" = {
               # off = _: {};
               mode = "1920x1200@60.003";
-              scale = 1.25;
+              scale = 1;
               #position = _: {
               #  props = {
               #    x = 0;
@@ -1393,7 +1395,7 @@ The default hosts structure goes as follows
     }: {
       packages.myEmacs = inputs.wrapper-modules.wrappers.emacs.wrap {
         inherit pkgs;
-        package = pkgs.emacs-pgtk;
+        #package = pkgs.emacs-pgtk;
         userDirectory = "~/.emacs.d";
         earlyConfigFile = ''
           <<emacs-early-init-el>>        
@@ -1430,7 +1432,6 @@ The default hosts structure goes as follows
           ]))
           sops
           empv
-          supersonic
         ];
       };
     };
@@ -1473,9 +1474,6 @@ The default hosts structure goes as follows
   (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
   (set-frame-font "Iosevka Nerd Font Propo 120" nil t)
 
-  ;; Auth Source
-  (setq auth-sources '("~/.authinfo"))
-
   ;; qol customizations
   (global-display-line-numbers-mode 1)
   (setq display-line-numbers-type 'relative)
@@ -1508,16 +1506,13 @@ The default hosts structure goes as follows
   ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
   ;; (load-theme 'gruvbox-dark-soft t)
 
+  ;; Vterm Fish
+  (use-package vterm
+    :config
+    (setq vterm-shell (executable-find "fish")))
+
   ;; EMPV
   (use-package empv)
-
-  ;; Supersonic
-  (use-package supersonic
-    :commands supersonic
-    :bind (("C-c m" . supersonic))
-    :custom
-    (supersonic-host "https://sonic.peanutbutter.quest")
-    (supersonic-enable-scrobbling t))
 
   ;; Sops
   (use-package sops
@@ -1930,6 +1925,45 @@ The default hosts structure goes as follows
               white = "#928374";
             };
           };
+        };
+      };
+    };
+  }
+#+end_src
+*** Fish
+#+begin_src nix :tangle modules/features/apps/fish.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.fish = {
+      lib,
+      pkgs,
+      ...
+    }: {
+      programs.fish = {
+        enable = true;
+        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myFish;
+      };
+    };
+    perSystem = {
+      lib,
+      pkgs,
+      ...
+    }: {
+      packages.myFish = inputs.wrapper-modules.wrappers.fish.wrap {
+        inherit pkgs;
+        abbreviations = {
+          nrs = "sudo nixos-rebuild switch --flake /home/kin/nixos#laptop";
+          y = "yazi";
+          l = "${lib.getExe pkgs.lsd} -l";
+          la = "${lib.getExe pkgs.lsd} -a";
+          lla = "${lib.getExe pkgs.lsd} -la";
+          lt = "${lib.getExe pkgs.lsd} --tree";
+          vpn53_start = "sudo systemctl start wg-quick-lenovo.service";
+          vpn53_stop = "sudo systemctl stop wg-quick-lenovo.service"; 
+          server_rebuild = "nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password";
         };
       };
     };

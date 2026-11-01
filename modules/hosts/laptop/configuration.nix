@@ -26,7 +26,8 @@
       self.nixosModules.wg-quick
       self.nixosModules.emacs
       self.nixosModules.home
-
+      self.nixosModules.fish
+      
       inputs.sops-nix.nixosModules.sops
     ];
 
@@ -155,7 +156,8 @@
         git
         #mullvad
         #mullvad-vpn
-
+        
+        inputs.xwayland-satellite-unscaled.packages.${pkgs.system}.xwayland-satellite
       ];
     };
 

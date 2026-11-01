@@ -30,7 +30,7 @@
   }: {
     packages.myEmacs = inputs.wrapper-modules.wrappers.emacs.wrap {
       inherit pkgs;
-      package = pkgs.emacs-pgtk;
+      #package = pkgs.emacs-pgtk;
       userDirectory = "~/.emacs.d";
       earlyConfigFile = ''
         ;;; early-init.el --- Early emacs configuration -*- lexical-binding: t; -*-
@@ -61,9 +61,6 @@
         ;; Font 
         (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
         (set-frame-font "Iosevka Nerd Font Propo 120" nil t)
-        
-        ;; Auth Source
-        (setq auth-sources '("~/.authinfo"))
         
         ;; qol customizations
         (global-display-line-numbers-mode 1)
@@ -97,16 +94,13 @@
         ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
         ;; (load-theme 'gruvbox-dark-soft t)
         
+        ;; Vterm Fish
+        (use-package vterm
+          :config
+          (setq vterm-shell (executable-find "fish")))
+        
         ;; EMPV
         (use-package empv)
-        
-        ;; Supersonic
-        (use-package supersonic
-          :commands supersonic
-          :bind (("C-c m" . supersonic))
-          :custom
-          (supersonic-host "https://sonic.peanutbutter.quest")
-          (supersonic-enable-scrobbling t))
         
         ;; Sops
         (use-package sops
@@ -276,7 +270,6 @@
         ]))
         sops
         empv
-        supersonic
       ];
     };
   };
