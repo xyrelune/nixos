@@ -99,6 +99,7 @@
           {
             matches = [
               {app-id = "firefox";}
+              {app-id = "librewolf";}
               {app-id = "helium";}
               {app-id = "brave-origin";}
               {app-id = "spotify";}
@@ -138,9 +139,9 @@
           }
         ];
         binds = {
-          "Mod+Return".spawn-sh = "alacritty";
+          "Mod+Return".spawn-sh = ''emacsclient -c --eval "(vterm t)"'';
           "Mod+D".spawn-sh = "${self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi}/bin/rofi -show drun";
-          "Mod+B".spawn-sh = "helium";
+          "Mod+B".spawn-sh = "librewolf";
           "Mod+U".spawn-sh = "emacsclient -c";
           "Mod+P".spawn-sh = "spotify";
 

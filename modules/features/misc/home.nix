@@ -37,7 +37,7 @@
             name = "Gruvbox-Plus-Dark";
           };
           font = {
-            name = "Inter";
+            name = "Iosevka Nerd Font Mono";
             size = 12;
           };
         };

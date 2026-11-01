@@ -36,8 +36,8 @@
           lcdfilter = "default";
         };
         defaultFonts = {
-          serif = ["Inter"];
-          sansSerif = ["Inter"];
+          serif = ["Iosevka Nerd Font Mono"];
+          sansSerif = ["Iosevka Nerd Font Mono"];
           monospace = ["Iosevka Nerd Font Mono"];
         };
       };

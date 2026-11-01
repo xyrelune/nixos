@@ -11,12 +11,8 @@
       enable = true;
       user = "media";
       group = "media";
-      #plugins = with pkgs.navidromePlugins; [
-      #  discord-rich-presence
-      #  apple-music
-      #];
       settings = {
-        MusicFolder = "/mnt/downloads/personal-music";
+        MusicFolder = "/mnt/downloads/flac-music";
         Plugins = {
           Enabled = true;
         };
@@ -25,7 +21,7 @@
       };
     };
     systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [
-      "/mnt/external-hdd/stream/music"
+      "/mnt/downloads/flac-music"
     ];
   };
 }

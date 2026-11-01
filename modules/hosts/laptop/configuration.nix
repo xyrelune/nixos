@@ -117,6 +117,11 @@
         spotify
         ghostty
         zulu25
+        librewolf
+        (discord.override {
+          withOpenASAR = true;
+          withVencord = true;
+        })
 
         inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
         inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.myAlacritty

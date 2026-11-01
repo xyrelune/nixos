@@ -62,6 +62,9 @@
         (set-face-attribute 'default nil :family "Iosevka Nerd Font Propo" :height 120)
         (set-frame-font "Iosevka Nerd Font Propo 120" nil t)
         
+        ;; Auth Source
+        (setq auth-sources '("~/.authinfo"))
+        
         ;; qol customizations
         (global-display-line-numbers-mode 1)
         (setq display-line-numbers-type 'relative)
@@ -94,6 +97,17 @@
         ;;  (load-theme 'base16-tokyo-night-terminal-dark t))
         ;; (load-theme 'gruvbox-dark-soft t)
         
+        ;; EMPV
+        (use-package empv)
+        
+        ;; Supersonic
+        (use-package supersonic
+          :commands supersonic
+          :bind (("C-c m" . supersonic))
+          :custom
+          (supersonic-host "https://sonic.peanutbutter.quest")
+          (supersonic-enable-scrobbling t))
+        
         ;; Sops
         (use-package sops
           :init
@@ -118,16 +132,16 @@
           (doom-modeline-mode 1))
         
         ;; Evil Mode
-        (use-package evil
-          :init
-          (setq evil-want-C-u-scroll t)
-          (setq evil-want-keybinding nil)
-          :config
-          (evil-mode 1))
-        (use-package evil-collection
-          :after evil
-          :config
-          (evil-collection-init))
+        ;; (use-package evil
+        ;;   :init
+        ;;   (setq evil-want-C-u-scroll t)
+        ;;   (setq evil-want-keybinding nil)
+        ;;   :config
+        ;;   (evil-mode 1))
+        ;; (use-package evil-collection
+        ;;   :after evil
+        ;;   :config
+        ;;   (evil-collection-init))
         
         (use-package bash-completion
           :config
@@ -169,10 +183,10 @@
                    "alias vpn53_stop sudo systemctl stop wg-quick-lenovo.service\n" ))
         
         ;; Org mode evil next line
-        (with-eval-after-load 'org
-          (evil-define-key 'normal org-mode-map
-            (kbd "gj") #'evil-next-visual-line
-            (kbd "gk") #'evil-previous-visual-line))
+        ;; (with-eval-after-load 'org
+        ;;   (evil-define-key 'normal org-mode-map
+        ;;     (kbd "gj") #'evil-next-visual-line
+        ;;     (kbd "gk") #'evil-previous-visual-line))
         
         ;; org-autolist
         (use-package org-autolist
@@ -223,45 +237,6 @@
                         ghostel-mode-hook))
           (add-hook mode (lambda() (display-line-numbers-mode 0))))
         
-        ;; Multi-Vterm
-        (use-package multi-vterm
-          :bind (("C-x t" . multi-vterm))
-                (("C-x [" . multi-vterm-prev))
-                (("C-x ]" . multi-vterm-next))
-          :config
-          (add-hook 'vterm-mode-hook
-        		(lambda ()
-        		(setq-local evil-insert-state-cursor 'box)
-        		(evil-insert-state)))
-        (define-key vterm-mode-map [return]                      #'vterm-send-return)
-        
-        (setq vterm-keymap-exceptions nil)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-c")      #'vterm--self-insert)
-        (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
-        (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-        (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
-        (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
-        (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
-        (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
-        (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
-        (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
-        
         ;; org-agenda
         (use-package org
           :init
@@ -273,8 +248,8 @@
           (("C-x a" . org-agenda)))
       '';
       emacsPackages = epkgs: with epkgs; [
-        evil
-        evil-collection
+        #evil
+        #evil-collection
 	      eat
 	      emms
         nerd-icons
@@ -300,6 +275,8 @@
           tree-sitter-nix 
         ]))
         sops
+        empv
+        supersonic
       ];
     };
   };
