@@ -41,6 +41,10 @@
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
+    boot.extraModulePackages = [
+      config.boot.kernelPackages.amneziawg
+    ];
+    boot.kernelModules = [ "amneziawg" ];
     #boot.kernelPackages = pkgs.linuxPackages_latest;
     nix.settings.experimental-features = ["nix-command" "flakes"];
     users = {
