@@ -21,17 +21,18 @@
       group = "users";
       settings = {
         i = "0.0.0.0";
+        global = {
+          ban-404 = false;
+          ban-403 = false;
+          ban-422 = false;
+          ban-url = false;
+          ban-pw = false;
+        };
       };
       accounts = {
         kin.passwordFile = config.sops.secrets."copyparty/kin/password".path;
       };
-      global = {
-        ban-404 = false;
-        ban-403 = false;
-        ban-422 = false;
-        ban-url = false;
-        ban-pw = false;
-      };
+      
       volumes = {
         "/" = {
           path = "/home/kin/data/copyparty";
