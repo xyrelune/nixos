@@ -25,6 +25,13 @@
       accounts = {
         kin.passwordFile = config.sops.secrets."copyparty/kin/password".path;
       };
+      global = {
+        ban-404 = false;
+        ban-403 = false;
+        ban-422 = false;
+        ban-url = false;
+        ban-pw = false;
+      };
       volumes = {
         "/" = {
           path = "/home/kin/data/copyparty";
@@ -36,10 +43,10 @@
             e2d = true;
           };
         };
-        "/personal-music" = {
-          path = "/mnt/downloads/personal-music";
+        "/flac-music" = {
+          path = "/mnt/downloads/flac-music";
           access = {
-            rw = [ "kin" ];
+            r = [ "kin" ];
           };
           flags = {
             scan = 60;
