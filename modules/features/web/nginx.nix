@@ -39,6 +39,13 @@
             proxyPass = "http://127.0.0.1:5232";
           };
         };
+        "party.peanutbutter.quest" = {
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:3923";
+          };
+        };
         "sonic.peanutbutter.quest" = {
           forceSSL = true;
           enableACME = true;
