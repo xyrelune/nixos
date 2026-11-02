@@ -117,6 +117,7 @@
       streamrip
       ffmpeg
       btop
+      amneziawg-tools
     ];
     networking = {
       hostName = "server";
