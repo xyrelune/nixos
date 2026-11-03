@@ -47,6 +47,14 @@
     boot.kernelModules = [ "amneziawg" ];
     #boot.kernelPackages = pkgs.linuxPackages_latest;
     nix.settings.experimental-features = ["nix-command" "flakes"];
+
+    services.openssh = {
+      enable = true;
+      settings = {
+        PubkeyAuthentication = true;
+        PasswordAuthentication = false;
+      };
+    };
     users = {
       users = {
         kin = {
@@ -165,7 +173,6 @@
       }
     ];
     time.timeZone = "Asia/Kolkata";
-    services.openssh.enable = true;
     system.stateVersion = "25.11"; # Did you read the comment?
   };
 }
