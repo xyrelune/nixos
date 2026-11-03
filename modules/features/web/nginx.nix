@@ -9,7 +9,7 @@
   }: {
     services.nginx = {
       enable = true;
-
+     
       recommendedGzipSettings = true;
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
@@ -64,6 +64,7 @@
         "ws.peanutbutter.quest" = {
           forceSSL = true;
           enableACME = true;
+          http2 = true;
           locations."/" = {
             proxyPass = "http://127.0.0.1:6666";
             proxyWebsockets = true;
