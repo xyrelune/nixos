@@ -402,6 +402,10 @@ The default hosts structure goes as follows
 
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
+      boot.extraModulePackages = [
+        config.boot.kernelPackages.amneziawg
+      ];
+      boot.kernelModules = [ "amneziawg" ];
       #boot.kernelPackages = pkgs.linuxPackages_latest;
       nix.settings.experimental-features = ["nix-command" "flakes"];
       users = {
@@ -478,6 +482,7 @@ The default hosts structure goes as follows
         streamrip
         ffmpeg
         btop
+        amneziawg-tools
       ];
       networking = {
         hostName = "server";
@@ -3654,10 +3659,16 @@ https://discourse.nixos.org/t/jellyfin-cuda-nixos-unable-to-transcode/79830/5
         group = "users";
         settings = {
           i = "0.0.0.0";
+          ban-404 = false;
+          ban-403 = false;
+          ban-422 = false;
+          ban-url = false;
+          ban-pw = false;
         };
         accounts = {
           kin.passwordFile = config.sops.secrets."copyparty/kin/password".path;
         };
+        
         volumes = {
           "/" = {
             path = "/home/kin/data/copyparty";
@@ -3669,10 +3680,10 @@ https://discourse.nixos.org/t/jellyfin-cuda-nixos-unable-to-transcode/79830/5
               e2d = true;
             };
           };
-          "/personal-music" = {
-            path = "/mnt/downloads/personal-music";
+          "/flac-music" = {
+            path = "/mnt/downloads/flac-music";
             access = {
-              rw = [ "kin" ];
+              r = [ "kin" ];
             };
             flags = {
               scan = 60;
@@ -3869,7 +3880,7 @@ The main peers would be:
         "wireguard/privatekey" = {};
       };
 
-      networking.firewall.allowedUDPPorts = [ 53 ];
+      networking.firewall.allowedUDPPorts = [ 11 ];
 
       boot.kernel.sysctl = {
         "net.ipv4.ip_forward" = 1;

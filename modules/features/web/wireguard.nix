@@ -12,7 +12,7 @@
       "wireguard/privatekey" = {};
     };
 
-    networking.firewall.allowedUDPPorts = [ 53 ];
+    networking.firewall.allowedUDPPorts = [ 11 ];
 
     boot.kernel.sysctl = {
       "net.ipv4.ip_forward" = 1;
