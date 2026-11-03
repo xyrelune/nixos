@@ -64,7 +64,7 @@
         "ws.peanutbutter.quest" = {
           forceSSL = true;
           enableACME = true;
-          locations."/" = {
+          locations."/some-secret-path" = {
             proxyPass = "http://127.0.0.1:6666";
             proxyWebsockets = true;
           };
