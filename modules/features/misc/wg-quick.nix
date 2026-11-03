@@ -47,7 +47,7 @@
             allowedIPs = [
               "0.0.0.0/0"
             ];
-            endpoint = "peanutbutter.quest:53";
+            endpoint = "127.0.0.1:44433";
           }
         ];
       };

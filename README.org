@@ -278,6 +278,7 @@ The default hosts structure goes as follows
             withOpenASAR = true;
             withVencord = true;
           })
+          cloudflare-warp
 
           inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
           inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.myAlacritty
@@ -1532,7 +1533,7 @@ The default hosts structure goes as follows
     :config
     (load-theme 'doom-gruvbox t))
 
-  ;; Doom Moodline
+  ;; Doom Modeline
   (use-package doom-modeline
     :config
     (doom-modeline-mode 1))
@@ -2803,7 +2804,7 @@ This uses a config generated for wireguard servers running at my home.
               allowedIPs = [
                 "0.0.0.0/0"
               ];
-              endpoint = "peanutbutter.quest:53";
+              endpoint = "127.0.0.1:44433";
             }
           ];
         };
@@ -3067,6 +3068,14 @@ By not doing the above nginx will fail which can be parsed using the ~journalctl
             enableACME = true;
             locations."/" = {
               proxyPass = "http://127.0.0.1:5055";
+              proxyWebsockets = true;
+            };
+          };
+          "ws.peanutbutter.quest" = {
+            forceSSL = true;
+            enableACME = true;
+            locations."/" = {
+              proxyPass = "http://127.0.0.1:6666";
               proxyWebsockets = true;
             };
           };
@@ -3879,7 +3888,7 @@ The main peers would be:
         interfaces = {
           wg0 = {
             ips = [ "10.0.0.1/24" ];
-            listenPort = 53;
+            listenPort = 44433;
             mtu = 1420;
             privateKeyFile = config.sops.secrets."wireguard/privatekey".path;
 

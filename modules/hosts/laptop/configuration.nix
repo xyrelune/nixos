@@ -123,6 +123,7 @@
           withOpenASAR = true;
           withVencord = true;
         })
+        cloudflare-warp
 
         inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
         inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.myAlacritty

@@ -120,7 +120,7 @@
           :config
           (load-theme 'doom-gruvbox t))
         
-        ;; Doom Moodline
+        ;; Doom Modeline
         (use-package doom-modeline
           :config
           (doom-modeline-mode 1))
