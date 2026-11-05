@@ -1,17 +1,19 @@
 {
   self,
   inputs,
+  moduleWithSystem,
   ...
 }: {
-  flake.homeModules.rofi = {
+  flake.homeModules.rofi = moduleWithSystem ({
     pkgs,
+    self',
     ...
   }: {
     programs.rofi = {
       enable = true;
-      package = self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi;
+      package = self'.packages.myRofi;
     };
-  };
+  });
   perSystem = {
     pkgs,
     ...

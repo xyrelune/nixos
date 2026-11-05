@@ -1,18 +1,20 @@
 {
   self,
   inputs,
+  moduleWithSystem,
   ...
 }: {
-  flake.nixosModules.yazi = {
+  flake.nixosModules.yazi = moduleWithSystem ({
     pkgs,
     lib,
+    self',
     ...
   }: {
     programs.yazi = {
       enable = true;
-      package = self.packages.${pkgs.stdenv.hostPlatform.system}.myYazi;
+      package = self'.packages.myYazi;
     };
-  };
+  });
   perSystem = {
     pkgs,
     lib,

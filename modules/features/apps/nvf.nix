@@ -1,16 +1,18 @@
 { 
   self,
-  inputs, 
+  inputs,
+  moduleWithSystem,
   ... 
 }: {
-  flake.nixosModules.nvf = { 
+  flake.nixosModules.nvf = moduleWithSystem ({ 
     pkgs,
+    self',
     ... 
   }: {
-    environment.systemPackages = [
-      self.packages.${pkgs.stdenv.hostPlatform.system}.myNvf
+    users.users.kin.packages = [
+      self'.packages.myNvf
     ];
-  };
+  });
   perSystem = {
     pkgs,
     ...

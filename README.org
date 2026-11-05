@@ -1023,17 +1023,19 @@ The default hosts structure goes as follows
   {
     self,
     inputs,
+    moduleWithSystem,
     ...
   }: {
-    flake.nixosModules.tmux = {
+    flake.nixosModules.tmux = moduleWithSystem ({
       pkgs,
+      self',
       ...
     }: { 
       programs.tmux = {
         enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myTmux;
+        package = self'.packages.myTmux;
       };
-    };
+    });
     perSystem = {
       pkgs,
       ...
@@ -1093,23 +1095,25 @@ The default hosts structure goes as follows
   {
     self,
     inputs,
+    moduleWithSystem,
     ...
   }: {
-    flake.nixosModules.vim = {
+    flake.nixosModules.vim = moduleWithSystem ({
       pkgs,
       lib,
+      self',
       ...
     }: {
       programs.vim = {
         enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myVim;
+        package = self'.packages.myVim;
       };
       environment.systemPackages = [
         pkgs.fzf
         pkgs.fd
         pkgs.ripgrep
       ];
-    };
+    });
     perSystem = {
       pkgs,
       lib,
@@ -1193,18 +1197,20 @@ The default hosts structure goes as follows
   {
     self,
     inputs,
+    moduleWithSystem,
     ...
   }: {
-    flake.nixosModules.yazi = {
+    flake.nixosModules.yazi = moduleWithSystem ({
       pkgs,
       lib,
+      self',
       ...
     }: {
       programs.yazi = {
         enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myYazi;
+        package = self'.packages.myYazi;
       };
-    };
+    });
     perSystem = {
       pkgs,
       lib,
@@ -1226,17 +1232,19 @@ The default hosts structure goes as follows
 #+begin_src nix :tangle modules/features/apps/nvf.nix 
   { 
     self,
-    inputs, 
+    inputs,
+    moduleWithSystem,
     ... 
   }: {
-    flake.nixosModules.nvf = { 
+    flake.nixosModules.nvf = moduleWithSystem ({ 
       pkgs,
+      self',
       ... 
     }: {
-      environment.systemPackages = [
-        self.packages.${pkgs.stdenv.hostPlatform.system}.myNvf
+      users.users.kin.packages = [
+        self'.packages.myNvf
       ];
-    };
+    });
     perSystem = {
       pkgs,
       ...
@@ -1396,16 +1404,18 @@ The default hosts structure goes as follows
   {
     self,
     inputs,
+    moduleWithSystem,
     ...
   }: {
-    flake.nixosModules.emacs = {
+    flake.nixosModules.emacs = moduleWithSystem ({
       pkgs,
       lib,
+      self',
       ...
     }: {
       services.emacs = {
         enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myEmacs;
+        package = self'.packages.myEmacs;
         install = true;
         defaultEditor = true;
         startWithGraphical = true;
@@ -1417,7 +1427,7 @@ The default hosts structure goes as follows
         texliveFull
         lsd
       ];
-    };
+    });
     perSystem = {
       pkgs,
       lib,
@@ -1688,18 +1698,20 @@ The default hosts structure goes as follows
   {
     self,
     inputs,
+    moduleWithSystem,
     ...
   }: {
-    flake.nixosModules.waybar = {
+    flake.nixosModules.waybar = moduleWithSystem ({
       pkgs,
       lib,
+      self',
       ...
     }: {
       programs.waybar = {
         enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar;
+        package = self'.packages.myWaybar;
       };
-    };
+    });
     perSystem = {
       pkgs,
       lib,
@@ -1803,17 +1815,19 @@ The default hosts structure goes as follows
   {
     self,
     inputs,
+    moduleWithSystem,
     ...
   }: {
-    flake.homeModules.rofi = {
+    flake.homeModules.rofi = moduleWithSystem ({
       pkgs,
+      self',
       ...
     }: {
       programs.rofi = {
         enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi;
+        package = self'.packages.myRofi;
       };
-    };
+    });
     perSystem = {
       pkgs,
       ...
@@ -1964,18 +1978,20 @@ The default hosts structure goes as follows
   {
     self,
     inputs,
+    moduleWithSystem,
     ...
   }: {
-    flake.nixosModules.fish = {
+    flake.nixosModules.fish = moduleWithSystem ({
       lib,
       pkgs,
+      self',
       ...
     }: {
       programs.fish = {
         enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myFish;
+        package = self'.packages.myFish;
       };
-    };
+    });
     perSystem = {
       lib,
       pkgs,

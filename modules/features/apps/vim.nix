@@ -1,23 +1,25 @@
 {
   self,
   inputs,
+  moduleWithSystem,
   ...
 }: {
-  flake.nixosModules.vim = {
+  flake.nixosModules.vim = moduleWithSystem ({
     pkgs,
     lib,
+    self',
     ...
   }: {
     programs.vim = {
       enable = true;
-      package = self.packages.${pkgs.stdenv.hostPlatform.system}.myVim;
+      package = self'.packages.myVim;
     };
     environment.systemPackages = [
       pkgs.fzf
       pkgs.fd
       pkgs.ripgrep
     ];
-  };
+  });
   perSystem = {
     pkgs,
     lib,

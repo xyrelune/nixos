@@ -1,16 +1,18 @@
 {
   self,
   inputs,
+  moduleWithSystem,
   ...
 }: {
-  flake.nixosModules.emacs = {
+  flake.nixosModules.emacs = moduleWithSystem ({
     pkgs,
     lib,
+    self',
     ...
   }: {
     services.emacs = {
       enable = true;
-      package = self.packages.${pkgs.stdenv.hostPlatform.system}.myEmacs;
+      package = self'.packages.myEmacs;
       install = true;
       defaultEditor = true;
       startWithGraphical = true;
@@ -22,7 +24,7 @@
       texliveFull
       lsd
     ];
-  };
+  });
   perSystem = {
     pkgs,
     lib,

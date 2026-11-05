@@ -1,17 +1,19 @@
 {
   self,
   inputs,
+  moduleWithSystem,
   ...
 }: {
-  flake.nixosModules.tmux = {
+  flake.nixosModules.tmux = moduleWithSystem ({
     pkgs,
+    self',
     ...
   }: { 
     programs.tmux = {
       enable = true;
-      package = self.packages.${pkgs.stdenv.hostPlatform.system}.myTmux;
+      package = self'.packages.myTmux;
     };
-  };
+  });
   perSystem = {
     pkgs,
     ...

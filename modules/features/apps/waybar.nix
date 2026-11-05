@@ -1,18 +1,20 @@
 {
   self,
   inputs,
+  moduleWithSystem,
   ...
 }: {
-  flake.nixosModules.waybar = {
+  flake.nixosModules.waybar = moduleWithSystem ({
     pkgs,
     lib,
+    self',
     ...
   }: {
     programs.waybar = {
       enable = true;
-      package = self.packages.${pkgs.stdenv.hostPlatform.system}.myWaybar;
+      package = self'.packages.myWaybar;
     };
-  };
+  });
   perSystem = {
     pkgs,
     lib,
