@@ -1,18 +1,20 @@
 {
   self,
   inputs,
+  moduleWithSystem,
   ...
 }: {
-  flake.nixosModules.foot = {
+  flake.nixosModules.foot = moduleWithSystem ({
     pkgs,
     lib,
+    self',
     ...
   }: {
     programs.foot = {
       enable = true;
-      package = self.packages.${pkgs.stdenv.hostPlatform.system}.myFoot;
+      package = self'.packages.myFoot;
     };
-  };
+  });
   perSystem = {
     pkgs,
     lib,

@@ -21,7 +21,6 @@
             style = "Bold";
           };
         };
-   
         cursor = {
           style = {
             shape = "Block";

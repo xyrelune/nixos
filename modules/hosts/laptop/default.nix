@@ -13,6 +13,7 @@
           overlays = [
             inputs.helium.overlays.default
             inputs.emacs-overlay.overlays.default
+            inputs.nix-cachyos-kernel.overlays.pinned
           ];
         };
       })

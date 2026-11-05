@@ -20,13 +20,13 @@
       self.nixosModules.nvf
       self.nixosModules.tmux
       self.nixosModules.foot
-      self.nixosModules.bash
       self.nixosModules.localCA
       self.nixosModules.customFonts
       self.nixosModules.wg-quick
       self.nixosModules.emacs
       self.nixosModules.home
       self.nixosModules.fish
+      self.nixosModules.bash
       
       inputs.sops-nix.nixosModules.sops
     ];
@@ -61,8 +61,11 @@
       "root"
       "kin"
     ];
-    boot.kernelPackages = pkgs.linuxPackages_zen;
-
+    boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-x86_64-v3;
+    #boot.kernelPackages = pkgs.linuxPackages_zen;
+    nix.settings.substituters = [ "https://cache.lantian.pub/lantian" ];
+    nix.settings.trusted-public-keys = [ "lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ=" ];
+    
     networking.hostName = "laptop";
 
     networking.networkmanager.enable = true;
@@ -72,7 +75,7 @@
     users.users.kin = {
       isNormalUser = true;
       extraGroups = ["wheel"];
-      shell = pkgs.bash;
+      #shell = pkgs.bash;
       home = "/home/kin/";
       packages = with pkgs; [
         libnotify
@@ -123,7 +126,8 @@
           withOpenASAR = true;
           withVencord = true;
         })
-        cloudflare-warp
+        kdePackages.okular
+        lsd
 
         inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
         inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.myAlacritty

@@ -7,6 +7,7 @@
     prismlauncher.url = "github:PrismLauncher/PrismLauncher?ref=release-9.x";
     xwayland-satellite-unscaled.url = "github:Supreeeme/xwayland-satellite?ref=unscaled-dpi";
     copyparty.url = "github:9001/copyparty";
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
     secrets = {
       url = "git+ssh://git@github.com/xyrelune/nix-secrets?ref=main&shallow=1";

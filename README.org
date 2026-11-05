@@ -47,6 +47,7 @@ I also use flakes as a way to import my non-flake files and use it to import fil
       prismlauncher.url = "github:PrismLauncher/PrismLauncher?ref=release-9.x";
       xwayland-satellite-unscaled.url = "github:Supreeeme/xwayland-satellite?ref=unscaled-dpi";
       copyparty.url = "github:9001/copyparty";
+      nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
       secrets = {
         url = "git+ssh://git@github.com/xyrelune/nix-secrets?ref=main&shallow=1";
@@ -123,6 +124,7 @@ The default hosts structure goes as follows
             overlays = [
               inputs.helium.overlays.default
               inputs.emacs-overlay.overlays.default
+              inputs.nix-cachyos-kernel.overlays.pinned
             ];
           };
         })
@@ -175,13 +177,13 @@ The default hosts structure goes as follows
         self.nixosModules.nvf
         self.nixosModules.tmux
         self.nixosModules.foot
-        self.nixosModules.bash
         self.nixosModules.localCA
         self.nixosModules.customFonts
         self.nixosModules.wg-quick
         self.nixosModules.emacs
         self.nixosModules.home
         self.nixosModules.fish
+        self.nixosModules.bash
         
         inputs.sops-nix.nixosModules.sops
       ];
@@ -216,8 +218,11 @@ The default hosts structure goes as follows
         "root"
         "kin"
       ];
-      boot.kernelPackages = pkgs.linuxPackages_zen;
-
+      boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-x86_64-v3;
+      #boot.kernelPackages = pkgs.linuxPackages_zen;
+      nix.settings.substituters = [ "https://cache.lantian.pub/lantian" ];
+      nix.settings.trusted-public-keys = [ "lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ=" ];
+      
       networking.hostName = "laptop";
 
       networking.networkmanager.enable = true;
@@ -227,7 +232,7 @@ The default hosts structure goes as follows
       users.users.kin = {
         isNormalUser = true;
         extraGroups = ["wheel"];
-        shell = pkgs.bash;
+        #shell = pkgs.bash;
         home = "/home/kin/";
         packages = with pkgs; [
           libnotify
@@ -278,7 +283,8 @@ The default hosts structure goes as follows
             withOpenASAR = true;
             withVencord = true;
           })
-          cloudflare-warp
+          kdePackages.okular
+          lsd
 
           inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
           inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.myAlacritty
@@ -903,105 +909,114 @@ The default hosts structure goes as follows
 #+end_src
 ** Applications
 *** Bash
-#+begin_src nix :tangle modules/features/apps/bash.nix 
+#+begin_src nix :tangle modules/features/apps/bash/bash.nix 
   {
     self,
     inputs,
+    moduleWithSystem,
     ...
   }: {
-    flake.nixosModules.bash = {
-      lib,
+    flake.nixosModules.bash = moduleWithSystem ({
+      pkgs,
+      self',
+      ...
+    }: {
+      users.users.kin.packages = [
+        self'.packages.bash
+      ];
+    });
+    perSystem =  {
       pkgs,
       ...
-    }: let 
-      nixosDir = "/home/kin/nixos";
-    in {
-      programs.bash = {
-        enable = true;
-        shellAliases = {
-          nrs = "sudo nixos-rebuild switch --flake ${nixosDir}#$HOSTNAME";
-          hms = "home-manager switch --flake ${nixosDir}#$USER-$HOSTNAME";
-          y = "yazi";
-          l = "${lib.getExe pkgs.lsd} -l";
-          la = "${lib.getExe pkgs.lsd} -a";
-          lla = "${lib.getExe pkgs.lsd} -la";
-          lt = "${lib.getExe pkgs.lsd} --tree";
-          vpn53_start = "sudo systemctl start wg-quick-lenovo.service";
-          vpn53_stop = "sudo systemctl stop wg-quick-lenovo.service"; 
-          server_rebuild = "nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password";
+    }: {
+      packages.bash = inputs.wrapper-modules.lib.wrapPackage {
+        inherit pkgs;
+        package = pkgs.bashNonInteractive;
+        flags = {
+          "--rcfile" = ./.bashrc;
         };
-        enableLsColors = true;
-        completion.package = pkgs.bash-completion;
       };
     };
   }
 #+end_src
 ~/.bashrc file generated using emacs tangle.
-#+begin_src bash :tangle ~/.bashrc
+#+begin_src bash :tangle modules/features/apps/bash/.bashrc
+  alias nrs='sudo nixos-rebuild switch --flake "${nixosDir}#$HOSTNAME"'
+  alias hms='home-manager switch --flake "${nixosDir}#$USER-$HOSTNAME"'
+  alias y='yazi'
+  alias l='lsd -l'
+  alias la='lsd -a'
+  alias lla='lsd -la'
+  alias lt='lsd --tree'
+  alias vpn53_start='sudo systemctl start wg-quick-lenovo.service'
+  alias vpn53_stop='sudo systemctl stop wg-quick-lenovo.service'
+  alias server_rebuild='nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password'
   export TERM=xterm-256color
 #+end_src
 *** Foot
 #+begin_src nix :tangle modules/features/apps/foot.nix 
-    {
-      self,
-      inputs,
+  {
+    self,
+    inputs,
+    moduleWithSystem,
+    ...
+  }: {
+    flake.nixosModules.foot = moduleWithSystem ({
+      pkgs,
+      lib,
+      self',
       ...
     }: {
-      flake.nixosModules.foot = {
-        pkgs,
-        lib,
-        ...
-      }: {
-        programs.foot = {
-          enable = true;
-          package = self.packages.${pkgs.stdenv.hostPlatform.system}.myFoot;
-        };
+      programs.foot = {
+        enable = true;
+        package = self'.packages.myFoot;
       };
-      perSystem = {
-        pkgs,
-        lib,
-        ...
-      }: {
-        packages.myFoot = inputs.wrapper-modules.wrappers.foot.wrap {
-          inherit pkgs;
-          settings = {
-            main = {
-              font = "Iosevka Nerd Font Mono:size=12";
-            };
-            colors-dark = {
-              alpha = "1";
-              blur = "no";
-              
-              foreground = "ebdbb2";
-              background = "282828";
-              
-              selection-foreground = "ebdbb2";
-              selection-background = "504945";
-              
-              urls = "83a598";
-              
-              regular0 = "282828";
-              regular1 = "cc241d";
-              regular2 = "98971a";
-              regular3 = "d79921";
-              regular4 = "458588";
-              regular5 = "b16286";
-              regular6 = "689d6a";
-              regular7 = "a89984";
-              
-              bright0 = "928374";
-              bright1 = "fb4934";
-              bright2 = "b8bb26";
-              bright3 = "fabd2f";
-              bright4 = "83a598";
-              bright5 = "d3869b";
-              bright6 = "8ec07c";
-              bright7 = "ebdbb2";
-            };
+    });
+    perSystem = {
+      pkgs,
+      lib,
+      ...
+    }: {
+      packages.myFoot = inputs.wrapper-modules.wrappers.foot.wrap {
+        inherit pkgs;
+        settings = {
+          main = {
+            font = "Iosevka Nerd Font Mono:size=12";
+          };
+          colors-dark = {
+            alpha = "1";
+            blur = "no";
+            
+            foreground = "ebdbb2";
+            background = "282828";
+            
+            selection-foreground = "ebdbb2";
+            selection-background = "504945";
+            
+            urls = "83a598";
+            
+            regular0 = "282828";
+            regular1 = "cc241d";
+            regular2 = "98971a";
+            regular3 = "d79921";
+            regular4 = "458588";
+            regular5 = "b16286";
+            regular6 = "689d6a";
+            regular7 = "a89984";
+            
+            bright0 = "928374";
+            bright1 = "fb4934";
+            bright2 = "b8bb26";
+            bright3 = "fabd2f";
+            bright4 = "83a598";
+            bright5 = "d3869b";
+            bright6 = "8ec07c";
+            bright7 = "ebdbb2";
           };
         };
       };
-    }
+    };
+  }
 #+end_src
 *** Tmux
 #+begin_src nix :tangle modules/features/apps/tmux.nix 
@@ -1879,7 +1894,6 @@ The default hosts structure goes as follows
               style = "Bold";
             };
           };
-     
           cursor = {
             style = {
               shape = "Block";
@@ -2818,7 +2832,7 @@ This uses a config generated for wireguard servers running at my home.
               allowedIPs = [
                 "0.0.0.0/0"
               ];
-              endpoint = "127.0.0.1:44433";
+              endpoint = "peanutbutter.quest:44433";
             }
           ];
         };

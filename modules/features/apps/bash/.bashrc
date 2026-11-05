@@ -8,5 +8,4 @@ alias lt='lsd --tree'
 alias vpn53_start='sudo systemctl start wg-quick-lenovo.service'
 alias vpn53_stop='sudo systemctl stop wg-quick-lenovo.service'
 alias server_rebuild='nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password'
-export LS_COLORS="$(dircolors -b)"
 export TERM=xterm-256color
