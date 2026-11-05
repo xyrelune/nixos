@@ -1,0 +1,12 @@
+alias nrs='sudo nixos-rebuild switch --flake "${nixosDir}#$HOSTNAME"'
+alias hms='home-manager switch --flake "${nixosDir}#$USER-$HOSTNAME"'
+alias y='yazi'
+alias l='lsd -l'
+alias la='lsd -a'
+alias lla='lsd -la'
+alias lt='lsd --tree'
+alias vpn53_start='sudo systemctl start wg-quick-lenovo.service'
+alias vpn53_stop='sudo systemctl stop wg-quick-lenovo.service'
+alias server_rebuild='nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password'
+export LS_COLORS="$(dircolors -b)"
+export TERM=xterm-256color
