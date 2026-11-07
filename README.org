@@ -89,8 +89,14 @@ I also use flakes as a way to import my non-flake files and use it to import fil
     outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
 
     nixConfig = {
-      extra-substituters = [ "https://cache.nixos-cuda.org" ];
-      extra-trusted-public-keys = [ "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M=" ];
+      extra-substituters = [
+        "https://cache.nixos-cuda.org"
+        "https://nix-community.cachix.org"
+      ];
+      extra-trusted-public-keys = [
+        "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
     };
   }
 #+end_src
@@ -408,6 +414,7 @@ The default hosts structure goes as follows
         self.nixosModules.navidrome
         self.nixosModules.thelounge
         self.nixosModules.ollama
+        self.nixosModules.llamacpp
 
         
         inputs.sops-nix.nixosModules.sops
@@ -4115,13 +4122,12 @@ The main peers would be:
       services.llama-cpp = {
         enable = true;
         package = (pkgs.llama-cpp.override { cudaSupport = true; });
-
-        modelsPreset = {
-          "Qwen3.5-4B" = {
-            hf-repo = "lmstudio-community/Qwen3.5-4B-GGUF";
-            hf-file = "Qwen3.5-4B-Q4_K_M.gguf";
-            alias = "lmstudio-community/Qwen3.5-4B-GGUF";
-          };
+        settings = {
+          hf-repo = "lmstudio-community/Qwen3.5-4B-GGUF";
+          hf-file = "Qwen3.5-4B-Q4_K_M.gguf";
+          alias = "lmstudio-community/Qwen3.5-4B-GGUF";
+          port = 3434;
+          host = "0.0.0.0";
         };
       };
     };

@@ -36,6 +36,7 @@
       self.nixosModules.navidrome
       self.nixosModules.thelounge
       self.nixosModules.ollama
+      self.nixosModules.llamacpp
 
       
       inputs.sops-nix.nixosModules.sops
