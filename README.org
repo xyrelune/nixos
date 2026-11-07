@@ -87,6 +87,11 @@ I also use flakes as a way to import my non-flake files and use it to import fil
       };
     };
     outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./modules);
+
+    nixConfig = {
+      extra-substituters = [ "https://cache.nixos-cuda.org" ];
+      extra-trusted-public-keys = [ "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M=" ];
+    };
   }
 #+end_src
 
@@ -416,17 +421,6 @@ The default hosts structure goes as follows
       boot.kernelModules = [ "amneziawg" ];
       #boot.kernelPackages = pkgs.linuxPackages_latest;
       nix.settings.experimental-features = ["nix-command" "flakes"];
-      nix.settings = {
-        substituters = [
-          "https://cache.nixos-cuda.org"
-          "https://nix-community.cachix.org"
-        ];
-        trusted-public-keys = [
-          "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
-          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-          
-        ];
-      };
       services.openssh = {
         enable = true;
         settings = {
