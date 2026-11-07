@@ -401,8 +401,10 @@ The default hosts structure goes as follows
         self.nixosModules.rclone
         self.nixosModules.radicale
         self.nixosModules.navidrome
-        self.nixosModules.thelounge 
+        self.nixosModules.thelounge
+        self.nixosModules.ollama
 
+        
         inputs.sops-nix.nixosModules.sops
       ];
 
@@ -645,18 +647,20 @@ The default hosts structure goes as follows
   {
     self,
     inputs,
+    moduleWithSystem,
     ...
   }: {
-    flake.nixosModules.niri = {
+    flake.nixosModules.niri = moduleWithSystem ({
       pkgs,
       lib,
+      self',
       ...
     }: {
       programs.niri = {
         enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.myNiri;
+        package = self'.packages.myNiri;
       };
-    };
+    });
     perSystem = {
       config,
       pkgs,
@@ -4053,7 +4057,6 @@ The main peers would be:
           host = "0.0.0.0";
           package = pkgs.ollama-cuda;
           loadModels = [
-            "qwen3:8b"
             "qwen3.5:4b"
           ];
         };
@@ -4088,6 +4091,32 @@ The main peers would be:
             nick = "cujo1337";
             username = "cujo1337";
             realname = "cujo1337";
+          };
+        };
+      };
+    };
+  }
+#+end_src
+*** Llama-CPP
+#+begin_src nix :tangle modules/features/web/llama_cpp.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.llamacpp = {
+      pkgs,
+      ...
+    }: {
+      services.llama-cpp = {
+        enable = true;
+        package = (pkgs.llama-cpp.override { cudaSupport = true; });
+
+        modelsPreset = {
+          "Qwen3.5-4B" = {
+            hf-repo = "lmstudio-community/Qwen3.5-4B-GGUF";
+            hf-file = "Qwen3.5-4B-Q4_K_M.gguf";
+            alias = "lmstudio-community/Qwen3.5-4B-GGUF";
           };
         };
       };

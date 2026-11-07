@@ -13,7 +13,6 @@
         host = "0.0.0.0";
         package = pkgs.ollama-cuda;
         loadModels = [
-          "qwen3:8b"
           "qwen3.5:4b"
         ];
       };
