@@ -11,11 +11,12 @@
       enable = true;
       package = (pkgs.llama-cpp.override { cudaSupport = true; });
       settings = {
-        hf-repo = "lmstudio-community/Qwen3.5-4B-GGUF";
-        hf-file = "Qwen3.5-4B-Q4_K_M.gguf";
-        alias = "lmstudio-community/Qwen3.5-4B-GGUF";
+        hf-repo = "unsloth/Llama-3.2-3B-Instruct-GGUF";
+        hf-file = "Llama-3.2-3B-Instruct-UD-Q6_K_XL.gguf";
+        alias = "unsloth/Llama-3.2-3B-Instruct-GGUF";
         port = 3434;
         host = "0.0.0.0";
+        c = 32768;
       };
     };
   };
