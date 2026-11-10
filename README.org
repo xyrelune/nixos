@@ -460,6 +460,14 @@ The default hosts structure goes as follows
             group = "media";
             home = "/var/lib/media";
             createHome = true;
+            openssh = {
+              authorizedKeys = {
+                keys = [
+                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAwOPAo/notPS5MuVByGErX+z3u8E2DurdDWtIDWlex+ kin@VM-82e85f01-2934-46c8-9e14-14bf8557c4a5"
+                ];
+              };
+            };
+
           };
         };
         groups = {
