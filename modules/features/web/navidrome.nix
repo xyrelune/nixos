@@ -12,7 +12,7 @@
       user = "media";
       group = "media";
       settings = {
-        MusicFolder = "/mnt/downloads/flac-music";
+        MusicFolder = "/mnt/multimedia/flac-music";
         Plugins = {
           Enabled = true;
         };
@@ -22,7 +22,7 @@
       };
     };
     systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [
-      "/mnt/downloads/flac-music"
+      "/mnt/multimedia/flac-music"
     ];
   };
 }

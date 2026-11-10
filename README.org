@@ -2369,7 +2369,7 @@ The default hosts structure goes as follows
           "/home/kin/data/deluge/config:/config:rw"
           "/mnt/external-hdd/downloads:/downloads:rw"
           "/mnt/manga:/manga:rw"
-          "/mnt/downloads/flac-music:/flac-music:rw"
+          "/mnt/multimedia/flac-music:/flac-music:rw"
         ];
         ports = [
           "8112:8112/tcp"
@@ -4042,7 +4042,7 @@ The main peers would be:
         user = "media";
         group = "media";
         settings = {
-          MusicFolder = "/mnt/downloads/flac-music";
+          MusicFolder = "/mnt/multimedia/flac-music";
           Plugins = {
             Enabled = true;
           };
@@ -4052,7 +4052,7 @@ The main peers would be:
         };
       };
       systemd.services.navidrome.serviceConfig.BindReadOnlyPaths = [
-        "/mnt/downloads/flac-music"
+        "/mnt/multimedia/flac-music"
       ];
     };
   }
