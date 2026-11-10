@@ -34,6 +34,11 @@
       fsType = "ext4";
       options = ["nofail"];
     };
+    fileSystems."/mnt/multimedia" = {
+      device = "/dev/disk/by-label/multimedia";
+      fsType = "ext4";
+      options = ["nofail"];
+    };
 
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
