@@ -72,6 +72,7 @@
                 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBl9/46Fjl8qpf1IdPXrWYbBuCtHJhQhr93MdDgTxM5m kin@lenovo"
                 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFbcsdaVzyUQ7USyDeVSXeQZGO0VS5leJoVUTb6KKv/k kin@laptop"
                 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJxz/lBN+YPrpI2U7QPgXsWHvdsCsXDwDxD3p+ao1Ep u0_a453@localhost"
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAwOPAo/notPS5MuVByGErX+z3u8E2DurdDWtIDWlex+ kin@VM-82e85f01-2934-46c8-9e14-14bf8557c4a5"
               ];
             };
           };
