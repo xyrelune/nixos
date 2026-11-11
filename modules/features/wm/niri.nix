@@ -143,7 +143,7 @@
         binds = {
           "Mod+Return".spawn-sh = ''emacsclient -c --eval "(vterm t)"'';
           "Mod+D".spawn-sh = "${self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi}/bin/rofi -show drun";
-          "Mod+B".spawn-sh = "librewolf";
+          "Mod+B".spawn-sh = "helium";
           "Mod+U".spawn-sh = "emacsclient -c";
           "Mod+P".spawn-sh = "spotify";
 

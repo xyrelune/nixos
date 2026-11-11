@@ -20,6 +20,7 @@
         pkgs.nerd-fonts.ubuntu-mono
         pkgs.corefonts
         pkgs.vista-fonts
+        pkgs.lato
         self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
         self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -36,8 +37,8 @@
           lcdfilter = "default";
         };
         defaultFonts = {
-          serif = ["Iosevka Nerd Font Mono"];
-          sansSerif = ["Iosevka Nerd Font Mono"];
+          serif = ["Lato"];
+          sansSerif = ["Lato"];
           monospace = ["Iosevka Nerd Font Mono"];
         };
       };

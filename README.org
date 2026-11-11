@@ -1,4 +1,4 @@
-#+TITLE: My NixOS Configuration
+-#+TITLE: My NixOS Configuration
 #+OPTIONS: toc:t broken-links: t
 #+PROPERTY: header-args  :noweb tangle :results silent :mkdirp yes
 #+Startup: content
@@ -806,7 +806,7 @@ The default hosts structure goes as follows
           binds = {
             "Mod+Return".spawn-sh = ''emacsclient -c --eval "(vterm t)"'';
             "Mod+D".spawn-sh = "${self.packages.${pkgs.stdenv.hostPlatform.system}.myRofi}/bin/rofi -show drun";
-            "Mod+B".spawn-sh = "librewolf";
+            "Mod+B".spawn-sh = "helium";
             "Mod+U".spawn-sh = "emacsclient -c";
             "Mod+P".spawn-sh = "spotify";
 
@@ -1568,10 +1568,10 @@ The default hosts structure goes as follows
   ;; (load-theme 'gruvbox-dark-soft t)
 
   ;; Vterm Fish
-  (use-package vterm
-    :config
-    (setq vterm-shell (executable-find "fish")))
-
+  ;;  (use-package vterm
+  ;;    :config
+  ;;    (setq vterm-shell (executable-find "fish")))
+  
   ;; EMPV
   (use-package empv)
 
@@ -1698,6 +1698,8 @@ The default hosts structure goes as follows
     :config (add-to-list 'revert-without-query ".pdf"))
   (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
   (add-hook 'pdf-view-mode-hook #'pdf-view-roll-minor-mode)
+  (add-hook 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode)
+  (add-hook 'pdf-view-mode-hook #'pixel-scroll-precision-mode)
 
   ;; To make line numbers disappear in terminal mode
   (dolist (mode '(vterm-mode-hook
@@ -2172,6 +2174,7 @@ The default hosts structure goes as follows
           pkgs.nerd-fonts.ubuntu-mono
           pkgs.corefonts
           pkgs.vista-fonts
+          pkgs.lato
           self.packages.${pkgs.stdenv.hostPlatform.system}.san-francisco-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.source-sans-pro
           self.packages.${pkgs.stdenv.hostPlatform.system}.futura
@@ -2188,8 +2191,8 @@ The default hosts structure goes as follows
             lcdfilter = "default";
           };
           defaultFonts = {
-            serif = ["Iosevka Nerd Font Mono"];
-            sansSerif = ["Iosevka Nerd Font Mono"];
+            serif = ["Lato"];
+            sansSerif = ["Lato"];
             monospace = ["Iosevka Nerd Font Mono"];
           };
         };
@@ -2947,7 +2950,7 @@ This uses a config generated for wireguard servers running at my home.
               name = "Gruvbox-Plus-Dark";
             };
             font = {
-              name = "Iosevka Nerd Font Mono";
+              name = "Lato";
               size = 12;
             };
           };

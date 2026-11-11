@@ -97,9 +97,9 @@
         ;; (load-theme 'gruvbox-dark-soft t)
         
         ;; Vterm Fish
-        (use-package vterm
-          :config
-          (setq vterm-shell (executable-find "fish")))
+        ;;  (use-package vterm
+        ;;    :config
+        ;;    (setq vterm-shell (executable-find "fish")))
         
         ;; EMPV
         (use-package empv)
@@ -227,6 +227,8 @@
           :config (add-to-list 'revert-without-query ".pdf"))
         (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
         (add-hook 'pdf-view-mode-hook #'pdf-view-roll-minor-mode)
+        (add-hook 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode)
+        (add-hook 'pdf-view-mode-hook #'pixel-scroll-precision-mode)
         
         ;; To make line numbers disappear in terminal mode
         (dolist (mode '(vterm-mode-hook

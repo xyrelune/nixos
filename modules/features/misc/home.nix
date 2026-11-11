@@ -37,7 +37,7 @@
             name = "Gruvbox-Plus-Dark";
           };
           font = {
-            name = "Iosevka Nerd Font Mono";
+            name = "Lato";
             size = 12;
           };
         };
