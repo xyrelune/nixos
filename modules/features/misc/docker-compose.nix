@@ -279,7 +279,7 @@
       ];
     };
     virtualisation.oci-containers.containers."komga" = {
-      image = "gotson/komga";
+      image = "ghcr.io/gotson/komga:latest";
       environment = {
         "SERVER_PORT" = "10060";
         "TZ" = "Asia/Kolkata";
