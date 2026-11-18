@@ -278,7 +278,43 @@
         "podman-compose-services-root.target"
       ];
     };
-
+    virtualisation.oci-containers.containers."komga" = {
+      image = "gotson/komga";
+      environment = {
+        "SERVER_PORT" = "10060";
+        "TZ" = "Asia/Kolkata";
+      };
+      volumes = [
+        "/home/kin/data/komga/config:/config:rw"
+        "/mnt/multimedia/manga:/data:rw"
+      ];
+      ports = [
+        "10060:10060/tcp"
+      ];
+      user = "980:169";
+      log-driver = "journald";
+      extraOptions = [
+        "--network-alias=komga"
+        "--network=services_default"
+      ];
+    };
+    systemd.services."podman-komga" = {
+      serviceConfig = {
+        Restart = lib.mkOverride 90 "always";
+      };
+      after = [
+        "podman-network-services_default.service"
+      ];
+      requires = [
+        "podman-network-services_default.service"
+      ];
+      partOf = [
+        "podman-compose-services-root.target"
+      ];
+      wantedBy = [
+        "podman-compose-services-root.target"
+      ];
+    };
     # Networks
     systemd.services."podman-network-services_default" = {
         path = [ pkgs.podman ];
