@@ -1,4 +1,4 @@
--#+TITLE: My NixOS Configuration
+#+TITLE: My NixOS Configuration
 #+OPTIONS: toc:t broken-links: t
 #+PROPERTY: header-args  :noweb tangle :results silent :mkdirp yes
 #+Startup: content
@@ -414,7 +414,8 @@ The default hosts structure goes as follows
         self.nixosModules.navidrome
         self.nixosModules.thelounge
         #self.nixosModules.ollama
-        #self.nixosModules.llamacpp
+
+        self.nixosModules.kavita
 
         
         inputs.sops-nix.nixosModules.sops
@@ -4140,6 +4141,23 @@ The main peers would be:
           host = "0.0.0.0";
           c = 32768;
         };
+      };
+    };
+  }
+#+end_src
+*** Kavita
+#+begin_src nix :tangle modules/features/web/kavita.nix
+  {
+    self,
+    inputs,
+    ...
+  }: {
+    flake.nixosModules.kavita = {
+      pkgs,
+      ...
+    }: {
+      services.kavita = {
+        enable = true;
       };
     };
   }
