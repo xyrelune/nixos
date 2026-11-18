@@ -37,7 +37,7 @@
       self.nixosModules.thelounge
       #self.nixosModules.ollama
 
-      self.nixosModules.komga
+      #self.nixosModules.komga
 
       
       inputs.sops-nix.nixosModules.sops
