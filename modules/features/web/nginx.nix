@@ -174,6 +174,14 @@
             proxyWebsockets = true;
           };
         };
+        "manga.peanutbutter.quest" = {
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://127.0.0.1:10060";
+            proxyWebsockets = true;
+          };
+        };          
         "radarr.server.org" = {
           forceSSL = true;
           sslCertificate = "/etc/ssl/local/server.org.pem";
