@@ -22,7 +22,7 @@
       self.nixosModules.vaultwarden
       self.nixosModules.miniflux
       self.nixosModules.docker
-      self.nixosModules.bash
+      self.nixosModules.zsh
       self.nixosModules.yazi
       #self.nixosModules.stirlingpdf
       self.nixosModules.whatmp3
@@ -64,16 +64,11 @@
           isNormalUser = true;
           description = "kin";
           extraGroups = [ "wheel" "docker" "media" ];
-          shell = pkgs.bash;
           home = "/home/kin";
           openssh = {
             authorizedKeys = {
               keys = [
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIS+eKj19lpFfENzaduMCgAqd6Borror02S8o2OF3Aiu vaultwarden"
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBl9/46Fjl8qpf1IdPXrWYbBuCtHJhQhr93MdDgTxM5m kin@lenovo"
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFbcsdaVzyUQ7USyDeVSXeQZGO0VS5leJoVUTb6KKv/k kin@laptop"
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJxz/lBN+YPrpI2U7QPgXsWHvdsCsXDwDxD3p+ao1Ep u0_a453@localhost"
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAwOPAo/notPS5MuVByGErX+z3u8E2DurdDWtIDWlex+ kin@VM-82e85f01-2934-46c8-9e14-14bf8557c4a5"
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEqwo+dVBZ/0ViHWWZzjsZdCWwrMZ0QnUo544HBKQnJb vaultwarden"
               ];
             };
           };
@@ -127,7 +122,6 @@
       gh
       fastfetch
       age
-      kitty
       sops
       compose2nix
       unzip

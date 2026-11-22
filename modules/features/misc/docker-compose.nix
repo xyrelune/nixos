@@ -115,7 +115,7 @@
       volumes = [
         "/home/kin/data/deluge/config:/config:rw"
         "/mnt/external-hdd/downloads:/downloads:rw"
-        "/mnt/manga:/manga:rw"
+        "/mnt/multimedia/manga:/manga:rw"
         "/mnt/multimedia/flac-music:/flac-music:rw"
       ];
       ports = [

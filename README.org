@@ -194,7 +194,7 @@ The default hosts structure goes as follows
         self.nixosModules.emacs
         self.nixosModules.home
         self.nixosModules.fish
-        self.nixosModules.bash
+        self.nixosModules.zsh
         
         inputs.sops-nix.nixosModules.sops
       ];
@@ -304,6 +304,7 @@ The default hosts structure goes as follows
 
       environment.sessionVariables = {
         TERM = "xterm-256color";
+        SSH_AUTH_SOCK="/home/kin/.bitwarden-ssh-agent.sock";
       };
 
       sops = {
@@ -400,7 +401,7 @@ The default hosts structure goes as follows
         self.nixosModules.vaultwarden
         self.nixosModules.miniflux
         self.nixosModules.docker
-        self.nixosModules.bash
+        self.nixosModules.zsh
         self.nixosModules.yazi
         #self.nixosModules.stirlingpdf
         self.nixosModules.whatmp3
@@ -442,16 +443,11 @@ The default hosts structure goes as follows
             isNormalUser = true;
             description = "kin";
             extraGroups = [ "wheel" "docker" "media" ];
-            shell = pkgs.bash;
             home = "/home/kin";
             openssh = {
               authorizedKeys = {
                 keys = [
-                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIS+eKj19lpFfENzaduMCgAqd6Borror02S8o2OF3Aiu vaultwarden"
-                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBl9/46Fjl8qpf1IdPXrWYbBuCtHJhQhr93MdDgTxM5m kin@lenovo"
-                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFbcsdaVzyUQ7USyDeVSXeQZGO0VS5leJoVUTb6KKv/k kin@laptop"
-                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJxz/lBN+YPrpI2U7QPgXsWHvdsCsXDwDxD3p+ao1Ep u0_a453@localhost"
-                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAwOPAo/notPS5MuVByGErX+z3u8E2DurdDWtIDWlex+ kin@VM-82e85f01-2934-46c8-9e14-14bf8557c4a5"
+                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEqwo+dVBZ/0ViHWWZzjsZdCWwrMZ0QnUo544HBKQnJb vaultwarden"
                 ];
               };
             };
@@ -505,7 +501,6 @@ The default hosts structure goes as follows
         gh
         fastfetch
         age
-        kitty
         sops
         compose2nix
         unzip
@@ -930,50 +925,64 @@ The default hosts structure goes as follows
   }
 #+end_src
 ** Applications
-*** Bash
-#+begin_src nix :tangle modules/features/apps/bash/bash.nix 
+*** Zsh
+#+begin_src nix :tangle modules/features/apps/bash/zsh.nix 
   {
     self,
     inputs,
     moduleWithSystem,
     ...
   }: {
-    flake.nixosModules.bash = moduleWithSystem ({
+    flake.nixosModules.zsh = moduleWithSystem ({
+      config,
       pkgs,
       self',
       ...
-    }: {
-      users.users.kin.packages = [
-        self'.packages.bash
-      ];
+    }: { 
+        config = {
+          nixpkgs.overlays = [
+            (final: prev: {
+              zsh = self'.packages.zsh;
+            })
+          ];
+          programs.zsh = {
+            enable = true;
+            enableCompletion = true;
+          };
+          users.users.kin.shell = pkgs.zsh;
+        };
     });
     perSystem =  {
+      lib,
       pkgs,
       ...
     }: {
-      packages.bash = inputs.wrapper-modules.lib.wrapPackage {
+      packages.zsh = inputs.wrapper-modules.wrappers.zsh.wrap {
         inherit pkgs;
-        package = pkgs.bashNonInteractive;
-        flags = {
-          "--rcfile" = ./.bashrc;
+        zshAliases = {
+          nrs = "sudo nixos-rebuild switch --flake /home/kin/nixos/#laptop";
+          y = lib.getExe pkgs.yazi;
+          l = "${lib.getExe pkgs.lsd} -l";
+          la = "${lib.getExe pkgs.lsd} -a";
+          lla = "${lib.getExe pkgs.lsd} -la";
+          lt = "${lib.getExe pkgs.lsd} --tree";
+          server_rebuild = "nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password";
         };
+        zshrc.content = ''
+          export TERM=xterm-256color
+          export SSH_AUTH_SOCK=/home/kin/.bitwarden-ssh-agent.sock
+
+          autoload -Uz vcs_info
+          precmd() { vcs_info }
+        
+          zstyle ':vcs_info:git:*' formats '%b '
+        
+          setopt PROMPT_SUBST
+          PROMPT='%F{green}%*%f %F{blue}%~%f %F{red}''${vcs_info_msg_0_}%f$ '
+        '';
       };
     };
   }
-#+end_src
-~/.bashrc file generated using emacs tangle.
-#+begin_src bash :tangle modules/features/apps/bash/.bashrc
-  alias nrs='sudo nixos-rebuild switch --flake "${nixosDir}#$HOSTNAME"'
-  alias hms='home-manager switch --flake "${nixosDir}#$USER-$HOSTNAME"'
-  alias y='yazi'
-  alias l='lsd -l'
-  alias la='lsd -a'
-  alias lla='lsd -la'
-  alias lt='lsd --tree'
-  alias vpn53_start='sudo systemctl start wg-quick-lenovo.service'
-  alias vpn53_stop='sudo systemctl stop wg-quick-lenovo.service'
-  alias server_rebuild='nixos-rebuild switch --flake ~/nixos#server --target-host kin@server.lan --build-host kin@server.lan --sudo --ask-sudo-password'
-  export TERM=xterm-256color
 #+end_src
 *** Foot
 #+begin_src nix :tangle modules/features/apps/foot.nix 
@@ -2373,7 +2382,7 @@ The default hosts structure goes as follows
         volumes = [
           "/home/kin/data/deluge/config:/config:rw"
           "/mnt/external-hdd/downloads:/downloads:rw"
-          "/mnt/manga:/manga:rw"
+          "/mnt/multimedia/manga:/manga:rw"
           "/mnt/multimedia/flac-music:/flac-music:rw"
         ];
         ports = [

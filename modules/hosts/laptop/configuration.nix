@@ -26,7 +26,7 @@
       self.nixosModules.emacs
       self.nixosModules.home
       self.nixosModules.fish
-      self.nixosModules.bash
+      self.nixosModules.zsh
       
       inputs.sops-nix.nixosModules.sops
     ];
@@ -136,6 +136,7 @@
 
     environment.sessionVariables = {
       TERM = "xterm-256color";
+      SSH_AUTH_SOCK="/home/kin/.bitwarden-ssh-agent.sock";
     };
 
     sops = {
