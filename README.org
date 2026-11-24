@@ -3819,6 +3819,16 @@ https://discourse.nixos.org/t/jellyfin-cuda-nixos-unable-to-transcode/79830/5
               e2d = true;
             };
           };
+          "/downloads" = {
+            path = "/mnt/external-hdd/downloads/";
+            access = {
+              r = [ "kin" ];
+            };
+            flags = {
+              scan = 60;
+              e2d = true;
+            };
+          };
         };
       };
     };

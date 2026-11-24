@@ -62,6 +62,16 @@
             e2d = true;
           };
         };
+        "/downloads" = {
+          path = "/mnt/external-hdd/downloads/";
+          access = {
+            r = [ "kin" ];
+          };
+          flags = {
+            scan = 60;
+            e2d = true;
+          };
+        };
       };
     };
   };
