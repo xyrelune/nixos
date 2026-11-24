@@ -69,6 +69,7 @@
             authorizedKeys = {
               keys = [
                 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEqwo+dVBZ/0ViHWWZzjsZdCWwrMZ0QnUo544HBKQnJb vaultwarden"
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBxVlxVFijFN9F++pFEZ2inr1luv21zsg/tKCdmeUnys u0_a433@localhost"
               ];
             };
           };
