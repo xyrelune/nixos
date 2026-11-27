@@ -47,7 +47,7 @@
         precmd() { vcs_info }
         setopt PROMPT_SUBST
         zstyle ':vcs_info:git:*' formats ' %F{214}(%b)%f'
-        PROMPT='%F{142}%n%f@[%F{108}%m%f %F{223}%~%f''${vcs_info_msg_0_} %(?.%F{142}.%F{167})%#%f '
+        PROMPT='%F{142}%n%f@%F{108}%m%f %F{223}%~%f''${vcs_info_msg_0_} %(?.%F{142}.%F{167})%#%f '
       '';
     };
   };
