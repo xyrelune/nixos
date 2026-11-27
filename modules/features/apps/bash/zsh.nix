@@ -31,9 +31,9 @@
     packages.zsh = inputs.wrapper-modules.wrappers.zsh.wrap {
       inherit pkgs;
       zshAliases = {
-        nrs = "sudo nixos-rebuild switch --flake /home/kin/nixos/#laptop";
+        nrs = "sudo nixos-rebuild switch --flake /home/kin/nixos/#$(hostname)";
         y = lib.getExe pkgs.yazi;
-        l = "${lib.getExe pkgs.lsd} -l";
+        ls = "${lib.getExe pkgs.lsd} -l";
         la = "${lib.getExe pkgs.lsd} -a";
         lla = "${lib.getExe pkgs.lsd} -la";
         lt = "${lib.getExe pkgs.lsd} --tree";
@@ -49,7 +49,7 @@
         zstyle ':vcs_info:git:*' formats '%b '
       
         setopt PROMPT_SUBST
-        PROMPT='%F{green}%*%f %F{blue}%~%f %F{red}''${vcs_info_msg_0_}%f$ '
+        PROMPT='(%F{142}%n%f@%F{108}%m%f) [%F{223}%~%f] %(?.%F{142}.%F{167})%#%f '
       '';
     };
   };

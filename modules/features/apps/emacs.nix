@@ -127,18 +127,6 @@
           :config
           (doom-modeline-mode 1))
         
-        ;; Evil Mode
-        ;; (use-package evil
-        ;;   :init
-        ;;   (setq evil-want-C-u-scroll t)
-        ;;   (setq evil-want-keybinding nil)
-        ;;   :config
-        ;;   (evil-mode 1))
-        ;; (use-package evil-collection
-        ;;   :after evil
-        ;;   :config
-        ;;   (evil-collection-init))
-        
         (use-package bash-completion
           :config
           (bash-completion-setup))
@@ -212,28 +200,6 @@
         ;; Rainbow Mode
         (use-package rainbow-mode
           :hook (after-change-major-mode . rainbow-mode))
-        
-        ;; Pdf-tools
-        (use-package pdf-tools
-          :defer t
-          :mode "\\.pdf\\'"
-          :commands (pdf-loader-install)
-          :bind (:map pdf-view-mode-map
-                      ("j" . pdf-view-next-line-or-next-page)
-                      ("k" . pdf-view-previous-line-or-previous-page)
-                      ("C-=" . pdf-view-enlarge)
-                      ("C--" . pdf-view-shrink))
-          :init (pdf-loader-install)
-          :config (add-to-list 'revert-without-query ".pdf"))
-        (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)))
-        (add-hook 'pdf-view-mode-hook #'pdf-view-roll-minor-mode)
-        (add-hook 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode)
-        (add-hook 'pdf-view-mode-hook #'pixel-scroll-precision-mode)
-        
-        ;; To make line numbers disappear in terminal mode
-        (dolist (mode '(vterm-mode-hook
-                        ghostel-mode-hook))
-          (add-hook mode (lambda() (display-line-numbers-mode 0))))
         
         ;; org-agenda
         (use-package org
