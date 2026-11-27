@@ -45,11 +45,9 @@
 
         autoload -Uz vcs_info
         precmd() { vcs_info }
-      
-        zstyle ':vcs_info:git:*' formats '%b '
-      
         setopt PROMPT_SUBST
-        PROMPT='(%F{142}%n%f@%F{108}%m%f) [%F{223}%~%f] %(?.%F{142}.%F{167})%#%f '
+        zstyle ':vcs_info:git:*' formats ' %F{214}(%b)%f'
+        PROMPT='%F{142}%n%f@[%F{108}%m%f %F{223}%~%f''${vcs_info_msg_0_} %(?.%F{142}.%F{167})%#%f '
       '';
     };
   };
